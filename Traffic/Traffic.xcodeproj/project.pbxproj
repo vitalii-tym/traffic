@@ -13,6 +13,14 @@
 		BBEFDC101C80767B00C395B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBEFDC0E1C80767B00C395B7 /* Main.storyboard */; };
 		BBEFDC1B1C80767B00C395B7 /* TrafficTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBEFDC1A1C80767B00C395B7 /* TrafficTests.swift */; };
 		BBEFDC261C80767B00C395B7 /* TrafficUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBEFDC251C80767B00C395B7 /* TrafficUITests.swift */; };
+		FE3DE4871CBBBCA300D35BF8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */; };
+		FE3DE4891CBBBCA300D35BF8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4881CBBBCA300D35BF8 /* ViewController.swift */; };
+		FE3DE48C1CBBBCA300D35BF8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE3DE48A1CBBBCA300D35BF8 /* Main.storyboard */; };
+		FE3DE48F1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE48D1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld */; };
+		FE3DE4911CBBBCA300D35BF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE3DE4901CBBBCA300D35BF8 /* Assets.xcassets */; };
+		FE3DE4941CBBBCA300D35BF8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE3DE4921CBBBCA300D35BF8 /* LaunchScreen.storyboard */; };
+		FE3DE49F1CBBBCA300D35BF8 /* Traffic_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE49E1CBBBCA300D35BF8 /* Traffic_iOSTests.swift */; };
+		FE3DE4AA1CBBBCA300D35BF8 /* Traffic_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4A91CBBBCA300D35BF8 /* Traffic_iOSUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +38,20 @@
 			remoteGlobalIDString = BBEFDC041C80767B00C395B7;
 			remoteInfo = Traffic;
 		};
+		FE3DE49B1CBBBCA300D35BF8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BBEFDBFD1C80767B00C395B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE3DE4831CBBBCA300D35BF8;
+			remoteInfo = "Traffic-iOS";
+		};
+		FE3DE4A61CBBBCA300D35BF8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BBEFDBFD1C80767B00C395B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE3DE4831CBBBCA300D35BF8;
+			remoteInfo = "Traffic-iOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +67,20 @@
 		BBEFDC211C80767B00C395B7 /* TrafficUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrafficUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBEFDC251C80767B00C395B7 /* TrafficUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficUITests.swift; sourceTree = "<group>"; };
 		BBEFDC271C80767B00C395B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FE3DE4841CBBBCA300D35BF8 /* Traffic-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Traffic-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FE3DE4881CBBBCA300D35BF8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FE3DE48B1CBBBCA300D35BF8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FE3DE48E1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Traffic_iOS.xcdatamodel; sourceTree = "<group>"; };
+		FE3DE4901CBBBCA300D35BF8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FE3DE4931CBBBCA300D35BF8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		FE3DE4951CBBBCA300D35BF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FE3DE49A1CBBBCA300D35BF8 /* Traffic-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Traffic-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE3DE49E1CBBBCA300D35BF8 /* Traffic_iOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Traffic_iOSTests.swift; sourceTree = "<group>"; };
+		FE3DE4A01CBBBCA300D35BF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FE3DE4A51CBBBCA300D35BF8 /* Traffic-iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Traffic-iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE3DE4A91CBBBCA300D35BF8 /* Traffic_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Traffic_iOSUITests.swift; sourceTree = "<group>"; };
+		FE3DE4AB1CBBBCA300D35BF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +105,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FE3DE4811CBBBCA300D35BF8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE3DE4971CBBBCA300D35BF8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE3DE4A21CBBBCA300D35BF8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -78,6 +135,9 @@
 				BBEFDC071C80767B00C395B7 /* Traffic */,
 				BBEFDC191C80767B00C395B7 /* TrafficTests */,
 				BBEFDC241C80767B00C395B7 /* TrafficUITests */,
+				FE3DE4851CBBBCA300D35BF8 /* Traffic-iOS */,
+				FE3DE49D1CBBBCA300D35BF8 /* Traffic-iOSTests */,
+				FE3DE4A81CBBBCA300D35BF8 /* Traffic-iOSUITests */,
 				BBEFDC061C80767B00C395B7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +148,9 @@
 				BBEFDC051C80767B00C395B7 /* Traffic.app */,
 				BBEFDC161C80767B00C395B7 /* TrafficTests.xctest */,
 				BBEFDC211C80767B00C395B7 /* TrafficUITests.xctest */,
+				FE3DE4841CBBBCA300D35BF8 /* Traffic-iOS.app */,
+				FE3DE49A1CBBBCA300D35BF8 /* Traffic-iOSTests.xctest */,
+				FE3DE4A51CBBBCA300D35BF8 /* Traffic-iOSUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,6 +183,38 @@
 				BBEFDC271C80767B00C395B7 /* Info.plist */,
 			);
 			path = TrafficUITests;
+			sourceTree = "<group>";
+		};
+		FE3DE4851CBBBCA300D35BF8 /* Traffic-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */,
+				FE3DE4881CBBBCA300D35BF8 /* ViewController.swift */,
+				FE3DE48A1CBBBCA300D35BF8 /* Main.storyboard */,
+				FE3DE4901CBBBCA300D35BF8 /* Assets.xcassets */,
+				FE3DE4921CBBBCA300D35BF8 /* LaunchScreen.storyboard */,
+				FE3DE4951CBBBCA300D35BF8 /* Info.plist */,
+				FE3DE48D1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld */,
+			);
+			path = "Traffic-iOS";
+			sourceTree = "<group>";
+		};
+		FE3DE49D1CBBBCA300D35BF8 /* Traffic-iOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				FE3DE49E1CBBBCA300D35BF8 /* Traffic_iOSTests.swift */,
+				FE3DE4A01CBBBCA300D35BF8 /* Info.plist */,
+			);
+			path = "Traffic-iOSTests";
+			sourceTree = "<group>";
+		};
+		FE3DE4A81CBBBCA300D35BF8 /* Traffic-iOSUITests */ = {
+			isa = PBXGroup;
+			children = (
+				FE3DE4A91CBBBCA300D35BF8 /* Traffic_iOSUITests.swift */,
+				FE3DE4AB1CBBBCA300D35BF8 /* Info.plist */,
+			);
+			path = "Traffic-iOSUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,13 +273,66 @@
 			productReference = BBEFDC211C80767B00C395B7 /* TrafficUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		FE3DE4831CBBBCA300D35BF8 /* Traffic-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE3DE4B21CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "Traffic-iOS" */;
+			buildPhases = (
+				FE3DE4801CBBBCA300D35BF8 /* Sources */,
+				FE3DE4811CBBBCA300D35BF8 /* Frameworks */,
+				FE3DE4821CBBBCA300D35BF8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Traffic-iOS";
+			productName = "Traffic-iOS";
+			productReference = FE3DE4841CBBBCA300D35BF8 /* Traffic-iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FE3DE4991CBBBCA300D35BF8 /* Traffic-iOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE3DE4B31CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "Traffic-iOSTests" */;
+			buildPhases = (
+				FE3DE4961CBBBCA300D35BF8 /* Sources */,
+				FE3DE4971CBBBCA300D35BF8 /* Frameworks */,
+				FE3DE4981CBBBCA300D35BF8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FE3DE49C1CBBBCA300D35BF8 /* PBXTargetDependency */,
+			);
+			name = "Traffic-iOSTests";
+			productName = "Traffic-iOSTests";
+			productReference = FE3DE49A1CBBBCA300D35BF8 /* Traffic-iOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FE3DE4A41CBBBCA300D35BF8 /* Traffic-iOSUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE3DE4B41CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "Traffic-iOSUITests" */;
+			buildPhases = (
+				FE3DE4A11CBBBCA300D35BF8 /* Sources */,
+				FE3DE4A21CBBBCA300D35BF8 /* Frameworks */,
+				FE3DE4A31CBBBCA300D35BF8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FE3DE4A71CBBBCA300D35BF8 /* PBXTargetDependency */,
+			);
+			name = "Traffic-iOSUITests";
+			productName = "Traffic-iOSUITests";
+			productReference = FE3DE4A51CBBBCA300D35BF8 /* Traffic-iOSUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		BBEFDBFD1C80767B00C395B7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0720;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Vitaliy Timoshenko";
 				TargetAttributes = {
@@ -198,6 +346,17 @@
 					BBEFDC201C80767B00C395B7 = {
 						CreatedOnToolsVersion = 7.2;
 						TestTargetID = BBEFDC041C80767B00C395B7;
+					};
+					FE3DE4831CBBBCA300D35BF8 = {
+						CreatedOnToolsVersion = 7.3;
+					};
+					FE3DE4991CBBBCA300D35BF8 = {
+						CreatedOnToolsVersion = 7.3;
+						TestTargetID = FE3DE4831CBBBCA300D35BF8;
+					};
+					FE3DE4A41CBBBCA300D35BF8 = {
+						CreatedOnToolsVersion = 7.3;
+						TestTargetID = FE3DE4831CBBBCA300D35BF8;
 					};
 				};
 			};
@@ -217,6 +376,9 @@
 				BBEFDC041C80767B00C395B7 /* Traffic */,
 				BBEFDC151C80767B00C395B7 /* TrafficTests */,
 				BBEFDC201C80767B00C395B7 /* TrafficUITests */,
+				FE3DE4831CBBBCA300D35BF8 /* Traffic-iOS */,
+				FE3DE4991CBBBCA300D35BF8 /* Traffic-iOSTests */,
+				FE3DE4A41CBBBCA300D35BF8 /* Traffic-iOSUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -239,6 +401,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		BBEFDC1F1C80767B00C395B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE3DE4821CBBBCA300D35BF8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE3DE4941CBBBCA300D35BF8 /* LaunchScreen.storyboard in Resources */,
+				FE3DE4911CBBBCA300D35BF8 /* Assets.xcassets in Resources */,
+				FE3DE48C1CBBBCA300D35BF8 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE3DE4981CBBBCA300D35BF8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE3DE4A31CBBBCA300D35BF8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -273,6 +459,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FE3DE4801CBBBCA300D35BF8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE3DE4891CBBBCA300D35BF8 /* ViewController.swift in Sources */,
+				FE3DE48F1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld in Sources */,
+				FE3DE4871CBBBCA300D35BF8 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE3DE4961CBBBCA300D35BF8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE3DE49F1CBBBCA300D35BF8 /* Traffic_iOSTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE3DE4A11CBBBCA300D35BF8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FE3DE4AA1CBBBCA300D35BF8 /* Traffic_iOSUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -286,6 +498,16 @@
 			target = BBEFDC041C80767B00C395B7 /* Traffic */;
 			targetProxy = BBEFDC221C80767B00C395B7 /* PBXContainerItemProxy */;
 		};
+		FE3DE49C1CBBBCA300D35BF8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FE3DE4831CBBBCA300D35BF8 /* Traffic-iOS */;
+			targetProxy = FE3DE49B1CBBBCA300D35BF8 /* PBXContainerItemProxy */;
+		};
+		FE3DE4A71CBBBCA300D35BF8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FE3DE4831CBBBCA300D35BF8 /* Traffic-iOS */;
+			targetProxy = FE3DE4A61CBBBCA300D35BF8 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -295,6 +517,22 @@
 				BBEFDC0F1C80767B00C395B7 /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		FE3DE48A1CBBBCA300D35BF8 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FE3DE48B1CBBBCA300D35BF8 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		FE3DE4921CBBBCA300D35BF8 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FE3DE4931CBBBCA300D35BF8 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -456,6 +694,103 @@
 			};
 			name = Release;
 		};
+		FE3DE4AC1CBBBCA300D35BF8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Traffic-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vitaliy.traffic.TrafficiOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FE3DE4AD1CBBBCA300D35BF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Traffic-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vitaliy.traffic.TrafficiOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FE3DE4AE1CBBBCA300D35BF8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Traffic-iOSTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vitaliy.traffic.TrafficiOS.Traffic-iOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Traffic-iOS.app/Traffic-iOS";
+			};
+			name = Debug;
+		};
+		FE3DE4AF1CBBBCA300D35BF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Traffic-iOSTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vitaliy.traffic.TrafficiOS.Traffic-iOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Traffic-iOS.app/Traffic-iOS";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FE3DE4B01CBBBCA300D35BF8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Traffic-iOSUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vitaliy.traffic.TrafficiOS.Traffic-iOSUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = "Traffic-iOS";
+			};
+			name = Debug;
+		};
+		FE3DE4B11CBBBCA300D35BF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Traffic-iOSUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vitaliy.traffic.TrafficiOS.Traffic-iOSUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = "Traffic-iOS";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -475,6 +810,7 @@
 				BBEFDC2C1C80767B00C395B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BBEFDC2D1C80767B00C395B7 /* Build configuration list for PBXNativeTarget "TrafficTests" */ = {
 			isa = XCConfigurationList;
@@ -483,6 +819,7 @@
 				BBEFDC2F1C80767B00C395B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BBEFDC301C80767B00C395B7 /* Build configuration list for PBXNativeTarget "TrafficUITests" */ = {
 			isa = XCConfigurationList;
@@ -491,8 +828,46 @@
 				BBEFDC321C80767B00C395B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE3DE4B21CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "Traffic-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE3DE4AC1CBBBCA300D35BF8 /* Debug */,
+				FE3DE4AD1CBBBCA300D35BF8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		FE3DE4B31CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "Traffic-iOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE3DE4AE1CBBBCA300D35BF8 /* Debug */,
+				FE3DE4AF1CBBBCA300D35BF8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		FE3DE4B41CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "Traffic-iOSUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE3DE4B01CBBBCA300D35BF8 /* Debug */,
+				FE3DE4B11CBBBCA300D35BF8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		FE3DE48D1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FE3DE48E1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodel */,
+			);
+			currentVersion = FE3DE48E1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodel */;
+			path = Traffic_iOS.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = BBEFDBFD1C80767B00C395B7 /* Project object */;
 }
