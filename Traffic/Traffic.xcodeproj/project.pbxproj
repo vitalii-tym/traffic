@@ -21,6 +21,8 @@
 		FE3DE4941CBBBCA300D35BF8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE3DE4921CBBBCA300D35BF8 /* LaunchScreen.storyboard */; };
 		FE3DE49F1CBBBCA300D35BF8 /* Traffic_iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE49E1CBBBCA300D35BF8 /* Traffic_iOSTests.swift */; };
 		FE3DE4AA1CBBBCA300D35BF8 /* Traffic_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4A91CBBBCA300D35BF8 /* Traffic_iOSUITests.swift */; };
+		FE3DE4B61CBBBF5300D35BF8 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */; };
+		FE3DE4B81CBBCBA100D35BF8 /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +83,8 @@
 		FE3DE4A51CBBBCA300D35BF8 /* Traffic-iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Traffic-iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE3DE4A91CBBBCA300D35BF8 /* Traffic_iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Traffic_iOSUITests.swift; sourceTree = "<group>"; };
 		FE3DE4AB1CBBBCA300D35BF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
+		FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +194,8 @@
 			children = (
 				FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */,
 				FE3DE4881CBBBCA300D35BF8 /* ViewController.swift */,
+				FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */,
+				FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */,
 				FE3DE48A1CBBBCA300D35BF8 /* Main.storyboard */,
 				FE3DE4901CBBBCA300D35BF8 /* Assets.xcassets */,
 				FE3DE4921CBBBCA300D35BF8 /* LaunchScreen.storyboard */,
@@ -280,6 +286,7 @@
 				FE3DE4801CBBBCA300D35BF8 /* Sources */,
 				FE3DE4811CBBBCA300D35BF8 /* Frameworks */,
 				FE3DE4821CBBBCA300D35BF8 /* Resources */,
+				FE49FE851CBBEB49009255EE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -433,6 +440,22 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		FE49FE851CBBEB49009255EE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TAGS=\"TODO:|FIXME:|WARNING:\"\necho \"searching ${SRCROOT} for ${TAGS}\"\nfind \"${SRCROOT}\" \\( -name \"*.swift\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		BBEFDC011C80767B00C395B7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -463,6 +486,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE3DE4B81CBBCBA100D35BF8 /* Tasks.swift in Sources */,
+				FE3DE4B61CBBBF5300D35BF8 /* TaskCell.swift in Sources */,
 				FE3DE4891CBBBCA300D35BF8 /* ViewController.swift in Sources */,
 				FE3DE48F1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld in Sources */,
 				FE3DE4871CBBBCA300D35BF8 /* AppDelegate.swift in Sources */,
@@ -837,6 +862,7 @@
 				FE3DE4AD1CBBBCA300D35BF8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FE3DE4B31CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "Traffic-iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -845,6 +871,7 @@
 				FE3DE4AF1CBBBCA300D35BF8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FE3DE4B41CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "Traffic-iOSUITests" */ = {
 			isa = XCConfigurationList;
@@ -853,6 +880,7 @@
 				FE3DE4B11CBBBCA300D35BF8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

@@ -16,6 +16,7 @@ class ViewController: NSViewController {
         // Do any additional setup after loading the view.
     }
 
+    @IBOutlet weak var view_collectionView: UICollectionView!
     override var representedObject: AnyObject? {
         didSet {
         // Update the view, if already loaded.
