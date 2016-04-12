@@ -33,14 +33,16 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         let request = NSURLRequest(URL: NSURL(string: "https://jira.atlassian.com/projects/DEMO")!)
         let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
+            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                 self.request_data = data
                 self.request_response = response
                 self.request_error = error
                 if error == nil && data != nil {
                     self.tasks.addTask(Task(task_name: response!.description, task_description: response!.debugDescription))
                     }
-                self.view_collectionView.reloadData() //WARNING: this line supposedly results in auto-layout engine crashes. To be investigated.
-            }
+                self.view_collectionView.reloadData()
+            })
+        }
         dataTask.resume()
         
     }

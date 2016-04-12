@@ -24,6 +24,7 @@
 		FE3DE4B61CBBBF5300D35BF8 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */; };
 		FE3DE4B81CBBCBA100D35BF8 /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */; };
 		FE49FE871CBD07CA009255EE /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE49FE861CBD07CA009255EE /* NetworkController.swift */; };
+		FE49FE891CBD56C9009255EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE49FE881CBD56C9009255EE /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 		FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
 		FE49FE861CBD07CA009255EE /* NetworkController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
+		FE49FE881CBD56C9009255EE /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */,
+				FE49FE881CBD56C9009255EE /* LoginViewController.swift */,
 				FE3DE4881CBBBCA300D35BF8 /* ViewController.swift */,
 				FE49FE861CBD07CA009255EE /* NetworkController.swift */,
 				FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */,
@@ -489,6 +492,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE49FE891CBD56C9009255EE /* LoginViewController.swift in Sources */,
 				FE3DE4B81CBBCBA100D35BF8 /* Tasks.swift in Sources */,
 				FE3DE4B61CBBBF5300D35BF8 /* TaskCell.swift in Sources */,
 				FE49FE871CBD07CA009255EE /* NetworkController.swift in Sources */,
