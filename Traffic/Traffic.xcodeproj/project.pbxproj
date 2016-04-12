@@ -23,6 +23,7 @@
 		FE3DE4AA1CBBBCA300D35BF8 /* Traffic_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4A91CBBBCA300D35BF8 /* Traffic_iOSUITests.swift */; };
 		FE3DE4B61CBBBF5300D35BF8 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */; };
 		FE3DE4B81CBBCBA100D35BF8 /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */; };
+		FE49FE871CBD07CA009255EE /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE49FE861CBD07CA009255EE /* NetworkController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,7 @@
 		FE3DE4AB1CBBBCA300D35BF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
+		FE49FE861CBD07CA009255EE /* NetworkController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,6 +196,7 @@
 			children = (
 				FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */,
 				FE3DE4881CBBBCA300D35BF8 /* ViewController.swift */,
+				FE49FE861CBD07CA009255EE /* NetworkController.swift */,
 				FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */,
 				FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */,
 				FE3DE48A1CBBBCA300D35BF8 /* Main.storyboard */,
@@ -488,6 +491,7 @@
 			files = (
 				FE3DE4B81CBBCBA100D35BF8 /* Tasks.swift in Sources */,
 				FE3DE4B61CBBBF5300D35BF8 /* TaskCell.swift in Sources */,
+				FE49FE871CBD07CA009255EE /* NetworkController.swift in Sources */,
 				FE3DE4891CBBBCA300D35BF8 /* ViewController.swift in Sources */,
 				FE3DE48F1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld in Sources */,
 				FE3DE4871CBBBCA300D35BF8 /* AppDelegate.swift in Sources */,

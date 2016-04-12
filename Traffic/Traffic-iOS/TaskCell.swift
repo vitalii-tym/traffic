@@ -9,8 +9,6 @@
 import UIKit
 
 class aTask: UICollectionViewCell {
-    
     @IBOutlet weak var label_name: UILabel!
     @IBOutlet weak var label_description: UILabel!
-    
 }

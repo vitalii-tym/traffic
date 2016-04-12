@@ -11,7 +11,6 @@ import UIKit
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     let tasks: Tasks = Tasks.init()
-    
     var urlSession: NSURLSession!
     var request_data: NSData!
     var request_response: NSURLResponse!
@@ -22,7 +21,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     override func viewDidLoad() {
         super.viewDidLoad()
         tasks.createDummyTasks() //temporary creating some dummy data before we can get real data
-
+        
+        login()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -31,7 +31,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         self.urlSession = NSURLSession(configuration: configuration)
         
-        let request = NSURLRequest(URL: NSURL(string: "https://google.com")!)
+        let request = NSURLRequest(URL: NSURL(string: "https://jira.atlassian.com/projects/DEMO")!)
         let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
                 self.request_data = data
                 self.request_response = response
