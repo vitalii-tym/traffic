@@ -10,41 +10,35 @@ import UIKit
 
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
-    let tasks: Tasks = Tasks.init()
     var urlSession: NSURLSession!
-    var request_data: NSData!
-    var request_response: NSURLResponse!
-    var request_error: NSError!
+    var tasks: Tasks? {
+        didSet {
+            self.view_collectionView.reloadData()
+        }
+    }
     
     @IBOutlet weak var view_collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tasks.createDummyTasks() //temporary creating some dummy data before we can get real data
-        
-        login()
     }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         self.urlSession = NSURLSession(configuration: configuration)
         
-        let request = NSURLRequest(URL: NSURL(string: "https://jira.atlassian.com/projects/DEMO")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://fastlane.atlassian.net/rest/api/2/search?jql=assignee=currentUser()")!)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                self.request_data = data
-                self.request_response = response
-                self.request_error = error
                 if error == nil && data != nil {
-                    self.tasks.addTask(Task(task_name: response!.description, task_description: response!.debugDescription))
-                    }
-                self.view_collectionView.reloadData()
+                    self.tasks = Tasks(data: data!)
+                }
             })
         }
         dataTask.resume()
-        
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -63,15 +57,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tasks.taskslist.count
+        return self.tasks?.taskslist.count ?? 0
     }
-    
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TaskCell", forIndexPath: indexPath) as! aTask
         
-        cell.label_name.text = tasks.taskslist[indexPath.row].task_name
-        cell.label_description.text = tasks.taskslist[indexPath.row].task_description
+        cell.label_name.text = tasks?.taskslist[indexPath.row].task_name
+        cell.label_description.text = tasks?.taskslist[indexPath.row].task_summary
         
         return cell
     }

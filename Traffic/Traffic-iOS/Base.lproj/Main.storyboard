@@ -48,7 +48,7 @@
                         <outlet property="button_login" destination="4c9-A8-qK0" id="nK1-oM-JXC"/>
                         <outlet property="textfield_login" destination="aCY-d4-9Mm" id="EwK-f4-M6w"/>
                         <outlet property="textfield_password" destination="bMV-x8-uEa" id="eCH-fP-DCq"/>
-                        <segue destination="BYZ-38-t0r" kind="show" identifier="afterLogin" id="cb9-bu-QqY"/>
+                        <segue destination="BYZ-38-t0r" kind="showDetail" identifier="afterLogin" id="cb9-bu-QqY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="S2V-5A-3Ix" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -68,29 +68,29 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zJh-zy-Kuh">
-                                <rect key="frame" x="34" y="15" width="537" height="565"/>
+                                <rect key="frame" x="0.0" y="0.0" width="482" height="565"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="XFl-Yn-Bgd">
-                                    <size key="itemSize" width="537" height="80"/>
+                                    <size key="itemSize" width="483" height="101"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="center" reuseIdentifier="TaskCell" id="Ojn-Of-U6S" customClass="aTask" customModule="Traffic_iOS" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="537" height="80"/>
+                                        <rect key="frame" x="-0.5" y="0.0" width="483" height="101"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="537" height="80"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="483" height="101"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zsh-Zu-Qr5">
-                                                    <rect key="frame" x="6" y="8" width="184" height="46"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Description" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DP9-n0-lMk">
+                                                    <rect key="frame" x="84" y="18" width="205" height="83"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DP9-n0-lMk">
-                                                    <rect key="frame" x="227" y="0.0" width="263" height="60"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zsh-Zu-Qr5">
+                                                    <rect key="frame" x="6" y="8" width="71" height="93"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -118,7 +118,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1065" y="278"/>
+            <point key="canvasLocation" x="1090" y="278"/>
         </scene>
     </scenes>
 </document>
