@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Login View Controller-->
@@ -17,18 +18,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="username" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="bMV-x8-uEa">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="username" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="bMV-x8-uEa" userLabel="Textfield login">
                                 <rect key="frame" x="165" y="146" width="270" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="270" id="XeD-wb-zUD"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" enablesReturnKeyAutomatically="YES"/>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="center" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="aCY-d4-9Mm">
-                                <rect key="frame" x="165" y="186" width="270" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="270" id="wAF-dc-Msz"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" enablesReturnKeyAutomatically="YES"/>
@@ -65,6 +58,14 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="center" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="login" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="aCY-d4-9Mm" userLabel="Textfield password">
+                                <rect key="frame" x="165" y="188" width="270" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="270" id="wAF-dc-Msz"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -95,8 +96,8 @@
                     <connections>
                         <outlet property="button_login" destination="4c9-A8-qK0" id="nK1-oM-JXC"/>
                         <outlet property="textfield_domain" destination="tJC-SB-Tu4" id="e18-dH-oJb"/>
-                        <outlet property="textfield_login" destination="aCY-d4-9Mm" id="EwK-f4-M6w"/>
-                        <outlet property="textfield_password" destination="bMV-x8-uEa" id="eCH-fP-DCq"/>
+                        <outlet property="textfield_login" destination="bMV-x8-uEa" id="9Pn-eE-FMi"/>
+                        <outlet property="textfield_password" destination="aCY-d4-9Mm" id="gyU-AF-saG"/>
                         <segue destination="GnQ-Ed-rb8" kind="showDetail" identifier="afterLogin" id="cb9-bu-QqY"/>
                     </connections>
                 </viewController>
@@ -126,27 +127,42 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="center" reuseIdentifier="TaskCell" id="Ojn-Of-U6S" customClass="aTask" customModule="Traffic_iOS" customModuleProvider="target">
-                                        <rect key="frame" x="-1" y="64" width="484" height="101"/>
+                                        <rect key="frame" x="-0.5" y="64" width="483" height="101"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="484" height="101"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="483" height="101"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Description" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DP9-n0-lMk">
-                                                    <rect key="frame" x="84" y="18" width="205" height="83"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zsh-Zu-Qr5">
+                                                    <rect key="frame" x="443" y="8" width="33" height="14.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zsh-Zu-Qr5">
-                                                    <rect key="frame" x="6" y="8" width="71" height="93"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Description" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DP9-n0-lMk">
+                                                    <rect key="frame" x="0.0" y="42.5" width="484" height="16"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <constraints>
+                                            <constraint firstItem="DP9-n0-lMk" firstAttribute="width" secondItem="Ojn-Of-U6S" secondAttribute="width" id="4WZ-EN-DOo"/>
+                                            <constraint firstItem="DP9-n0-lMk" firstAttribute="centerY" secondItem="Ojn-Of-U6S" secondAttribute="centerY" id="Gqy-vL-tXr"/>
+                                            <constraint firstItem="DP9-n0-lMk" firstAttribute="leading" secondItem="Ojn-Of-U6S" secondAttribute="leadingMargin" id="RNr-VV-SUD"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="DP9-n0-lMk" secondAttribute="bottom" constant="10" id="SLx-CL-JfQ"/>
+                                            <constraint firstItem="Zsh-Zu-Qr5" firstAttribute="trailing" secondItem="Ojn-Of-U6S" secondAttribute="trailingMargin" id="ctx-wK-bYk"/>
+                                            <constraint firstItem="DP9-n0-lMk" firstAttribute="centerX" secondItem="Ojn-Of-U6S" secondAttribute="centerX" id="goU-CO-XAl"/>
+                                            <constraint firstItem="Zsh-Zu-Qr5" firstAttribute="top" secondItem="Ojn-Of-U6S" secondAttribute="topMargin" id="wYE-0p-E8D"/>
+                                        </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="RNr-VV-SUD"/>
+                                                <exclude reference="SLx-CL-JfQ"/>
+                                            </mask>
+                                        </variation>
                                         <connections>
                                             <outlet property="label_description" destination="DP9-n0-lMk" id="kFe-Wg-fT7"/>
                                             <outlet property="label_name" destination="Zsh-Zu-Qr5" id="Nhg-UO-AjA"/>

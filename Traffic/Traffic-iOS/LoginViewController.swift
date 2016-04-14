@@ -69,6 +69,13 @@ class LoginViewController: UIViewController {
         let dataTask: NSURLSessionDataTask = urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                 if error == nil && data != nil {
+                    
+                    do {
+                        let jsonObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject> //to be parsed in future in order to show a reason of an error
+                    }
+                    catch {  }
+                    
+                    
                     self.performSegueWithIdentifier("afterLogin", sender: nil)
                 }
             })
