@@ -14,9 +14,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     var tasks: Tasks? {
         didSet {
             self.view_collectionView.reloadData()
+            }
         }
-    }
-    
     var chosenIssueDescription: String!
     
     @IBOutlet weak var view_collectionView: UICollectionView!
@@ -30,7 +29,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         self.urlSession = NSURLSession(configuration: configuration)
-        
         let request = NSMutableURLRequest(URL: NSURL(string: "https://fastlane.atlassian.net/rest/api/2/search?jql=assignee=currentUser()")!)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
@@ -42,7 +40,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
         dataTask.resume()
     }
-
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1

@@ -9,12 +9,12 @@
 import UIKit
 
 class LoginViewController: UIViewController {
-
-    var urlSession: NSURLSession!
     
     @IBOutlet weak var textfield_login: UITextField!
     @IBOutlet weak var textfield_password: UITextField!
     @IBOutlet weak var button_login: UIButton!
+    
+    var urlSession: NSURLSession!
     
     override func viewDidLoad() {
         super.viewDidLoad()
