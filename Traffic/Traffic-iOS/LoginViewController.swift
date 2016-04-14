@@ -10,6 +10,7 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
+    @IBOutlet weak var textfield_domain: UITextField!
     @IBOutlet weak var textfield_login: UITextField!
     @IBOutlet weak var textfield_password: UITextField!
     @IBOutlet weak var button_login: UIButton!
@@ -48,19 +49,19 @@ class LoginViewController: UIViewController {
     @IBAction func action_login_pressed(sender: UIButton) {
             print("Login pressed")
             let loginParameters: String = "{ \"username\": \"\(textfield_login.text!)\", \"password\": \"\(textfield_password.text!)\" }"
-            login(with: loginParameters)
+        let domain: String = "https://\(textfield_domain.text!)"
+            login(with: loginParameters, and: domain)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
-    func login(with logincredentials: String) {
-        let jiraURL = "https://fastlane.atlassian.net"
+    func login(with logincredentials: String, and domain: String) {
         let loginURLsuffix = "/rest/auth/1/session"
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         self.urlSession = NSURLSession(configuration: configuration)
-        let request = NSMutableURLRequest(URL: NSURL(string: jiraURL+loginURLsuffix)!)
+        let request = NSMutableURLRequest(URL: NSURL(string: domain+loginURLsuffix)!)
         request.HTTPMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = logincredentials.dataUsingEncoding(NSASCIIStringEncoding)!
