@@ -17,6 +17,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         }
     }
     
+    var chosenIssueDescription: String!
+    
     @IBOutlet weak var view_collectionView: UICollectionView!
     
     override func viewDidLoad() {
@@ -41,16 +43,6 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         dataTask.resume()
     }
 
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        self.urlSession.invalidateAndCancel()
-        self.urlSession = nil
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
@@ -62,11 +54,34 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TaskCell", forIndexPath: indexPath) as! aTask
-        
         cell.label_name.text = tasks?.taskslist[indexPath.row].task_name
         cell.label_description.text = tasks?.taskslist[indexPath.row].task_summary
-        
         return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        chosenIssueDescription = (tasks?.taskslist[indexPath.row].task_summary)!
+        self.performSegueWithIdentifier("issueDetails", sender: nil)
+    }
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "issueDetails" {
+            guard let destionationViewController = segue.destinationViewController as? IssueDetailsViewController else {
+                return
+            }
+            destionationViewController.target_text = chosenIssueDescription
+        }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.urlSession.invalidateAndCancel()
+        self.urlSession = nil
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
     }
     
 }

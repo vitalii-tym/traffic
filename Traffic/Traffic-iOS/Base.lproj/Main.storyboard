@@ -35,9 +35,9 @@
                                     <action selector="action_login_pressed:" destination="0JR-NX-GBK" eventType="touchUpInside" id="IXV-o4-Kku"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Please enter JIRA login and password" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BSE-ZQ-GHu">
-                                <rect key="frame" x="20" y="162" width="334" height="32"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Please enter JIRA login and password" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BSE-ZQ-GHu">
+                                <rect key="frame" x="20" y="162" width="246" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -48,14 +48,14 @@
                         <outlet property="button_login" destination="4c9-A8-qK0" id="nK1-oM-JXC"/>
                         <outlet property="textfield_login" destination="aCY-d4-9Mm" id="EwK-f4-M6w"/>
                         <outlet property="textfield_password" destination="bMV-x8-uEa" id="eCH-fP-DCq"/>
-                        <segue destination="BYZ-38-t0r" kind="showDetail" identifier="afterLogin" id="cb9-bu-QqY"/>
+                        <segue destination="GnQ-Ed-rb8" kind="showDetail" identifier="afterLogin" id="cb9-bu-QqY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="S2V-5A-3Ix" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="403" y="278"/>
         </scene>
-        <!--View Controller-->
+        <!--Tasks-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Traffic_iOS" customModuleProvider="target" sceneMemberID="viewController">
@@ -77,10 +77,10 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="center" reuseIdentifier="TaskCell" id="Ojn-Of-U6S" customClass="aTask" customModule="Traffic_iOS" customModuleProvider="target">
-                                        <rect key="frame" x="-0.5" y="0.0" width="483" height="101"/>
+                                        <rect key="frame" x="-1" y="64" width="484" height="101"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="483" height="101"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="484" height="101"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Description" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DP9-n0-lMk">
@@ -112,13 +112,68 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Tasks" id="6PO-bB-dUa"/>
                     <connections>
                         <outlet property="view_collectionView" destination="zJh-zy-Kuh" id="b5D-cL-x7G"/>
+                        <segue destination="sz5-hb-Gft" kind="show" identifier="issueDetails" id="u8H-kH-fNc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1090" y="278"/>
+            <point key="canvasLocation" x="1787" y="415"/>
+        </scene>
+        <!--Task Details-->
+        <scene sceneID="7gl-eI-sf6">
+            <objects>
+                <viewController title="Task Details" id="sz5-hb-Gft" customClass="IssueDetailsViewController" customModule="Traffic_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="iqI-Pz-Byz"/>
+                        <viewControllerLayoutGuide type="bottom" id="ShW-I2-Huv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="QCd-60-okE">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="sample test text" translatesAutoresizingMaskIntoConstraints="NO" id="A5Z-lD-kvr">
+                                <rect key="frame" x="20" y="68" width="225" height="277"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <connections>
+                                    <outlet property="delegate" destination="sz5-hb-Gft" id="Gvu-UT-jRK"/>
+                                </connections>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Task Details" id="JRq-sE-2fi">
+                        <barButtonItem key="backBarButtonItem" title="Details" id="yAA-Wp-AuT"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="textview_IssueDetails" destination="A5Z-lD-kvr" id="WCT-qd-BNg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l3Y-pC-pvN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2449" y="415"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="6OW-w3-6au">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="GnQ-Ed-rb8" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Y95-CT-Ett">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="AeH-4l-3K8"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="85B-W9-FFO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1121" y="415"/>
         </scene>
     </scenes>
 </document>
