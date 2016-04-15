@@ -16,7 +16,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             self.view_collectionView.reloadData()
             }
         }
-    var chosenIssueDescription: String!
+    var aTasktoPass: Task!
     
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
@@ -74,7 +74,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        chosenIssueDescription = (tasks?.taskslist[indexPath.row].task_summary)!
+        aTasktoPass = (tasks?.taskslist[indexPath.row])!
         self.performSegueWithIdentifier("issueDetails", sender: nil)
     }
 
@@ -83,7 +83,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             guard let destionationViewController = segue.destinationViewController as? IssueDetailsViewController else {
                 return
             }
-            destionationViewController.target_text = chosenIssueDescription
+            destionationViewController.aTask = aTasktoPass
         }
     }
     

@@ -15,9 +15,11 @@ func fixJsonData (data: NSData) -> NSData {
 }
 
 struct Task {
-    let task_name: String
-    let task_summary: String
-    let task_priority: String
+    var task_name: String
+    var task_summary: String
+    var task_priority: String
+    var task_description: String
+    var task_status: String
 }
 
 class Tasks {
@@ -56,16 +58,25 @@ class Tasks {
                 guard let issue_fields_Dict = itemDict["fields"] as? Dictionary<String,AnyObject> else {
                     continue
                 }
+                guard let issue_description = issue_fields_Dict["description"] as? String else {
+                    continue
+                }
                 guard let issue_priority_Dict = issue_fields_Dict["priority"] as? Dictionary<String,AnyObject> else {
                     continue
                 }
                 guard let issue_priority = issue_priority_Dict["name"] as? String else {
                     continue
                 }
+                guard let issue_status_Dict = issue_fields_Dict["status"] as? Dictionary<String,AnyObject> else {
+                    continue
+                }
+                guard let issue_status = issue_status_Dict["name"] as? String else {
+                    continue
+                }
                 guard let issue_summary = issue_fields_Dict["summary"] as? String else {
                     continue
                 }
-            newTasks.append(Task(task_name: issue_key ?? "(no title)", task_summary: issue_summary, task_priority: issue_priority))
+            newTasks.append(Task(task_name: issue_key ?? "(no title)", task_summary: issue_summary, task_priority: issue_priority, task_description: issue_description, task_status: issue_status))
         }
         
         self.init(tasks: newTasks)
