@@ -1,0 +1,2475 @@
+{
+	"expand": "schema,names",
+	"startAt": 0,
+	"maxResults": 50,
+	"total": 16,
+	"issues": [{
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10015",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10015",
+		"key": "TEST-16",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10002",
+				"id": "10002",
+				"description": "A task that needs to be done.",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+				"name": "Task",
+				"subtask": false,
+				"avatarId": 10318
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [{
+				"self": "https://fastlane.atlassian.net/rest/api/2/version/10000",
+				"id": "10000",
+				"name": "1.0",
+				"archived": false,
+				"released": true
+			}],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": "2016-04-13T14:01:32.777+0300",
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-16/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-03-29T07:55:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-07T15:49:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10002",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Done",
+				"id": "10002",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+					"id": 3,
+					"key": "done",
+					"colorName": "green",
+					"name": "Done"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": null,
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@b334fe",
+			"aggregatetimeestimate": null,
+			"summary": "Issues like this one that are marked as fixed in a released version do not show up in Work mode but are included in the reports",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0003b:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-16/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10014",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10014",
+		"key": "TEST-15",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10002",
+				"id": "10002",
+				"description": "A task that needs to be done.",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+				"name": "Task",
+				"subtask": false,
+				"avatarId": 10318
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [{
+				"self": "https://fastlane.atlassian.net/rest/api/2/version/10000",
+				"id": "10000",
+				"name": "1.0",
+				"archived": false,
+				"released": true
+			}],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-15/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-03-27T08:23:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-05T20:25:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10002",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Done",
+				"id": "10002",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+					"id": 3,
+					"key": "done",
+					"colorName": "green",
+					"name": "Done"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": null,
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@14a4e79",
+			"aggregatetimeestimate": null,
+			"summary": "Issues like this one that are marked as fixed in a released version do not show up in Work mode but are included in the reports",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i00033:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-15/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10013",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10013",
+		"key": "TEST-14",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10002",
+				"id": "10002",
+				"description": "A task that needs to be done.",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+				"name": "Task",
+				"subtask": false,
+				"avatarId": 10318
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [{
+				"self": "https://fastlane.atlassian.net/rest/api/2/version/10000",
+				"id": "10000",
+				"name": "1.0",
+				"archived": false,
+				"released": true
+			}],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-14/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-03-24T00:17:52.000+0200",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-04T19:53:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10002",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Done",
+				"id": "10002",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+					"id": 3,
+					"key": "done",
+					"colorName": "green",
+					"name": "Done"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": null,
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@161ef1b",
+			"aggregatetimeestimate": null,
+			"summary": "Issues like this one that are marked as fixed in a released version do not show up in Work mode but are included in the reports",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0002v:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-14/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10012",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10012",
+		"key": "TEST-13",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10002",
+				"id": "10002",
+				"description": "A task that needs to be done.",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+				"name": "Task",
+				"subtask": false,
+				"avatarId": 10318
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [{
+				"self": "https://fastlane.atlassian.net/rest/api/2/version/10000",
+				"id": "10000",
+				"name": "1.0",
+				"archived": false,
+				"released": true
+			}],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-13/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-03-26T00:02:52.000+0200",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-06T16:57:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10002",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Done",
+				"id": "10002",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+					"id": 3,
+					"key": "done",
+					"colorName": "green",
+					"name": "Done"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": null,
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@10bb53d",
+			"aggregatetimeestimate": null,
+			"summary": "Issues like this one that are marked as fixed in a released version do not show up in Work mode but are included in the reports",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0002n:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-13/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10011",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10011",
+		"key": "TEST-12",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10002",
+				"id": "10002",
+				"description": "A task that needs to be done.",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+				"name": "Task",
+				"subtask": false,
+				"avatarId": 10318
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [{
+				"self": "https://fastlane.atlassian.net/rest/api/2/version/10000",
+				"id": "10000",
+				"name": "1.0",
+				"archived": false,
+				"released": true
+			}],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-12/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-03-30T01:42:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-08T04:40:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10002",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Done",
+				"id": "10002",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+					"id": 3,
+					"key": "done",
+					"colorName": "green",
+					"name": "Done"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": null,
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@cd9f5c",
+			"aggregatetimeestimate": null,
+			"summary": "Issues like this one that are marked as fixed in a released version do not show up in Work mode but are included in the reports",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0002f:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-12/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10010",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10010",
+		"key": "TEST-11",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10002",
+				"id": "10002",
+				"description": "A task that needs to be done.",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+				"name": "Task",
+				"subtask": false,
+				"avatarId": 10318
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [{
+				"self": "https://fastlane.atlassian.net/rest/api/2/version/10000",
+				"id": "10000",
+				"name": "1.0",
+				"archived": false,
+				"released": true
+			}],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-11/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-04-02T10:03:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-09T06:38:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10002",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Done",
+				"id": "10002",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+					"id": 3,
+					"key": "done",
+					"colorName": "green",
+					"name": "Done"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": null,
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@c8e8a1",
+			"aggregatetimeestimate": null,
+			"summary": "Issues like this one that are marked as fixed in a released version do not show up in Work mode but are included in the reports",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i00027:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-11/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10009",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10009",
+		"key": "TEST-10",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10001",
+				"id": "10001",
+				"description": "gh.issue.story.desc",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/issuetypes/story.svg",
+				"name": "Story",
+				"subtask": false
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-10/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-04-04T14:25:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-10T13:25:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10002",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Done",
+				"id": "10002",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+					"id": 3,
+					"key": "done",
+					"colorName": "green",
+					"name": "Done"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": "*To delete this Sample Project _(must be performed by a user with Administration rights)_* \n- Open the administration interface to the projects page by using the keyboard shortcut 'g' then 'g' and typing 'Projects' in to the search dialog\n- Select the \"Delete\" link for the \"test\" project\n\n*To delete the Sample Project workflow and workflow scheme _(must be performed by a user with Administration rights)_* \n- Open the administration interface to the workflow schemes page by using the keyboard shortcut 'g' then 'g' and typing 'Workflow Schemes' in to the search dialog\n- Select the \"Delete\" link for the \"TEST: Agile Simplified Workflow Scheme\" workflow scheme\n- Go to the workflows page by using the keyboard shortcut 'g' then 'g' and typing 'Workflows' in to the search dialog(_OnDemand users should select the second match for Workflows_)\n- Expand the \"Inactive\" section\n- Select the \"Delete\" link for the \"Agile Simplified Workflow  for Project TEST\" workflow\n\n*To delete this Board _(must be performed by the owner of this Board or an Administrator)_*\n- Click the \"Tools\" cog at the top right of this board\n- Select \"Delete\"",
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10008": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@15f7a3f",
+			"aggregatetimeestimate": null,
+			"summary": "Instructions for deleting this sample board and project are in the description for this issue >> Click the \"TEST-10\" link and read the description tab of the detail view for more",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0001z:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-10/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10008",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10008",
+		"key": "TEST-9",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10004",
+				"id": "10004",
+				"description": "jira.translation.issuetype.bug.name.desc",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+				"name": "Bug",
+				"subtask": false,
+				"avatarId": 10303
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-9/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-04-06T14:25:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-11T14:03:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10002",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Done",
+				"id": "10002",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+					"id": 3,
+					"key": "done",
+					"colorName": "green",
+					"name": "Done"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": null,
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@153f688",
+			"aggregatetimeestimate": null,
+			"summary": "As teams develop with Kanban they get better at reducing average resolution time (aka Cycle time). The Control Chart in the Reports shows this information",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0001r:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-9/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10007",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10007",
+		"key": "TEST-8",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10004",
+				"id": "10004",
+				"description": "jira.translation.issuetype.bug.name.desc",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+				"name": "Bug",
+				"subtask": false,
+				"avatarId": 10303
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-8/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-04-08T14:25:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-12T13:30:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10002",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Done",
+				"id": "10002",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+					"id": 3,
+					"key": "done",
+					"colorName": "green",
+					"name": "Done"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": "*Creating Quick Filters*\n\nYou can add your own Quick Filters in the board configuration (select *Board > Configure*)",
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@1fd96b3",
+			"aggregatetimeestimate": null,
+			"summary": "Filters at the top of the board allow you to quickly cut down the shown items >> Try clicking the \"Recently Updated\" to hide work items not updated in the past day",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0001j:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-8/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10006",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10006",
+		"key": "TEST-7",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10004",
+				"id": "10004",
+				"description": "jira.translation.issuetype.bug.name.desc",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+				"name": "Bug",
+				"subtask": false,
+				"avatarId": 10303
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-7/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-04-08T14:25:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-11T04:25:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/3",
+				"description": "This issue is being actively worked on at the moment by the assignee.",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/statuses/inprogress.png",
+				"name": "In Progress",
+				"id": "3",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/4",
+					"id": 4,
+					"key": "indeterminate",
+					"colorName": "yellow",
+					"name": "In Progress"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": "*Setting Constraints*\n\nYou can set limits (constraints) for columns on this board by editing the board's configuration (select *Board > Configure*)",
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@1470790",
+			"aggregatetimeestimate": null,
+			"summary": "... so 2 work items violate the limit and cause the column to be highlighted",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0001b:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-7/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10005",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10005",
+		"key": "TEST-6",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10004",
+				"id": "10004",
+				"description": "jira.translation.issuetype.bug.name.desc",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+				"name": "Bug",
+				"subtask": false,
+				"avatarId": 10303
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-6/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-04-04T04:25:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-10T09:48:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/3",
+				"description": "This issue is being actively worked on at the moment by the assignee.",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/statuses/inprogress.png",
+				"name": "In Progress",
+				"id": "3",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/4",
+					"id": 4,
+					"key": "indeterminate",
+					"colorName": "yellow",
+					"name": "In Progress"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": null,
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@13e39b8",
+			"aggregatetimeestimate": null,
+			"summary": "Work In Progress (WIP) limits highlight delays. This column's limit is 1...",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i00013:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-6/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10004",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10004",
+		"key": "TEST-5",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10004",
+				"id": "10004",
+				"description": "jira.translation.issuetype.bug.name.desc",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+				"name": "Bug",
+				"subtask": false,
+				"avatarId": 10303
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-5/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-04-03T14:25:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-03T14:25:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10000",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Backlog",
+				"id": "10000",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/2",
+					"id": 2,
+					"key": "new",
+					"colorName": "blue-gray",
+					"name": "To Do"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": "*Creating Columns*\n\nYou can also add columns to this board by editing its configuration (select *Board > Configure*)",
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@1fbb1f0",
+			"aggregatetimeestimate": null,
+			"summary": "Work items flow through different stages from left to right >> Try dragging this card to \"Selected for Development\"",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0000v:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-5/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10003",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10003",
+		"key": "TEST-4",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10004",
+				"id": "10004",
+				"description": "jira.translation.issuetype.bug.name.desc",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+				"name": "Bug",
+				"subtask": false,
+				"avatarId": 10303
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-4/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-03-31T14:25:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-09T12:20:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10000",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Backlog",
+				"id": "10000",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/2",
+					"id": 2,
+					"key": "new",
+					"colorName": "blue-gray",
+					"name": "To Do"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": null,
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@fc35aa",
+			"aggregatetimeestimate": null,
+			"summary": "Work items are ranked in priority order (from top to bottom) >> Try dragging this card over the card below to rank its priority lower",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0000n:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-4/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10002",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10002",
+		"key": "TEST-3",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10004",
+				"id": "10004",
+				"description": "jira.translation.issuetype.bug.name.desc",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+				"name": "Bug",
+				"subtask": false,
+				"avatarId": 10303
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-3/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-04-12T14:25:53.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/3",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/medium.svg",
+				"name": "Medium",
+				"id": "3"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-12T14:25:53.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10000",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Backlog",
+				"id": "10000",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/2",
+					"id": 2,
+					"key": "new",
+					"colorName": "blue-gray",
+					"name": "To Do"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": "*Creating Issues*\n\nWhen you click \"+ Create Issue\" you will be asked for the correct project (select \"test\").",
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@109532b",
+			"aggregatetimeestimate": null,
+			"summary": "Add work items with \"+ Create Issue\" at the top right of the screen >> Try adding a new card now",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i0000f:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-3/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10001",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10001",
+		"key": "TEST-2",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10002",
+				"id": "10002",
+				"description": "A task that needs to be done.",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+				"name": "Task",
+				"subtask": false,
+				"avatarId": 10318
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-2/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-04-11T14:25:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/1",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/highest.svg",
+				"name": "Highest",
+				"id": "1"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-12T09:13:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10001",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Selected for Development",
+				"id": "10001",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/2",
+					"id": 2,
+					"key": "new",
+					"colorName": "blue-gray",
+					"name": "To Do"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": "*Creating Swimlanes*\n\nYou can create your own Swimlanes for this board by editing its configuration (select *Board > Configure*)",
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@12ebcf",
+			"aggregatetimeestimate": null,
+			"summary": "Kanban boards are often divided into streams of work, aka Swimlanes. By default, Kanban boards include an \"Expedite\" swimlane for items marked with the highest priority (like this one)",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|i00007:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-2/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}, {
+		"expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+		"id": "10000",
+		"self": "https://fastlane.atlassian.net/rest/api/2/issue/10000",
+		"key": "TEST-1",
+		"fields": {
+			"issuetype": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issuetype/10002",
+				"id": "10002",
+				"description": "A task that needs to be done.",
+				"iconUrl": "https://fastlane.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+				"name": "Task",
+				"subtask": false,
+				"avatarId": 10318
+			},
+			"timespent": null,
+			"project": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/project/10000",
+				"id": "10000",
+				"key": "TEST",
+				"name": "test",
+				"avatarUrls": {
+					"48x48": "https://fastlane.atlassian.net/secure/projectavatar?avatarId=10324",
+					"24x24": "https://fastlane.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+					"16x16": "https://fastlane.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+					"32x32": "https://fastlane.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+				}
+			},
+			"fixVersions": [],
+			"aggregatetimespent": null,
+			"resolution": null,
+			"resolutiondate": null,
+			"workratio": -1,
+			"lastViewed": null,
+			"watches": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-1/watchers",
+				"watchCount": 0,
+				"isWatching": false
+			},
+			"created": "2016-04-12T11:49:52.000+0300",
+			"customfield_10020": null,
+			"customfield_10021": "Not started",
+			"customfield_10022": null,
+			"priority": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/priority/1",
+				"iconUrl": "https://fastlane.atlassian.net/images/icons/priorities/highest.svg",
+				"name": "Highest",
+				"id": "1"
+			},
+			"labels": [],
+			"customfield_10016": null,
+			"customfield_10017": null,
+			"customfield_10018": null,
+			"customfield_10019": null,
+			"timeestimate": null,
+			"aggregatetimeoriginalestimate": null,
+			"versions": [],
+			"issuelinks": [],
+			"assignee": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"updated": "2016-04-12T11:49:52.000+0300",
+			"status": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/status/10000",
+				"description": "",
+				"iconUrl": "https://fastlane.atlassian.net/",
+				"name": "Backlog",
+				"id": "10000",
+				"statusCategory": {
+					"self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/2",
+					"id": 2,
+					"key": "new",
+					"colorName": "blue-gray",
+					"name": "To Do"
+				}
+			},
+			"components": [],
+			"timeoriginalestimate": null,
+			"description": "*About Kanban*\n\n[Kanban|http://en.wikipedia.org/wiki/Kanban_(development)] is part of the Toyota Lean Manufacturing methodology but was popularised for use in IT by David Anderson. Broadly speaking it aims to optimize outcomes by: \n  - Prioritizing items that are added to the potential work list then only commencing work on items when capacity exists to take them on \n  - Tracking items in progress so that items that have started are completed before new work is taken on \n  - Ensuring that items that are in progress do not get blocked indefinitely at any particular stage of the work \n\nYou can check out many Kanban resources at http://agilemanagement.net/\n\n*To close this view of this task (called the Detail view), click the cross in the top right corner*",
+			"customfield_10010": null,
+			"customfield_10011": null,
+			"customfield_10012": null,
+			"customfield_10013": null,
+			"customfield_10014": null,
+			"customfield_10015": null,
+			"customfield_10009": "com.atlassian.servicedesk.plugins.approvals.internal.customfield.ApprovalsCFValue@caa1f4",
+			"aggregatetimeestimate": null,
+			"summary": "Kanban cards represent work items >> Click the \"TEST-1\" link at the top of this card to show the Detail view - there's more on Kanban in the 'Description' section",
+			"creator": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"subtasks": [],
+			"reporter": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/user?username=admin",
+				"name": "admin",
+				"key": "admin",
+				"emailAddress": "post.vitaliy@gmail.com",
+				"avatarUrls": {
+					"48x48": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=48",
+					"24x24": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=24",
+					"16x16": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=16",
+					"32x32": "https://secure.gravatar.com/avatar/131a8d80cd806e47dc8191eaf9d06de6?d=mm&s=32"
+				},
+				"displayName": "Vitaliy Tim [Administrator]",
+				"active": true,
+				"timeZone": "Europe/Helsinki"
+			},
+			"customfield_10000": null,
+			"aggregateprogress": {
+				"progress": 0,
+				"total": 0
+			},
+			"customfield_10001": null,
+			"customfield_10002": "0|hzzzzz:",
+			"customfield_10003": null,
+			"customfield_10004": null,
+			"environment": null,
+			"duedate": null,
+			"progress": {
+				"progress": 0,
+				"total": 0
+			},
+			"votes": {
+				"self": "https://fastlane.atlassian.net/rest/api/2/issue/TEST-1/votes",
+				"votes": 0,
+				"hasVoted": false
+			}
+		}
+	}]
+}
