@@ -47,10 +47,9 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func action_login_pressed(sender: UIButton) {
-            print("Login pressed")
-            let loginParameters: String = "{ \"username\": \"\(textfield_login.text!)\", \"password\": \"\(textfield_password.text!)\" }"
+        let loginParameters: String = "{ \"username\": \"\(textfield_login.text!)\", \"password\": \"\(textfield_password.text!)\" }"
         let domain: String = "https://\(textfield_domain.text!)"
-            login(with: loginParameters, and: domain)
+        login(with: loginParameters, and: domain)
     }
 
     override func didReceiveMemoryWarning() {

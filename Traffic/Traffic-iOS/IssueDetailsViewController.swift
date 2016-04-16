@@ -20,10 +20,20 @@ class IssueDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         textview_IssueSummary.text = aTask.task_summary
-        textview_IssueDetails.text = aTask.task_description
+        
+        if aTask.task_description != nil
+            { textview_IssueDetails.text = aTask.task_description }
+        else {
+            textview_IssueDetails.text = "(no description)"
+            textview_IssueDetails.font = UIFont.italicSystemFontOfSize(12.0)
+            }
+        
         label_priority.text = aTask.task_priority
+        
         label_status.text = aTask.task_status
+
     }
     
     override func viewWillAppear(animated: Bool) {
