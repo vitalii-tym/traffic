@@ -25,6 +25,7 @@
 		FE3DE4B61CBBBF5300D35BF8 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */; };
 		FE3DE4B81CBBCBA100D35BF8 /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */; };
 		FE49FE891CBD56C9009255EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE49FE881CBD56C9009255EE /* LoginViewController.swift */; };
+		FEC7BAB91CC62AEE001A2181 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC7BAB81CC62AEE001A2181 /* Security.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
 		FE49FE881CBD56C9009255EE /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		FEC7BAB81CC62AEE001A2181 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEC7BAB91CC62AEE001A2181 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,6 +149,7 @@
 				FE3DE4851CBBBCA300D35BF8 /* Traffic-iOS */,
 				FE3DE49D1CBBBCA300D35BF8 /* Traffic-iOSTests */,
 				FE3DE4A81CBBBCA300D35BF8 /* Traffic-iOSUITests */,
+				FEC7BABA1CC62AF4001A2181 /* frameworks */,
 				BBEFDC061C80767B00C395B7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -227,6 +231,14 @@
 				FE3DE4AB1CBBBCA300D35BF8 /* Info.plist */,
 			);
 			path = "Traffic-iOSUITests";
+			sourceTree = "<group>";
+		};
+		FEC7BABA1CC62AF4001A2181 /* frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FEC7BAB81CC62AEE001A2181 /* Security.framework */,
+			);
+			name = frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
