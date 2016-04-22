@@ -27,7 +27,6 @@ class LoginViewController: UIViewController {
         textfield_password.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
         
         //Cheking whether there are saved login and pass
-        
         let service = "Traffic"
         let userAccount = "admin"
         let keychainQuery: [String: AnyObject] =
@@ -37,25 +36,17 @@ class LoginViewController: UIViewController {
              kSecReturnData as String : kCFBooleanTrue,
              kSecMatchLimit as String : kSecMatchLimitOne]
         var rawResult: AnyObject?
-        
         let keychain_get_status: OSStatus = SecItemCopyMatching(keychainQuery, &rawResult)
-        
         print("Keychain getting code is: \(keychain_get_status)")
 
         if (keychain_get_status == errSecSuccess) {
             let retrievedData = rawResult as? NSData
-            print("Retrieved the following data from the keychain: \(retrievedData)")
             let str = NSString(data: retrievedData!, encoding: NSUTF8StringEncoding)
-            print("The decoded string is \(str)")
-            
-            
             let loginParameters: String = "{ \"username\": \"\(userAccount)\", \"password\": \"\(str!)\" }"
             let domain: String = "https://\(textfield_domain.text!)"
-            
-            login(with: loginParameters, and: domain)
-            
+            login(with: loginParameters, and: domain, save_to_keychain: false)
         } else {
-            print("Nothing was retrieved from the keychain.")
+            print("No login data found in Keychain.")
         }
 
     }
@@ -87,15 +78,14 @@ class LoginViewController: UIViewController {
     @IBAction func action_login_pressed(sender: UIButton) {
         let loginParameters: String = "{ \"username\": \"\(textfield_login.text!)\", \"password\": \"\(textfield_password.text!)\" }"
         let domain: String = "https://\(textfield_domain.text!)"
-        login(with: loginParameters, and: domain)
+        login(with: loginParameters, and: domain, save_to_keychain: true)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
-    func login(with logincredentials: String, and domain: String) {
-
+    func login(with logincredentials: String, and domain: String, save_to_keychain: Bool) {
         let loginURLsuffix = "/rest/auth/1/session"
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         self.urlSession = NSURLSession(configuration: configuration)
@@ -107,16 +97,13 @@ class LoginViewController: UIViewController {
         let dataTask: NSURLSessionDataTask = urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                 if error == nil && data != nil {
-                    
                     do {
                         let jsonObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject> //to be parsed in future in order to show a reason of an error
                     }
                     catch {  }
                     
-                    
-                    // Saving login and password into Keychain if the user choose to save it
-                    if self.switch_remember_me.on == true {
-                    
+                    // Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
+                    if self.switch_remember_me.on == true && save_to_keychain == true {
                         let userAccount = self.textfield_login.text!
                         let service = "Traffic"
                         let passwordData: NSData = self.textfield_password.text!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
