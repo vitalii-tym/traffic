@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Login View Controller-->
@@ -142,7 +141,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zJh-zy-Kuh">
-                                <rect key="frame" x="20" y="0.0" width="560" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="XFl-Yn-Bgd">
@@ -153,27 +152,27 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" reuseIdentifier="TaskCell" id="Ojn-Of-U6S" customClass="aTask" customModule="Traffic_iOS" customModuleProvider="target">
-                                        <rect key="frame" x="138" y="64" width="285" height="95"/>
+                                        <rect key="frame" x="0.0" y="64" width="285" height="95"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="285" height="95"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zsh-Zu-Qr5">
-                                                    <rect key="frame" x="244" y="8" width="33" height="15"/>
+                                                    <rect key="frame" x="252" y="0.0" width="33" height="15"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="0.60000002379999995" green="0.60000002379999995" blue="0.60000002379999995" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DP9-n0-lMk">
-                                                    <rect key="frame" x="0.0" y="25" width="285" height="72"/>
+                                                    <rect key="frame" x="0.0" y="20" width="285" height="72"/>
                                                     <string key="text">the item width must be less than the width of the UICollectionView minus the section insets left and right values, minus the content insets left and right values.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="priority" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xnU-2M-gVS">
-                                                    <rect key="frame" x="0.0" y="8" width="38" height="14"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="38" height="14"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -181,16 +180,16 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.96148804530201337" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="DP9-n0-lMk" firstAttribute="width" secondItem="Ojn-Of-U6S" secondAttribute="width" id="4WZ-EN-DOo"/>
-                                            <constraint firstItem="DP9-n0-lMk" firstAttribute="top" secondItem="Ojn-Of-U6S" secondAttribute="top" constant="25" id="Gqy-vL-tXr"/>
-                                            <constraint firstItem="DP9-n0-lMk" firstAttribute="leading" secondItem="Ojn-Of-U6S" secondAttribute="leadingMargin" constant="-8" id="HIt-qh-KlW"/>
-                                            <constraint firstItem="xnU-2M-gVS" firstAttribute="leading" secondItem="Ojn-Of-U6S" secondAttribute="leadingMargin" constant="-8" id="Il0-8U-nYc"/>
-                                            <constraint firstItem="xnU-2M-gVS" firstAttribute="top" secondItem="Ojn-Of-U6S" secondAttribute="topMargin" id="Yaw-bY-AmS"/>
-                                            <constraint firstItem="Zsh-Zu-Qr5" firstAttribute="trailing" secondItem="Ojn-Of-U6S" secondAttribute="trailingMargin" id="ctx-wK-bYk"/>
+                                            <constraint firstItem="DP9-n0-lMk" firstAttribute="top" secondItem="Ojn-Of-U6S" secondAttribute="top" constant="20" id="Gqy-vL-tXr"/>
+                                            <constraint firstItem="DP9-n0-lMk" firstAttribute="leading" secondItem="Ojn-Of-U6S" secondAttribute="leading" id="HIt-qh-KlW"/>
+                                            <constraint firstItem="xnU-2M-gVS" firstAttribute="leading" secondItem="Ojn-Of-U6S" secondAttribute="leading" id="Il0-8U-nYc"/>
+                                            <constraint firstItem="xnU-2M-gVS" firstAttribute="top" secondItem="Ojn-Of-U6S" secondAttribute="top" id="Yaw-bY-AmS"/>
+                                            <constraint firstItem="Zsh-Zu-Qr5" firstAttribute="trailing" secondItem="Ojn-Of-U6S" secondAttribute="trailing" id="ctx-wK-bYk"/>
                                             <constraint firstItem="DP9-n0-lMk" firstAttribute="centerX" secondItem="Ojn-Of-U6S" secondAttribute="centerX" id="goU-CO-XAl"/>
-                                            <constraint firstItem="Zsh-Zu-Qr5" firstAttribute="top" secondItem="Ojn-Of-U6S" secondAttribute="topMargin" id="wYE-0p-E8D"/>
+                                            <constraint firstItem="Zsh-Zu-Qr5" firstAttribute="top" secondItem="Ojn-Of-U6S" secondAttribute="top" id="wYE-0p-E8D"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="label_description" destination="DP9-n0-lMk" id="kFe-Wg-fT7"/>
@@ -208,9 +207,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="zJh-zy-Kuh" secondAttribute="bottom" id="FKJ-14-TKe"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="zJh-zy-Kuh" secondAttribute="trailing" id="IH6-Is-qPT"/>
-                            <constraint firstItem="zJh-zy-Kuh" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="VLo-4X-zHd"/>
-                            <constraint firstItem="zJh-zy-Kuh" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="s9b-gf-jas"/>
+                            <constraint firstAttribute="trailing" secondItem="zJh-zy-Kuh" secondAttribute="trailing" id="IH6-Is-qPT"/>
+                            <constraint firstItem="zJh-zy-Kuh" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="VLo-4X-zHd"/>
+                            <constraint firstItem="zJh-zy-Kuh" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="s9b-gf-jas"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Tasks" id="6PO-bB-dUa">
