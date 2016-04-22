@@ -15,7 +15,7 @@
 		BBEFDC261C80767B00C395B7 /* TrafficUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBEFDC251C80767B00C395B7 /* TrafficUITests.swift */; };
 		FE1011161CBE8AE100DE04CE /* IssueDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1011151CBE8AE100DE04CE /* IssueDetailsViewController.swift */; };
 		FE3DE4871CBBBCA300D35BF8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */; };
-		FE3DE4891CBBBCA300D35BF8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4881CBBBCA300D35BF8 /* ViewController.swift */; };
+		FE3DE4891CBBBCA300D35BF8 /* TasksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4881CBBBCA300D35BF8 /* TasksViewController.swift */; };
 		FE3DE48C1CBBBCA300D35BF8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE3DE48A1CBBBCA300D35BF8 /* Main.storyboard */; };
 		FE3DE48F1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE48D1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld */; };
 		FE3DE4911CBBBCA300D35BF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE3DE4901CBBBCA300D35BF8 /* Assets.xcassets */; };
@@ -75,7 +75,7 @@
 		FE1011151CBE8AE100DE04CE /* IssueDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssueDetailsViewController.swift; sourceTree = "<group>"; };
 		FE3DE4841CBBBCA300D35BF8 /* Traffic-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Traffic-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		FE3DE4881CBBBCA300D35BF8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		FE3DE4881CBBBCA300D35BF8 /* TasksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksViewController.swift; sourceTree = "<group>"; };
 		FE3DE48B1CBBBCA300D35BF8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FE3DE48E1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Traffic_iOS.xcdatamodel; sourceTree = "<group>"; };
 		FE3DE4901CBBBCA300D35BF8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -202,7 +202,7 @@
 			children = (
 				FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */,
 				FE49FE881CBD56C9009255EE /* LoginViewController.swift */,
-				FE3DE4881CBBBCA300D35BF8 /* ViewController.swift */,
+				FE3DE4881CBBBCA300D35BF8 /* TasksViewController.swift */,
 				FE1011151CBE8AE100DE04CE /* IssueDetailsViewController.swift */,
 				FE3DE4B71CBBCBA100D35BF8 /* Tasks.swift */,
 				FE3DE4B51CBBBF5300D35BF8 /* TaskCell.swift */,
@@ -507,7 +507,7 @@
 				FE49FE891CBD56C9009255EE /* LoginViewController.swift in Sources */,
 				FE3DE4B81CBBCBA100D35BF8 /* Tasks.swift in Sources */,
 				FE3DE4B61CBBBF5300D35BF8 /* TaskCell.swift in Sources */,
-				FE3DE4891CBBBCA300D35BF8 /* ViewController.swift in Sources */,
+				FE3DE4891CBBBCA300D35BF8 /* TasksViewController.swift in Sources */,
 				FE1011161CBE8AE100DE04CE /* IssueDetailsViewController.swift in Sources */,
 				FE3DE48F1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld in Sources */,
 				FE3DE4871CBBBCA300D35BF8 /* AppDelegate.swift in Sources */,

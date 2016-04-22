@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     var urlSession: NSURLSession!
     var tasks: Tasks? {
@@ -20,6 +20,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
+    @IBOutlet weak var button_log_out: UIBarButtonItem!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +33,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         self.urlSession = NSURLSession(configuration: configuration)
         let request = NSMutableURLRequest(URL: NSURL(string: "https://fastlane.atlassian.net/rest/api/2/search?jql=assignee=currentUser()+order+by+rank+asc")!)
+            //WARNING: Hardcode in the line above.
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
@@ -91,6 +94,43 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         let alert: UIAlertController = UIAlertController(title: "Wait!", message: "This feature is still in construction", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func button_pressed_log_out(sender: AnyObject) {
+        logout()
+    }
+    
+    func logout() {
+        let loginURLsuffix = "/rest/auth/1/session"
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        self.urlSession = NSURLSession(configuration: configuration)
+        let domain = "https://fastlane.atlassian.net" //WARING: Severe hardcode here. Domain must be taken from user data.
+        let request = NSMutableURLRequest(URL: NSURL(string: domain+loginURLsuffix)!)
+        request.HTTPMethod = "DELETE"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask: NSURLSessionDataTask = urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
+            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                if error == nil && data != nil {
+                    do {
+                        let jsonObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject> //to be parsed in future in order to show a reason of an error
+                    }
+                    catch {  }
+                    
+                    //Deleting users's credentials from Keychain
+                    let userAccount = "admin" //WARNING: Hardcode. Cosider taking this data from user data
+                    let service = "Traffic" //WARNING: Hardcode. Cosider taking this data from user data
+                    
+                    let keychainQuery: [String: AnyObject] =
+                            [kSecClass as String: kSecClassGenericPassword,
+                                kSecAttrAccount as String: userAccount,
+                                kSecAttrService as String: service]
+                    SecItemDelete(keychainQuery as CFDictionaryRef)
+                }
+                   self.performSegueWithIdentifier("back_to_login", sender: self)
+            })
+        }
+            dataTask.resume()
     }
     
     override func viewWillDisappear(animated: Bool) {

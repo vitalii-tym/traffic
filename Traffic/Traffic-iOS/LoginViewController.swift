@@ -27,8 +27,8 @@ class LoginViewController: UIViewController {
         textfield_password.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
         
         //Cheking whether there are saved login and pass
-        let service = "Traffic"
-        let userAccount = "admin"
+        let service = "Traffic"   //WARNING: Hardcode here. Consider saving in user data.
+        let userAccount = "admin" //WARNING: Hardcode here. Consider saveing in user data.
         let keychainQuery: [String: AnyObject] =
             [kSecClass as String : kSecClassGenericPassword,
              kSecAttrService as String : service,
@@ -43,7 +43,7 @@ class LoginViewController: UIViewController {
             let retrievedData = rawResult as? NSData
             let str = NSString(data: retrievedData!, encoding: NSUTF8StringEncoding)
             let loginParameters: String = "{ \"username\": \"\(userAccount)\", \"password\": \"\(str!)\" }"
-            let domain: String = "https://\(textfield_domain.text!)"
+            let domain: String = "https://\(textfield_domain.text!)" // WARNING: the field is supposed to be epty. Consider taking this info from user data instead.
             login(with: loginParameters, and: domain, save_to_keychain: false)
         } else {
             print("No login data found in Keychain.")
@@ -105,7 +105,7 @@ class LoginViewController: UIViewController {
                     // Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
                     if self.switch_remember_me.on == true && save_to_keychain == true {
                         let userAccount = self.textfield_login.text!
-                        let service = "Traffic"
+                        let service = "Traffic" //WARNING: Hardcode here. Consider using app name BundleID
                         let passwordData: NSData = self.textfield_password.text!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
 
                         let keychainQuery: [String: AnyObject] =
@@ -124,5 +124,10 @@ class LoginViewController: UIViewController {
             })
         }
         dataTask.resume()
+    }
+    
+    
+    @IBAction func unwindToLogin(segue: UIStoryboardSegue) {
+    
     }
 }
