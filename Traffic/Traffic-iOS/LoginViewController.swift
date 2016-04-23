@@ -29,12 +29,12 @@ class LoginViewController: UIViewController {
         //Cheking whether there are saved login and pass
         let service = "Traffic"   //WARNING: Hardcode here. Consider saving in user data.
         let userAccount = "admin" //WARNING: Hardcode here. Consider saveing in user data.
-        let keychainQuery: [String: AnyObject] =
-            [kSecClass as String : kSecClassGenericPassword,
-             kSecAttrService as String : service,
-             kSecAttrAccount as String : userAccount,
-             kSecReturnData as String : kCFBooleanTrue,
-             kSecMatchLimit as String : kSecMatchLimitOne]
+        let keychainQuery: [NSString: NSObject] = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: userAccount,
+            kSecReturnData: kCFBooleanTrue,
+            kSecMatchLimit: kSecMatchLimitOne]
         var rawResult: AnyObject?
         let keychain_get_status: OSStatus = SecItemCopyMatching(keychainQuery, &rawResult)
         print("Keychain getting code is: \(keychain_get_status)")
@@ -108,13 +108,13 @@ class LoginViewController: UIViewController {
                         let service = "Traffic" //WARNING: Hardcode here. Consider using app name BundleID
                         let passwordData: NSData = self.textfield_password.text!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
 
-                        let keychainQuery: [String: AnyObject] =
-                                [kSecClass as String: kSecClassGenericPassword,
-                                kSecAttrAccount as String: userAccount,
-                                kSecAttrService as String: service,
-                                kSecValueData as String: passwordData]
+                        let keychainQuery: [NSString: NSObject] = [
+                            kSecClass: kSecClassGenericPassword,
+                            kSecAttrAccount: userAccount,
+                            kSecAttrService: service,
+                            kSecValueData: passwordData]
                     
-                        SecItemDelete(keychainQuery as CFDictionaryRef)
+                        SecItemDelete(keychainQuery as CFDictionaryRef) //Deletes the item just in case it already exists
                         let keychain_save_status: OSStatus = SecItemAdd(keychainQuery as CFDictionaryRef, nil)
                         print("Keychain saving code is: \(keychain_save_status)")
                     }

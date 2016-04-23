@@ -121,11 +121,12 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                     let userAccount = "admin" //WARNING: Hardcode. Cosider taking this data from user data
                     let service = "Traffic" //WARNING: Hardcode. Cosider taking this data from user data
                     
-                    let keychainQuery: [String: AnyObject] =
-                            [kSecClass as String: kSecClassGenericPassword,
-                                kSecAttrAccount as String: userAccount,
-                                kSecAttrService as String: service]
-                    SecItemDelete(keychainQuery as CFDictionaryRef)
+                    let keychainQuery: [NSString: NSObject] = [
+                        kSecClass: kSecClassGenericPassword,
+                        kSecAttrAccount: userAccount,
+                        kSecAttrService: service]
+                    let keychain_delete_status: OSStatus = SecItemDelete(keychainQuery as CFDictionaryRef)
+                    print("Keychain deleting code is: \(keychain_delete_status)")
                 }
                    self.performSegueWithIdentifier("back_to_login", sender: self)
             })
