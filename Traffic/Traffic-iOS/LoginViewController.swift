@@ -27,27 +27,35 @@ class LoginViewController: UIViewController {
         textfield_login.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
         textfield_password.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
         
-        //Cheking whether there are saved login and pass
-        let service = "Traffic"   //WARNING: Hardcode here. Consider saving in user data.
-        let userAccount = "admin" //WARNING: Hardcode here. Consider saveing in user data.
-        let keychainQuery: [NSString: NSObject] = [
-            kSecClass: kSecClassGenericPassword,
-            kSecAttrService: service,
-            kSecAttrAccount: userAccount,
-            kSecReturnData: kCFBooleanTrue,
-            kSecMatchLimit: kSecMatchLimitOne]
-        var rawResult: AnyObject?
-        let keychain_get_status: OSStatus = SecItemCopyMatching(keychainQuery, &rawResult)
-        print("Keychain getting code is: \(keychain_get_status)")
+        // Cheking whether there are saved login and pass in User Data and if exists we try to get pass from
+        // keychain and automatically login
+        let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
+        let userLogin = NSUserDefaults.standardUserDefaults().objectForKey("login") as? String
+        
+        if let hasDomain = domain, hasLogin = userLogin {
+            self.textfield_domain.text = hasDomain
+            self.textfield_login.text = hasLogin
+            let theURL: String = "https://\(hasDomain)"
+            
+            let keychainQuery: [NSString: NSObject] = [
+                kSecClass: kSecClassGenericPassword,
+                kSecAttrService: theURL, // we use JIRA URL as service string for Keychain
+                kSecAttrAccount: hasLogin,
+                kSecReturnData: kCFBooleanTrue,
+                kSecMatchLimit: kSecMatchLimitOne]
+            var rawResult: AnyObject?
+            let keychain_get_status: OSStatus = SecItemCopyMatching(keychainQuery, &rawResult)
+            print("Keychain getting code is: \(keychain_get_status)")
 
-        if (keychain_get_status == errSecSuccess) {
-            let retrievedData = rawResult as? NSData
-            let str = NSString(data: retrievedData!, encoding: NSUTF8StringEncoding)
-            let loginParameters: String = "{ \"username\": \"\(userAccount)\", \"password\": \"\(str!)\" }"
-            let domain: String = "https://\(textfield_domain.text!)" // WARNING: the field is supposed to be epty. Consider taking this info from user data instead.
-            login(with: loginParameters, and: domain, save_to_keychain: false)
+            if (keychain_get_status == errSecSuccess) {
+                let retrievedData = rawResult as? NSData
+                let str = NSString(data: retrievedData!, encoding: NSUTF8StringEncoding)
+                let loginParameters: String = "{ \"username\": \"\(hasLogin)\", \"password\": \"\(str!)\" }"
+            login(with: loginParameters, and: theURL, save_to_keychain: false)
         } else {
             print("No login data found in Keychain.")
+            // We don't autologin in this case and simply leave user on login screen
+            }
         }
     }
     
@@ -76,9 +84,16 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func action_login_pressed(sender: UIButton) {
-        let loginParameters: String = "{ \"username\": \"\(textfield_login.text!)\", \"password\": \"\(textfield_password.text!)\" }"
-        let domain: String = "https://\(textfield_domain.text!)"
-        login(with: loginParameters, and: domain, save_to_keychain: true)
+        let userLogin: String = textfield_login.text!
+        let loginParameters: String = "{ \"username\": \"\(userLogin)\", \"password\": \"\(textfield_password.text!)\" }"
+        let domain = textfield_domain.text!
+        let theURL: String = "https://\(domain)"
+        
+        // Saving login and URL for user's convenience
+        NSUserDefaults.standardUserDefaults().setObject(userLogin, forKey: "login")
+        NSUserDefaults.standardUserDefaults().setObject(domain, forKey: "JIRAdomain")
+        
+        login(with: loginParameters, and: theURL, save_to_keychain: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -90,6 +105,7 @@ class LoginViewController: UIViewController {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         self.urlSession = NSURLSession(configuration: configuration)
         let request = NSMutableURLRequest(URL: NSURL(string: domain+loginURLsuffix)!)
+        
         request.HTTPMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = logincredentials.dataUsingEncoding(NSASCIIStringEncoding)!
@@ -106,20 +122,17 @@ class LoginViewController: UIViewController {
                         // Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
                         if self.switch_remember_me.on == true && save_to_keychain == true {
                             let userAccount = self.textfield_login.text!
-                            let service = "Traffic" //WARNING: Hardcode here. Consider using app name BundleID
                             let passwordData: NSData = self.textfield_password.text!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
                             let keychainQuery: [NSString: NSObject] = [
                                 kSecClass: kSecClassGenericPassword,
                                 kSecAttrAccount: userAccount,
-                                kSecAttrService: service,
+                                kSecAttrService: domain, // we use JIRA URL as service string for Keychain
                                 kSecValueData: passwordData]
                             SecItemDelete(keychainQuery as CFDictionaryRef) //Deletes the item just in case it already exists
                             let keychain_save_status: OSStatus = SecItemAdd(keychainQuery as CFDictionaryRef, nil)
                             print("Keychain saving code is: \(keychain_save_status)")
-
-                        self.performSegueWithIdentifier("afterLogin", sender: nil)
-                    
                         }
+                        self.performSegueWithIdentifier("afterLogin", sender: nil)
                     } else {
                         // Well, there was a problem with JIRA instance
                         self.errors = JIRAerrors(data: data!, response: theResponse!)
@@ -145,7 +158,12 @@ class LoginViewController: UIViewController {
 
                 } else {
                     // Worst case: we can't even access the JIRA instance.
-                    let networkError: String = (error?.localizedDescription)!
+                    var networkError: String = ""
+                    switch error {
+                        // There is still a case when there was no error, but we got here because of data == nil
+                    case nil: networkError = "Seems there were no error, but the answer from JIRA unexpectedly was empty. Please contact developer to investigate this case."
+                    default: networkError = (error?.localizedDescription)!
+                    }
                     
                     let alert: UIAlertController = UIAlertController(title: "Oops", message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))

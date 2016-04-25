@@ -17,6 +17,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             }
         }
     var aTasktoPass: Task!
+    var errors: JIRAerrors?
     
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
@@ -101,42 +102,87 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func logout() {
-        let loginURLsuffix = "/rest/auth/1/session"
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        self.urlSession = NSURLSession(configuration: configuration)
-        let domain = "https://fastlane.atlassian.net" //WARING: Severe hardcode here. Domain must be taken from user data.
-        let request = NSMutableURLRequest(URL: NSURL(string: domain+loginURLsuffix)!)
-        request.HTTPMethod = "DELETE"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
+        let userLogin = NSUserDefaults.standardUserDefaults().objectForKey("login") as? String
+
+        if let hasDomain = domain, hasLogin = userLogin {
+            let loginURLsuffix = "/rest/auth/1/session"
+            let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+            self.urlSession = NSURLSession(configuration: configuration)
+            let theURL = "https://\(hasDomain)"
+            let request = NSMutableURLRequest(URL: NSURL(string: theURL+loginURLsuffix)!)
+            request.HTTPMethod = "DELETE"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let dataTask: NSURLSessionDataTask = urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                if error == nil && data != nil {
-                    do {
-                        let jsonObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject> //to be parsed in future in order to show a reason of an error
+            let dataTask: NSURLSessionDataTask = urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
+                NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                    if error == nil && data != nil {
+                        let theResponse = response as? NSHTTPURLResponse
+                        let responseStatus = theResponse!.statusCode
+                        // 204 - Returned if the user was successfully logged out.
+                        // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-currentUser
+                      
+                        if 204 ~= responseStatus {
+                            //Deleting users's credentials from Keychain
+                            let keychainQuery: [NSString: NSObject] = [
+                                kSecClass: kSecClassGenericPassword,
+                                kSecAttrAccount: hasLogin,
+                                kSecAttrService: theURL]
+                            let keychain_delete_status: OSStatus = SecItemDelete(keychainQuery as CFDictionaryRef)
+                            print("Keychain deleting code is: \(keychain_delete_status)")
+                            // Loggin out was succesful, can go back to login screen
+                            self.performSegueWithIdentifier("back_to_login", sender: self)
+                        } else {
+                            // Well, there was a problem with JIRA instance
+                            self.errors = JIRAerrors(data: data!, response: theResponse!)
+                            
+                            let errorCode = self.errors?.errorslist[0].error_code
+                            let JIRAerrorMessage = self.errors?.errorslist[0].error_message
+                            var errorExplanation = ""
+                            
+                            switch errorCode! {
+                                //There are two possible codes for /rest/auth/1/session call:
+                                // 401 - Returned if the login fails due to invalid credentials.
+                                // Documentation: https://developer.atlassian.com/static/rest/jira/5.0.html
+                            case 401: errorExplanation = "Looks like you have been logged out already."
+                            default: errorExplanation = "Don't know what exactly went wrong. Try again and contact me if you the problem persists."
+                            }
+                            
+                            let alert: UIAlertController = UIAlertController(title: "Oops", message: "JIRA says \"\(JIRAerrorMessage!)\". Code: \(errorCode!). \(errorExplanation)", preferredStyle: UIAlertControllerStyle.Alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                            self.presentViewController(alert, animated: true, completion: nil)
+                            // But since the user has been already logged out we can also go back to login screen
+                            self.performSegueWithIdentifier("back_to_login", sender: self)
+                        }
+                    } else {
+                        // Worst case: we can't even access the JIRA instance.
+                        var networkError: String = ""
+                        switch error {
+                        // There is still a case when there was no error, but we got here because of data == nil
+                        case nil: networkError = "Seems there were no error, but the answer from JIRA unexpectedly was empty. Please contact developer to investigate this case."
+                        default: networkError = (error?.localizedDescription)!
+                        }
+                        
+                        let alert: UIAlertController = UIAlertController(title: "Oops", message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                        self.presentViewController(alert, animated: true, completion: nil)
+                    
                     }
-                    catch {  }
-                    
-                    // Need to parse jsonObject to see whether there some answers from Jira that actually are errors
-                    
-                    //Deleting users's credentials from Keychain
-                    let userAccount = "admin" //WARNING: Hardcode. Cosider taking this data from user data
-                    let service = "Traffic" //WARNING: Hardcode. Cosider taking this data from user data
-                    
-                    let keychainQuery: [NSString: NSObject] = [
-                        kSecClass: kSecClassGenericPassword,
-                        kSecAttrAccount: userAccount,
-                        kSecAttrService: service]
-                    let keychain_delete_status: OSStatus = SecItemDelete(keychainQuery as CFDictionaryRef)
-                    print("Keychain deleting code is: \(keychain_delete_status)")
-                } else {
-                    //check here for errors in "error" field
-                    
-                }
-                   self.performSegueWithIdentifier("back_to_login", sender: self)
-            })
-        }
+                })
+            }
             dataTask.resume()
+        } else {
+        // Don't know what to do in this case.
+        // Looks like user was logged in but for some reason his login or domain were not saved in User Data at all.
+        // We can't log user out because we simply don't know the JIRA URL to do this upon.
+        // However most probaly he/she will get stuck on the login screen on next app launch because auto-login
+        // won't work without valid User Data.
+        // So... let's just ask inform him/her suggesting to relaunch the application.
+            
+            let alert: UIAlertController = UIAlertController(title: "Oops", message: "Something weird happened. We can't log you out. But restarting the applicaiton should get you to the login screen.", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
