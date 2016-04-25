@@ -31,10 +31,11 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         self.urlSession = NSURLSession(configuration: configuration)
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://fastlane.atlassian.net/rest/api/2/search?jql=assignee=currentUser()+order+by+rank+asc")!)
-            //WARNING: Hardcode in the line above.
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://\(domain!)/rest/api/2/search?jql=assignee=currentUser()+order+by+rank+asc")!)
+            //WARNING: JIRA query hardcoded in the line above - consider moving this logic out
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
