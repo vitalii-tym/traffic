@@ -19,6 +19,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var switch_remember_me: UISwitch!
     
     var urlSession: NSURLSession!
+    var errors: JIRAerrors?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +49,6 @@ class LoginViewController: UIViewController {
         } else {
             print("No login data found in Keychain.")
         }
-
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -96,38 +96,66 @@ class LoginViewController: UIViewController {
         
         let dataTask: NSURLSessionDataTask = urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                
                 if error == nil && data != nil {
-                    do {
-                        let jsonObject = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject> //to be parsed in future in order to show a reason of an error
-                    }
-                    catch {  }
-                    
-                    // Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
-                    if self.switch_remember_me.on == true && save_to_keychain == true {
-                        let userAccount = self.textfield_login.text!
-                        let service = "Traffic" //WARNING: Hardcode here. Consider using app name BundleID
-                        let passwordData: NSData = self.textfield_password.text!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+                    let theResponse = response as? NSHTTPURLResponse
+                    let responseStatus = theResponse!.statusCode
 
-                        let keychainQuery: [NSString: NSObject] = [
-                            kSecClass: kSecClassGenericPassword,
-                            kSecAttrAccount: userAccount,
-                            kSecAttrService: service,
-                            kSecValueData: passwordData]
+                    if 200...202 ~= responseStatus {
+                        // Authorization succesfull. Great!
+                        // Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
+                        if self.switch_remember_me.on == true && save_to_keychain == true {
+                            let userAccount = self.textfield_login.text!
+                            let service = "Traffic" //WARNING: Hardcode here. Consider using app name BundleID
+                            let passwordData: NSData = self.textfield_password.text!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+                            let keychainQuery: [NSString: NSObject] = [
+                                kSecClass: kSecClassGenericPassword,
+                                kSecAttrAccount: userAccount,
+                                kSecAttrService: service,
+                                kSecValueData: passwordData]
+                            SecItemDelete(keychainQuery as CFDictionaryRef) //Deletes the item just in case it already exists
+                            let keychain_save_status: OSStatus = SecItemAdd(keychainQuery as CFDictionaryRef, nil)
+                            print("Keychain saving code is: \(keychain_save_status)")
+
+                        self.performSegueWithIdentifier("afterLogin", sender: nil)
                     
-                        SecItemDelete(keychainQuery as CFDictionaryRef) //Deletes the item just in case it already exists
-                        let keychain_save_status: OSStatus = SecItemAdd(keychainQuery as CFDictionaryRef, nil)
-                        print("Keychain saving code is: \(keychain_save_status)")
+                        }
+                    } else {
+                        // Well, there was a problem with JIRA instance
+                        self.errors = JIRAerrors(data: data!, response: theResponse!)
+
+                        let errorCode = self.errors?.errorslist[0].error_code
+                        let JIRAerrorMessage = self.errors?.errorslist[0].error_message
+                        var errorExplanation = ""
+
+                        switch errorCode! {
+                            //There are two possible codes for /rest/auth/1/session call:
+                            // 401 - Returned if the login fails due to invalid credentials.
+                            // 403 - Returned if the login is denied due to a CAPTCHA requirement, throtting, or any other reason. In case of a 403 status code it is possible that the supplied credentials are valid but the user is not allowed to log in at this point in time.
+                            // Documentation: https://developer.atlassian.com/static/rest/jira/5.0.html
+                        case 401: errorExplanation = "Check your login and password and try again."
+                        case 403: errorExplanation = "Looks like there is a problem with captcha."
+                        default: errorExplanation = "Don't know what exactly went wrong. Try again and contact me if you the problem persists."
+                        }
+
+                        let alert: UIAlertController = UIAlertController(title: "Oops", message: "JIRA says \"\(JIRAerrorMessage!)\". Code: \(errorCode!). \(errorExplanation)", preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                        self.presentViewController(alert, animated: true, completion: nil)
                     }
 
-                    self.performSegueWithIdentifier("afterLogin", sender: nil)
+                } else {
+                    // Worst case: we can't even access the JIRA instance.
+                    let networkError: String = (error?.localizedDescription)!
+                    
+                    let alert: UIAlertController = UIAlertController(title: "Oops", message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
                 }
             })
         }
         dataTask.resume()
     }
     
-    
     @IBAction func unwindToLogin(segue: UIStoryboardSegue) {
-    
     }
 }

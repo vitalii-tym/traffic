@@ -11,7 +11,7 @@ import UIKit
 class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
     var urlSession: NSURLSession!
-    var tasks: Tasks? {
+    var tasks: JIRATasks? {
         didSet {
             self.view_collectionView.reloadData()
             }
@@ -38,7 +38,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                 if error == nil && data != nil {
-                    self.tasks = Tasks(data: data!)
+                    self.tasks = JIRATasks(data: data!)
                 }
             })
         }
@@ -117,6 +117,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                     }
                     catch {  }
                     
+                    // Need to parse jsonObject to see whether there some answers from Jira that actually are errors
+                    
                     //Deleting users's credentials from Keychain
                     let userAccount = "admin" //WARNING: Hardcode. Cosider taking this data from user data
                     let service = "Traffic" //WARNING: Hardcode. Cosider taking this data from user data
@@ -127,6 +129,9 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                         kSecAttrService: service]
                     let keychain_delete_status: OSStatus = SecItemDelete(keychainQuery as CFDictionaryRef)
                     print("Keychain deleting code is: \(keychain_delete_status)")
+                } else {
+                    //check here for errors in "error" field
+                    
                 }
                    self.performSegueWithIdentifier("back_to_login", sender: self)
             })

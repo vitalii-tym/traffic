@@ -22,7 +22,12 @@ struct Task {
     var task_status: String
 }
 
-class Tasks {
+struct Error {
+    var error_code: Int?
+    var error_message: String?
+}
+
+class JIRATasks {
     var taskslist: [Task]
     
     init (tasks newTasks: [Task]) {
@@ -77,9 +82,52 @@ class Tasks {
                 continue
             }
             
-            newTasks.append(Task(task_name: issue_key ?? "(no title)", task_summary: issue_summary, task_priority: issue_priority, task_description: issue_description, task_status: issue_status))
+            newTasks.append(Task(task_name: issue_key ?? "(no title)",
+                                task_summary: issue_summary,
+                                task_priority: issue_priority,
+                                task_description: issue_description,
+                                task_status: issue_status))
         }
         
         self.init(tasks: newTasks)
+    }
+}
+
+class JIRAerrors {
+    var errorslist: [Error]
+    
+    init (errors: [Error]) {
+        self.errorslist = errors
+    }
+    
+    convenience init? (data: NSData, response: NSHTTPURLResponse) {
+        let fixedData = fixJsonData (data)
+        var newErrors = [Error]()
+        let response_code = response.statusCode
+        
+        var jsonObject: Dictionary<String, AnyObject>?
+        
+        do {
+            jsonObject = try NSJSONSerialization.JSONObjectWithData(fixedData, options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject>
+        }
+        catch {  }
+        
+        guard let jsonObjectRoot = jsonObject else {
+            return nil
+        }
+        
+        guard let items = jsonObjectRoot["errorMessages"] as? Array<AnyObject> else {
+            return nil
+        }
+        
+        for item in items {
+            guard let message = item as? String else {
+                continue
+            }
+            
+            newErrors.append(Error(error_code: response_code ,error_message: message))
+        }
+        
+        self.init(errors: newErrors)
     }
 }
