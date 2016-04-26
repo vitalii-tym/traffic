@@ -15,12 +15,11 @@ func fixJsonData (data: NSData) -> NSData {
 }
 
 struct Task {
-    var task_name: String
+    var task_key: String
     var task_summary: String
     var task_priority: String
     var task_description: String? //optional, because some tasks might have no description (JIRA returns "null")
     var task_status: String
-//    var task_key: String
 //    var task_id: Int
 }
 
@@ -32,6 +31,7 @@ struct Error {
 struct Transition {
     var transition_id: String
     var transition_name: String
+    var target_status: String
 }
 
 class JIRATasks {
@@ -82,7 +82,9 @@ class JIRATasks {
             guard let issue_summary = issue_fields_Dict["summary"] as? String else {
                 continue
             }
-            newTasks.append(Task(task_name: issue_key ?? "(no title)",
+            
+            
+            newTasks.append(Task(task_key: issue_key ?? "(no title)",
                                 task_summary: issue_summary,
                                 task_priority: issue_priority,
                                 task_description: issue_description,
@@ -155,7 +157,33 @@ class JIRATransitions {
             guard let transition_name = itemDict["name"] as? String else {
                 continue
             }
-            newTransitions.append(Transition(transition_id: transition_id, transition_name: transition_name))
+            guard let transition_toDict = itemDict["to"] as? Dictionary<String,AnyObject> else {
+                continue
+            }
+            guard let transition_target = transition_toDict["name"] as? String else {
+                continue
+            }
+            
+            guard let transition_fields = itemDict["fields"] as? Dictionary<String,AnyObject> else {
+                continue
+            }
+            
+//            for field in transition_fields {
+//                guard let field_Dict = field as? Dictionary<String,AnyObject> else {
+//                    continue
+//                }
+//                if let is_reqired_field = field["required"] as? Bool {
+//                    // we don't need optional fieds, need to handle only required ones
+//                    
+//                    
+//                }else {
+//                    continue
+//                }
+//                
+//            }
+            
+            
+            newTransitions.append(Transition(transition_id: transition_id, transition_name: transition_name, target_status: transition_target))
         }
         self.init(transitions: newTransitions)
     }

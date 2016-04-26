@@ -101,7 +101,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TaskCell", forIndexPath: indexPath) as! aTask
-        cell.label_name.text = tasks?.taskslist[indexPath.row].task_name
+        cell.label_name.text = tasks?.taskslist[indexPath.row].task_key
         cell.label_description.text = tasks?.taskslist[indexPath.row].task_summary
         cell.label_priority.text = tasks?.taskslist[indexPath.row].task_priority
         cell.label_status.text = tasks?.taskslist[indexPath.row].task_status
@@ -239,6 +239,9 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    @IBAction func unwindToTasksList(segue: UIStoryboardSegue) {
     }
     
 }

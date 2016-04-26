@@ -223,6 +223,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Tasks" id="6PO-bB-dUa">
+                        <barButtonItem key="backBarButtonItem" title="Tasks" id="OpN-Nl-Wgv"/>
                         <barButtonItem key="leftBarButtonItem" title="Log out" id="bKO-tE-R8N">
                             <connections>
                                 <action selector="button_pressed_log_out:" destination="BYZ-38-t0r" id="wHK-lX-Jo0"/>
@@ -307,8 +308,11 @@
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             </textView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="urK-n4-J4V">
-                                                <rect key="frame" x="549" y="5" width="46" height="30"/>
-                                                <state key="normal" title="Button"/>
+                                                <rect key="frame" x="496" y="5" width="99" height="30"/>
+                                                <state key="normal" title="Update Status"/>
+                                                <connections>
+                                                    <action selector="action_change_status_pressed:" destination="sz5-hb-Gft" eventType="touchUpInside" id="84r-TZ-mvI"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -362,11 +366,13 @@
                         <outlet property="label_status" destination="hTh-6U-cJO" id="V0n-a7-ZR6"/>
                         <outlet property="textview_IssueDetails" destination="A5Z-lD-kvr" id="WCT-qd-BNg"/>
                         <outlet property="textview_IssueSummary" destination="ZIc-rz-jOa" id="KXb-bE-8ZR"/>
+                        <segue destination="exa-Nm-uB6" kind="unwind" identifier="back_to_tasks" unwindAction="unwindToTasksList:" id="W4l-V4-wvf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l3Y-pC-pvN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="exa-Nm-uB6" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2390" y="503"/>
+            <point key="canvasLocation" x="2456" y="503"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="6OW-w3-6au">

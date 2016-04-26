@@ -1,0 +1,287 @@
+// a very minimalistic transition. Somehow it works even if required fields are not included
+// in this case results in weird results, for example it is possible to have isse with status "Resolved" and resolution "Unresolved"
+// so probably need to always check for required field and provide them in the transition
+
+{ "transition": { "id": "5" } }
+
+// sample POST request for /rest/api/2/issue/{issueIdOrKey}/transitions
+{
+    "update": {
+        "comment": [
+            {
+                "add": {
+                    "body": "Bug has been fixed."
+                }
+            }
+        ]
+    },
+    "fields": {
+        "assignee": {
+            "name": "bob"
+        },
+        "resolution": {
+            "name": "Fixed"
+        }
+    },
+    "transition": {
+        "id": "5"
+    },
+    "historyMetadata": {
+        "type": "myplugin:type",
+        "description": "text description",
+        "descriptionKey": "plugin.changereason.i18.key",
+        "activityDescription": "text description",
+        "activityDescriptionKey": "plugin.activity.i18.key",
+        "actor": {
+            "id": "tony",
+            "displayName": "Tony",
+            "type": "mysystem-user",
+            "avatarUrl": "http://mysystem/avatar/tony.jpg",
+            "url": "http://mysystem/users/tony"
+        },
+        "generator": {
+            "id": "mysystem-1",
+            "type": "mysystem-application"
+        },
+        "cause": {
+            "id": "myevent",
+            "type": "mysystem-event"
+        },
+        "extraData": {
+            "keyvalue": "extra data",
+            "goes": "here"
+        }
+    }
+}
+
+// schema
+
+{
+    "id": "https://docs.atlassian.com/jira/REST/schema/issue-update#",
+    "title": "Issue Update",
+    "type": "object",
+    "properties": {
+        "transition": {
+            "title": "Transition",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "to": {
+                    "title": "Status",
+                    "type": "object",
+                    "properties": {
+                        "statusColor": {
+                            "type": "string"
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "iconUrl": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "statusCategory": {
+                            "title": "Status Category",
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "key": {
+                                    "type": "string"
+                                },
+                                "colorName": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "fields": {
+                    "type": "object",
+                    "patternProperties": {
+                        ".+": {
+                            "title": "Field Meta",
+                            "type": "object",
+                            "properties": {
+                                "required": {
+                                    "type": "boolean"
+                                },
+                                "schema": {
+                                    "title": "Json Type",
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string"
+                                        },
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "system": {
+                                            "type": "string"
+                                        },
+                                        "custom": {
+                                            "type": "string"
+                                        },
+                                        "customId": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "autoCompleteUrl": {
+                                    "type": "string"
+                                },
+                                "hasDefaultValue": {
+                                    "type": "boolean"
+                                },
+                                "operations": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "allowedValues": {
+                                    "type": "array",
+                                    "items": {}
+                                }
+                            },
+                            "additionalProperties": false,
+                            "required": [
+                                "required"
+                            ]
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "fields": {
+            "type": "object",
+            "patternProperties": {
+                ".+": {}
+            },
+            "additionalProperties": false
+        },
+        "update": {
+            "type": "object",
+            "patternProperties": {
+                ".+": {
+                    "type": "array",
+                    "items": {
+                        "title": "Field Operation",
+                        "type": "object"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "historyMetadata": {
+            "title": "History Metadata",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "descriptionKey": {
+                    "type": "string"
+                },
+                "activityDescription": {
+                    "type": "string"
+                },
+                "activityDescriptionKey": {
+                    "type": "string"
+                },
+                "emailDescription": {
+                    "type": "string"
+                },
+                "emailDescriptionKey": {
+                    "type": "string"
+                },
+                "actor": {
+                    "$ref": "#/definitions/history-metadata-participant"
+                },
+                "generator": {
+                    "$ref": "#/definitions/history-metadata-participant"
+                },
+                "cause": {
+                    "$ref": "#/definitions/history-metadata-participant"
+                },
+                "extraData": {
+                    "type": "object",
+                    "patternProperties": {
+                        ".+": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "properties": {
+            "type": "array",
+            "items": {
+                "title": "Entity Property",
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "value": {}
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "definitions": {
+        "history-metadata-participant": {
+            "title": "History Metadata Participant",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "displayName": {
+                    "type": "string"
+                },
+                "displayNameKey": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}
