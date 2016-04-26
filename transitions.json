@@ -1,0 +1,301 @@
+// my sample transitions list
+
+{
+    "expand": "transitions",
+    "transitions": [{
+        "id": "301",
+        "name": "Stop Progress",
+        "to": {
+            "self": "https://fastlane.atlassian.net/rest/api/2/status/1",
+            "description": "The issue is open and ready for the assignee to start work on it.",
+            "iconUrl": "https://fastlane.atlassian.net/images/icons/statuses/open.png",
+            "name": "Open",
+            "id": "1",
+            "statusCategory": {
+                "self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "To Do"
+            }
+        }
+    }, {
+        "id": "5",
+        "name": "Resolve Issue",
+        "to": {
+            "self": "https://fastlane.atlassian.net/rest/api/2/status/5",
+            "description": "A resolution has been taken, and it is awaiting verification by reporter. From here issues are either reopened, or are closed.",
+            "iconUrl": "https://fastlane.atlassian.net/images/icons/statuses/resolved.png",
+            "name": "Resolved",
+            "id": "5",
+            "statusCategory": {
+                "self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+                "id": 3,
+                "key": "done",
+                "colorName": "green",
+                "name": "Done"
+            }
+        }
+    }, {
+        "id": "2",
+        "name": "Close Issue",
+        "to": {
+            "self": "https://fastlane.atlassian.net/rest/api/2/status/6",
+            "description": "The issue is considered finished, the resolution is correct. Issues which are closed can be reopened.",
+            "iconUrl": "https://fastlane.atlassian.net/images/icons/statuses/closed.png",
+            "name": "Closed",
+            "id": "6",
+            "statusCategory": {
+                "self": "https://fastlane.atlassian.net/rest/api/2/statuscategory/3",
+                "id": 3,
+                "key": "done",
+                "colorName": "green",
+                "name": "Done"
+            }
+        }
+    }]
+}
+
+
+//example transitions list from JIRA
+{
+    "expand": "transitions",
+    "transitions": [
+        {
+            "id": "2",
+            "name": "Close Issue",
+            "to": {
+                "self": "http://localhost:8090/jira/rest/api/2.0/status/10000",
+                "description": "The issue is currently being worked on.",
+                "iconUrl": "http://localhost:8090/jira/images/icons/progress.gif",
+                "name": "In Progress",
+                "id": "10000",
+                "statusCategory": {
+                    "self": "http://localhost:8090/jira/rest/api/2.0/statuscategory/1",
+                    "id": 1,
+                    "key": "in-flight",
+                    "colorName": "yellow",
+                    "name": "In Progress"
+                }
+            },
+            "fields": {
+                "summary": {
+                    "required": false,
+                    "schema": {
+                        "type": "array",
+                        "items": "option",
+                        "custom": "com.atlassian.jira.plugin.system.customfieldtypes:multiselect",
+                        "customId": 10001
+                    },
+                    "name": "My Multi Select",
+                    "hasDefaultValue": false,
+                    "operations": [
+                        "set",
+                        "add"
+                    ],
+                    "allowedValues": [
+                        "red",
+                        "blue"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "711",
+            "name": "QA Review",
+            "to": {
+                "self": "http://localhost:8090/jira/rest/api/2.0/status/5",
+                "description": "The issue is closed.",
+                "iconUrl": "http://localhost:8090/jira/images/icons/closed.gif",
+                "name": "Closed",
+                "id": "5",
+                "statusCategory": {
+                    "self": "http://localhost:8090/jira/rest/api/2.0/statuscategory/9",
+                    "id": 9,
+                    "key": "completed",
+                    "colorName": "green"
+                }
+            },
+            "fields": {
+                "summary": {
+                    "required": false,
+                    "schema": {
+                        "type": "array",
+                        "items": "option",
+                        "custom": "com.atlassian.jira.plugin.system.customfieldtypes:multiselect",
+                        "customId": 10001
+                    },
+                    "name": "My Multi Select",
+                    "hasDefaultValue": false,
+                    "operations": [
+                        "set",
+                        "add"
+                    ],
+                    "allowedValues": [
+                        "red",
+                        "blue"
+                    ]
+                },
+                "colour": {
+                    "required": false,
+                    "schema": {
+                        "type": "array",
+                        "items": "option",
+                        "custom": "com.atlassian.jira.plugin.system.customfieldtypes:multiselect",
+                        "customId": 10001
+                    },
+                    "name": "My Multi Select",
+                    "hasDefaultValue": false,
+                    "operations": [
+                        "set",
+                        "add"
+                    ],
+                    "allowedValues": [
+                        "red",
+                        "blue"
+                    ]
+                }
+            }
+        }
+    ]
+}
+
+// schema
+
+{
+    "id": "https://docs.atlassian.com/jira/REST/schema/transitions-meta#",
+    "title": "Transitions Meta",
+    "type": "object",
+    "properties": {
+        "expand": {
+            "type": "string"
+        },
+        "transitions": {
+            "type": "array",
+            "items": {
+                "title": "Transition",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "to": {
+                        "title": "Status",
+                        "type": "object",
+                        "properties": {
+                            "self": {
+                                "type": "string"
+                            },
+                            "statusColor": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "iconUrl": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "statusCategory": {
+                                "title": "Status Category",
+                                "type": "object",
+                                "properties": {
+                                    "self": {
+                                        "type": "string"
+                                    },
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "key": {
+                                        "type": "string"
+                                    },
+                                    "colorName": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "additionalProperties": false
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "fields": {
+                        "type": "object",
+                        "patternProperties": {
+                            ".+": {
+                                "title": "Field Meta",
+                                "type": "object",
+                                "properties": {
+                                    "required": {
+                                        "type": "boolean"
+                                    },
+                                    "schema": {
+                                        "title": "Json Type",
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "system": {
+                                                "type": "string"
+                                            },
+                                            "custom": {
+                                                "type": "string"
+                                            },
+                                            "customId": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "autoCompleteUrl": {
+                                        "type": "string"
+                                    },
+                                    "hasDefaultValue": {
+                                        "type": "boolean"
+                                    },
+                                    "operations": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "allowedValues": {
+                                        "type": "array",
+                                        "items": {}
+                                    }
+                                },
+                                "additionalProperties": false,
+                                "required": [
+                                    "required"
+                                ]
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "expand": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

@@ -12,4 +12,5 @@ class aTask: UICollectionViewCell {
     @IBOutlet weak var label_name: UILabel!
     @IBOutlet weak var label_description: UILabel!
     @IBOutlet weak var label_priority: UILabel!
+    @IBOutlet weak var label_status: UILabel!
 }

@@ -1,39 +1,3 @@
-// schema for error messages
-
-{
-    "id": "https://docs.atlassian.com/jira/REST/schema/error-collection#",
-    "title": "Error Collection",
-    "type": "object",
-    "properties": {
-        "errorMessages": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
-        },
-        "errors": {
-            "type": "object",
-            "patternProperties": {
-                ".+": {
-                    "type": "string"
-                }
-            },
-            "additionalProperties": false
-        },
-        "status": {
-            "type": "integer"
-        }
-    },
-    "additionalProperties": false
-}
-
-// sample error message
-{
-	"errorMessages": 
-				["Login failed"],
-	"errors": {}
-}
-
 {
 	"expand": "schema,names",
 	"startAt": 0,

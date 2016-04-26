@@ -48,7 +48,9 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                     
                     if 200 ~= responseStatus {
                         // Everything is fine, forming the tasks list
+                        
                         self.tasks = JIRATasks(data: data!)
+                        
                     } else {
                         // Well, there was a problem with JIRA instance
                         self.errors = JIRAerrors(data: data!, response: theResponse!)
@@ -77,9 +79,12 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                     default: networkError = (error?.localizedDescription)!
                     }
                     
-                    let alert: UIAlertController = UIAlertController(title: "Oops", message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
+                    if error?.code != -999 { // code -999 means the request query was cancelled by the app itself
+                                             // we do it in the viewWillDisappear. Alert not needed in this case.
+                        let alert: UIAlertController = UIAlertController(title: "Oops", message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                        self.presentViewController(alert, animated: true, completion: nil)
+                    }
                 }
             })
         }
@@ -99,6 +104,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         cell.label_name.text = tasks?.taskslist[indexPath.row].task_name
         cell.label_description.text = tasks?.taskslist[indexPath.row].task_summary
         cell.label_priority.text = tasks?.taskslist[indexPath.row].task_priority
+        cell.label_status.text = tasks?.taskslist[indexPath.row].task_status
+
         switch cell.label_priority.text! {
         case "Highest":
             cell.label_priority.textColor = UIColor.redColor()
