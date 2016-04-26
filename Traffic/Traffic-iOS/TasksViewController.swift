@@ -34,13 +34,54 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         self.urlSession = NSURLSession(configuration: configuration)
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://\(domain!)/rest/api/2/search?jql=assignee=currentUser()+order+by+rank+asc")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://\(domain!)/rest/api/2/search?jql=assignee=currenUser()+order+by+rank+asc")!)
             //WARNING: JIRA query hardcoded in the line above - consider moving this logic out
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                 if error == nil && data != nil {
-                    self.tasks = JIRATasks(data: data!)
+                    let theResponse = response as? NSHTTPURLResponse
+                    let responseStatus = theResponse!.statusCode
+                    // 204 - Returned if the user was successfully logged out.
+                    // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-currentUser
+                    
+                    if 200 ~= responseStatus {
+                        // Everything is fine, forming the tasks list
+                        self.tasks = JIRATasks(data: data!)
+                    } else {
+                        // Well, there was a problem with JIRA instance
+                        self.errors = JIRAerrors(data: data!, response: theResponse!)
+                        let errorCode = self.errors?.errorslist[0].error_code
+                        let JIRAerrorMessage = self.errors?.errorslist[0].error_message
+                        var errorExplanation = ""
+                        
+                        switch errorCode! {
+                            //There is only one fail code for DELETE /rest/auth/1/session call:
+                            // 400 - Returned if there is a problem with the JQL query.
+                            // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/search-searchUsingSearchRequest
+                        case 400: errorExplanation = "Search request failed. There was a problem with the jql query."
+                        default: errorExplanation = "Don't know what exactly went wrong. Try again and contact me if you the problem persists."
+                        }
+                        
+                        let alert: UIAlertController = UIAlertController(
+                            title: "Oops",
+                            message: "\(errorExplanation) \n Error code: \(errorCode!), \n Message: \(JIRAerrorMessage!)",
+                            preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                        self.presentViewController(alert, animated: true, completion: nil)
+                    }
+                } else {
+                    // Looks like we can't access the JIRA instance.
+                    var networkError: String = ""
+                    switch error {
+                    // There is still a case when there was no error, but we got here because of data == nil
+                    case nil: networkError = "Seems there was no error, but the answer from JIRA unexpectedly was empty. Please contact developer to investigate this case."
+                    default: networkError = (error?.localizedDescription)!
+                    }
+                    
+                    let alert: UIAlertController = UIAlertController(title: "Oops", message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
                 }
             })
         }
@@ -142,7 +183,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                             var errorExplanation = ""
                             
                             switch errorCode! {
-                                //There are two possible codes for /rest/auth/1/session call:
+                                //There is only one fail code for DELETE /rest/auth/1/session call:
                                 // 401 - Returned if the login fails due to invalid credentials.
                                 // Documentation: https://developer.atlassian.com/static/rest/jira/5.0.html
                             case 401: errorExplanation = "Looks like you have been logged out already."
@@ -160,7 +201,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                         var networkError: String = ""
                         switch error {
                         // There is still a case when there was no error, but we got here because of data == nil
-                        case nil: networkError = "Seems there were no error, but the answer from JIRA unexpectedly was empty. Please contact developer to investigate this case."
+                        case nil: networkError = "Seems there was no error, but the answer from JIRA unexpectedly was empty. Please contact developer to investigate this case."
                         default: networkError = (error?.localizedDescription)!
                         }
                         
