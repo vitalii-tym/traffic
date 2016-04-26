@@ -34,7 +34,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         self.urlSession = NSURLSession(configuration: configuration)
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://\(domain!)/rest/api/2/search?jql=assignee=currenUser()+order+by+rank+asc")!)
+        let request = NSMutableURLRequest(URL: NSURL(string: "https://\(domain!)/rest/api/2/search?jql=assignee=currentUser()+order+by+rank+asc")!)
             //WARNING: JIRA query hardcoded in the line above - consider moving this logic out
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
@@ -42,8 +42,9 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 if error == nil && data != nil {
                     let theResponse = response as? NSHTTPURLResponse
                     let responseStatus = theResponse!.statusCode
-                    // 204 - Returned if the user was successfully logged out.
-                    // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-currentUser
+                    // 200 - application/json Returns a JSON representation of the search results.
+                    // 400 - Returned if there is a problem with the JQL query.
+                    // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/search-searchUsingSearchRequest
                     
                     if 200 ~= responseStatus {
                         // Everything is fine, forming the tasks list
@@ -56,11 +57,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                         var errorExplanation = ""
                         
                         switch errorCode! {
-                            //There is only one fail code for DELETE /rest/auth/1/session call:
-                            // 400 - Returned if there is a problem with the JQL query.
-                            // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/search-searchUsingSearchRequest
-                        case 400: errorExplanation = "Search request failed. There was a problem with the jql query."
-                        default: errorExplanation = "Don't know what exactly went wrong. Try again and contact me if you the problem persists."
+                            case 400: errorExplanation = "Search request failed. There was a problem with the jql query."
+                            default: errorExplanation = "Don't know what exactly went wrong. Try again and contact me if you the problem persists."
                         }
                         
                         let alert: UIAlertController = UIAlertController(
@@ -162,6 +160,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                         let theResponse = response as? NSHTTPURLResponse
                         let responseStatus = theResponse!.statusCode
                         // 204 - Returned if the user was successfully logged out.
+                        // 401 - Returned if the login fails due to invalid credentials.
                         // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-currentUser
                       
                         if 204 ~= responseStatus {
@@ -183,11 +182,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                             var errorExplanation = ""
                             
                             switch errorCode! {
-                                //There is only one fail code for DELETE /rest/auth/1/session call:
-                                // 401 - Returned if the login fails due to invalid credentials.
-                                // Documentation: https://developer.atlassian.com/static/rest/jira/5.0.html
-                            case 401: errorExplanation = "Looks like you have been logged out already."
-                            default: errorExplanation = "Don't know what exactly went wrong. Try again and contact me if you the problem persists."
+                                case 401: errorExplanation = "Looks like you have been logged out already."
+                                default: errorExplanation = "Don't know what exactly went wrong. Try again and contact me if you the problem persists."
                             }
                             
                             let alert: UIAlertController = UIAlertController(title: "Oops", message: "JIRA says \"\(JIRAerrorMessage!)\". Code: \(errorCode!). \(errorExplanation)", preferredStyle: UIAlertControllerStyle.Alert)
