@@ -32,6 +32,7 @@ struct Transition {
     var transition_id: String
     var transition_name: String
     var target_status: String
+    var required_fields: [(String, AnyObject)]?
 }
 
 class JIRATasks {
@@ -136,6 +137,7 @@ class JIRATransitions {
     convenience init? (data: NSData) {
         let fixedData = fixJsonData(data)
         var newTransitions = [Transition]()
+        var the_req_fields = [(String, AnyObject)]()
         var jsonObject: Dictionary<String, AnyObject>?
         do {
             jsonObject = try NSJSONSerialization.JSONObjectWithData(fixedData, options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject>
@@ -167,23 +169,12 @@ class JIRATransitions {
             guard let transition_fields = itemDict["fields"] as? Dictionary<String,AnyObject> else {
                 continue
             }
-            
-//            for field in transition_fields {
-//                guard let field_Dict = field as? Dictionary<String,AnyObject> else {
-//                    continue
-//                }
-//                if let is_reqired_field = field["required"] as? Bool {
-//                    // we don't need optional fieds, need to handle only required ones
-//                    
-//                    
-//                }else {
-//                    continue
-//                }
-//                
-//            }
-            
-            
-            newTransitions.append(Transition(transition_id: transition_id, transition_name: transition_name, target_status: transition_target))
+            for (field_name, item) in transition_fields {
+                if let required_field = item["required"] as? Bool where required_field == true {
+                    the_req_fields.append(field_name, item)
+                }
+            }
+            newTransitions.append(Transition(transition_id: transition_id, transition_name: transition_name, target_status: transition_target, required_fields: the_req_fields))
         }
         self.init(transitions: newTransitions)
     }
