@@ -19,7 +19,7 @@ let actionTypes: [String:
     "get_transitions": ("Oops",  // This is message header
                         [200],   // This is a list of successful codes
                             [404: "There was a problem with transitions", // This is the list of unsuccesful codes
-                            0: "unknown problem"]),                       // with respective messages to user
+                            0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),                              // with respective messages to user
                                                                           // 0 - is a generic text for the case when we can't interpret the code
         // STATUS 200 - application/jsonReturns a full representation of the transitions possible for
         // the specified issue and the fields required to perform the transition.
@@ -28,9 +28,9 @@ let actionTypes: [String:
     
     "do_transition": ("Oops",
                         [204],
-                            [400: "There was a problem with doing your transition",
-                            404: "There was a problem with doing your transition",
-                            0: "unknown problem"])
+                            [400: "No transition specified",
+                            404: "The issue does not exist or you don't have permission to view it",
+                            0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."])
         // STATUS 204 - Returned if the transition was successful.
         // STATUS 400 - If there is no transition specified.
         // STATUS 404 - The issue does not exist or the user does not have permission to view it
@@ -76,6 +76,7 @@ func anyErrors(actionType: String, controller: UIViewController, data: NSData?, 
 
             } else {
                     // We couldn't get info from JIRA, so showing just a generic alert for the chosen type of action
+                errorExplanation = "Looks like something went wrong. There was an error, but we couldn't parse it, most probably JIRA returned HTML. This could happen in case we had wrong URL in request."
                 
                     let alert: UIAlertController = UIAlertController(
                             title: actionTypes[actionType]!.0,

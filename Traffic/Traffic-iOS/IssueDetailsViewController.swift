@@ -70,77 +70,28 @@ class IssueDetailsViewController: UIViewController {
                 let do_transition: String = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
                 
                 let request = NSMutableURLRequest(URL: NSURL(string: "https://\(domain!)/rest/api/2/issue/\(self.aTask.task_key)/transitions")!)
+
                 request.HTTPMethod = "POST"
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.HTTPBody = do_transition.dataUsingEncoding(NSASCIIStringEncoding)!
                 let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
                     NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                        if error == nil && data != nil {
-                            let theResponse = response as? NSHTTPURLResponse
-                            let responseStatus = theResponse!.statusCode
-                            // STATUS 204 - Returned if the transition was successful.
-                            // STATUS 400 - If there is no transition specified.
-                            // STATUS 404 - The issue does not exist or the user does not have permission to view it
-                            // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-doTransition
-                            
-                            if 204 ~= responseStatus {
-                                // Everything is fine, forming the transitions list
-                                
-                                let alert: UIAlertController = UIAlertController(
-                                    title: "Success",
-                                    message: "Status succesfully changed to \(transition.target_status).",
-                                    preferredStyle: UIAlertControllerStyle.Alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
-                                            action in
-                                            self.performSegueWithIdentifier("back_to_tasks", sender: self)
-                                }))
-                                self.presentViewController(alert, animated: true, completion: nil)
-                                
-                            } else {
-                                // Well, there was a problem with JIRA instance
-                                self.errors = JIRAerrors(data: data!, response: theResponse!)
-                                var errorExplanation = ""
-                                let errorCode = "(empty)"
-                                let JIRAerrorMessage = "(empty)"
-                                if
-                                    let errorCode = self.errors?.errorslist[0].error_code,
-                                    let JIRAerrorMessage = self.errors?.errorslist[0].error_message {
-                                    
-                                    switch errorCode {
-                                    case 400: errorExplanation = "No transition specified"
-                                    case 404: errorExplanation = "The issue does not exist or you don't have permission to view it"
-                                    default: errorExplanation = "Don't know what exactly went wrong. Try again and contact me if you the problem persists."
-                                    }
-                                } else {
-                                    errorExplanation = "Something weird happened. Couldn't parse JIRA error codes."
-                                }
-                                let alert: UIAlertController = UIAlertController(
-                                    title: "Oops",
-                                    message: "\(errorExplanation) \n Error code: \(errorCode) \n Message: \(JIRAerrorMessage)",
-                                    preferredStyle: UIAlertControllerStyle.Alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                                self.presentViewController(alert, animated: true, completion: nil)
-                            }
-                        } else {
-                            // Looks like we can't access the JIRA instance.
-                            var networkError: String = ""
-                            switch error {
-                            // There is still a case when there was no error, but we got here because of data == nil
-                            case nil: networkError = "Seems there was no error, but the answer from JIRA unexpectedly was empty. Please contact developer to investigate this case."
-                            default: networkError = (error?.localizedDescription)!
-                            }
-                            
-                            if networkError != "cancelled" {
-                                let alert: UIAlertController = UIAlertController(title: "Oops", message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                                self.presentViewController(alert, animated: true, completion: nil)
-                            }
-                            
+                        if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
+
+                            let alert: UIAlertController = UIAlertController(
+                                title: "Success",
+                                message: "Status succesfully changed to \(transition.target_status).",
+                                preferredStyle: UIAlertControllerStyle.Alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
+                                action in
+                                self.performSegueWithIdentifier("back_to_tasks", sender: self)
+                            }))
+                            self.presentViewController(alert, animated: true, completion: nil)
                         }
                     })
                 }
                 dataTask.resume()
-                } ))
+            }))
         }
         new_photo_actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
         self.presentViewController(new_photo_actionSheet, animated: true, completion: nil)
