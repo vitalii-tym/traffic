@@ -58,26 +58,50 @@ class IssueDetailsViewController: UIViewController {
     }
     
     @IBAction func action_change_status_pressed(sender: AnyObject) {
-        let new_photo_actionSheet = UIAlertController(title: "Set status", message: nil, preferredStyle: .ActionSheet)
+        let change_status_actionSheet = UIAlertController(title: "Set status", message: nil, preferredStyle: .ActionSheet)
         
         for transition in (availableTransitions!.transitionsList) {
-            new_photo_actionSheet.addAction(UIAlertAction(title: "\(transition.transition_name)", style: .Default, handler: {
+            change_status_actionSheet.addAction(UIAlertAction(title: "\(transition.transition_name)", style: .Default, handler: {
                 action in
                 
                 let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
                 let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
                 self.urlSession = NSURLSession(configuration: configuration)
-                let do_transition: String = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
+                var do_transition: String = ""
+
+                if !transition.required_fields.isEmpty {
+                    // Do something only in case the are required fields
+                    for field in transition.required_fields {
+                        // need to make user fill in each of the required fields
+                        
+                        guard let fieldDict = field.1 as? Dictionary<String,AnyObject> else {
+                            continue
+                        }
+                        
+                        guard let field_name = fieldDict["name"] as? String else {
+                            continue
+                        }
+                        
+                        print ("need to fill in required field \(field_name)")
+                        
+                        // will present a custom view asking user to make choice here 
+                        
+                    }
+
+                } else {
+                    do_transition = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
+                }
+                
+                // --------------
                 
                 let request = NSMutableURLRequest(URL: NSURL(string: "https://\(domain!)/rest/api/2/issue/\(self.aTask.task_key)/transitions")!)
-
+                
                 request.HTTPMethod = "POST"
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.HTTPBody = do_transition.dataUsingEncoding(NSASCIIStringEncoding)!
                 let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
                     NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                         if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
-
                             let alert: UIAlertController = UIAlertController(
                                 title: "Success",
                                 message: "Status changed to \"\(transition.target_status)\".",
@@ -93,8 +117,8 @@ class IssueDetailsViewController: UIViewController {
                 dataTask.resume()
             }))
         }
-        new_photo_actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-        self.presentViewController(new_photo_actionSheet, animated: true, completion: nil)
+        change_status_actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        self.presentViewController(change_status_actionSheet, animated: true, completion: nil)
     }
     
     override func viewWillDisappear(animated: Bool) {

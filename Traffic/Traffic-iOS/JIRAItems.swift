@@ -32,7 +32,7 @@ struct Transition {
     var transition_id: String
     var transition_name: String
     var target_status: String
-    var required_fields: [(String, AnyObject)]?
+    var required_fields: [(String, AnyObject)] //this one will never be nil, but still can be just an empty array
 }
 
 class JIRATasks {
