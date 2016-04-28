@@ -100,11 +100,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
-    @IBAction func button_pressed_log_out(sender: AnyObject) {
-        logout()
-    }
-    
-    func logout() {
+    @IBAction func button_pressed_log_out(sender: UIButton) {
         let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
         let userLogin = NSUserDefaults.standardUserDefaults().objectForKey("login") as? String
 
@@ -119,66 +115,26 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         
             let dataTask: NSURLSessionDataTask = urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
                 NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                    if error == nil && data != nil {
-                        let theResponse = response as? NSHTTPURLResponse
-                        let responseStatus = theResponse!.statusCode
-                        // 204 - Returned if the user was successfully logged out.
-                        // 401 - Returned if the login fails due to invalid credentials.
-                        // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-currentUser
-                      
-                        if 204 ~= responseStatus {
-                            //Deleting users's credentials from Keychain
-                            let keychainQuery: [NSString: NSObject] = [
-                                kSecClass: kSecClassGenericPassword,
-                                kSecAttrAccount: hasLogin,
-                                kSecAttrService: theURL]
-                            let keychain_delete_status: OSStatus = SecItemDelete(keychainQuery as CFDictionaryRef)
-                            print("Keychain deleting code is: \(keychain_delete_status)")
-                            // Loggin out was succesful, can go back to login screen
-                            self.performSegueWithIdentifier("back_to_login", sender: self)
-                        } else {
-                            // Well, there was a problem with JIRA instance
-                            self.errors = JIRAerrors(data: data!, response: theResponse!)
-                            
-                            let errorCode = self.errors?.errorslist[0].error_code
-                            let JIRAerrorMessage = self.errors?.errorslist[0].error_message
-                            var errorExplanation = ""
-                            
-                            switch errorCode! {
-                                case 401: errorExplanation = "Looks like you have been logged out already."
-                                default: errorExplanation = "Don't know what exactly went wrong. Try again and contact me if you the problem persists."
-                            }
-                            
-                            let alert: UIAlertController = UIAlertController(title: "Oops", message: "JIRA says \"\(JIRAerrorMessage!)\". Code: \(errorCode!). \(errorExplanation)", preferredStyle: UIAlertControllerStyle.Alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                            self.presentViewController(alert, animated: true, completion: nil)
-                            // But since the user has been already logged out we can also go back to login screen
-                            self.performSegueWithIdentifier("back_to_login", sender: self)
-                        }
-                    } else {
-                        // Worst case: we can't even access the JIRA instance.
-                        var networkError: String = ""
-                        switch error {
-                        // There is still a case when there was no error, but we got here because of data == nil
-                        case nil: networkError = "Seems there was no error, but the answer from JIRA unexpectedly was empty. Please contact developer to investigate this case."
-                        default: networkError = (error?.localizedDescription)!
-                        }
-                        
-                        let alert: UIAlertController = UIAlertController(title: "Oops", message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                        self.presentViewController(alert, animated: true, completion: nil)
-                    
-                    }
+                   // if !anyErrors("do_logout", controller: self, data: data, response: response, error: error) {
+                        //Deleting users's credentials from Keychain
+                        let keychainQuery: [NSString: NSObject] = [
+                            kSecClass: kSecClassGenericPassword,
+                            kSecAttrAccount: hasLogin,
+                            kSecAttrService: theURL]
+                        let keychain_delete_status: OSStatus = SecItemDelete(keychainQuery as CFDictionaryRef)
+                        print("Keychain deleting code is: \(keychain_delete_status)")
+                        // Loggin out was succesful, can go back to login screen
+                        self.performSegueWithIdentifier("back_to_login", sender: self)
                 })
             }
             dataTask.resume()
         } else {
         // Don't know what to do in this case.
-        // Looks like user was logged in but for some reason his login or domain were not saved in User Data at all.
+        // Looks like user happened to be logged in but for some reason his login or domain were not saved in User Data at all.
         // We can't log user out because we simply don't know the JIRA URL to do this upon.
-        // However most probaly he/she will get stuck on the login screen on next app launch because auto-login
+        // However most probaly he/she will land on the login screen on next app launch because auto-login
         // won't work without valid User Data.
-        // So... let's just ask inform him/her suggesting to relaunch the application.
+        // So... let's just inform him/her suggesting to relaunch the application.
             
             let alert: UIAlertController = UIAlertController(title: "Oops", message: "Something weird happened. We can't log you out. But restarting the applicaiton should get you to the login screen.", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))

@@ -31,6 +31,25 @@ let actionTypes: [String:
     "network": ("Oops",
                     [0],
                         [0:""]),
+    "do_login": ("Oops",
+                        [200],
+                        [401: "Check your login and password and try again.",
+                        403: "Looks like there is a problem with captcha.",
+                        0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
+        // STATUS 200 - Returns information about the caller's session if the caller is authenticated.
+        // STATUS 401 - Returned if the login fails due to invalid credentials.
+        // STATUS 403 - Returned if the login is denied due to a CAPTCHA requirement, throtting, or any other reason.
+        // In case of a 403 status code it is possible that the supplied credentials are valid but the user is not allowed to log in at this point in time.
+        // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-login
+
+    "do_logout": ("Oops",
+                        [204],
+                        [401: "Looks like you have been logged out already.",
+                        0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
+        // STATUS 401 - Returned if the caller is not authenticated.
+        // STATUS 204 - Returned if the user was successfully logged out.
+        // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-logout
+
     "get_transitions": ("Oops",  // This is message header
                         [200],   // This is a list of successful codes
                             [404: "There was a problem with transitions", // This is the list of unsuccesful codes

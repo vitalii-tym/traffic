@@ -80,7 +80,7 @@ class IssueDetailsViewController: UIViewController {
 
                             let alert: UIAlertController = UIAlertController(
                                 title: "Success",
-                                message: "Status succesfully changed to \(transition.target_status).",
+                                message: "Status changed to \"\(transition.target_status)\".",
                                 preferredStyle: UIAlertControllerStyle.Alert)
                             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
                                 action in
