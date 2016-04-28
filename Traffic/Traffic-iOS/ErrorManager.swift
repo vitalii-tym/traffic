@@ -6,6 +6,21 @@
 //  Copyright © 2016 Vitaliy Timoshenko. All rights reserved.
 //
 
+//  An example on how to use the anyErrors() function:
+//
+//  let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
+//      NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+//          if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
+//                  // Do work need to do when there were no errors
+//              } else {
+//                  // If there's something else to do after user has dismissed the error
+//                  // but mind the "cancel" type of errors - when the session was cancelled by user going away
+//              }
+//          })
+//      }
+//      dataTask.resume()
+//  }))
+
 import Foundation
 import UIKit
 
@@ -30,11 +45,19 @@ let actionTypes: [String:
                         [204],
                             [400: "No transition specified",
                             404: "The issue does not exist or you don't have permission to view it",
-                            0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."])
+                            0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
         // STATUS 204 - Returned if the transition was successful.
         // STATUS 400 - If there is no transition specified.
         // STATUS 404 - The issue does not exist or the user does not have permission to view it
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-doTransition
+        
+    "do_search": ("Oops",
+                        [200],
+                        [400: "Search request failed. There was a problem with the jql query.",
+                         0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."])
+        // 200 - application/json Returns a JSON representation of the search results.
+        // 400 - Returned if there is a problem with the JQL query.
+        // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/search-searchUsingSearchRequest
     ]
 
 func anyErrors(actionType: String, controller: UIViewController, data: NSData?, response: NSURLResponse?, error: NSError?) -> Bool {
@@ -97,8 +120,9 @@ func anyErrors(actionType: String, controller: UIViewController, data: NSData?, 
         default: networkError = (error?.localizedDescription)!
         }
         
-        if networkError != "cancelled" {
-            // showing this alert only if the network call was not cancelled by user simply leaving the respective screen
+        if error?.code != -999 {
+            // code -999 means the request query was cancelled by the app itself
+            // It is usually done in a viewWillDisappear by self.urlSession.invalidateAndCancel() and can be ignored.
             let alert: UIAlertController = UIAlertController(title: actionTypes["network"]!.0, message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             controller.presentViewController(alert, animated: true, completion: nil)

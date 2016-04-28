@@ -39,53 +39,9 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                if error == nil && data != nil {
-                    let theResponse = response as? NSHTTPURLResponse
-                    let responseStatus = theResponse!.statusCode
-                    // 200 - application/json Returns a JSON representation of the search results.
-                    // 400 - Returned if there is a problem with the JQL query.
-                    // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/search-searchUsingSearchRequest
-                    
-                    if 200 ~= responseStatus {
-                        // Everything is fine, forming the tasks list
-                        
+                if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
                         self.tasks = JIRATasks(data: data!)
-                        
-                    } else {
-                        // Well, there was a problem with JIRA instance
-                        self.errors = JIRAerrors(data: data!, response: theResponse!)
-                        let errorCode = self.errors?.errorslist[0].error_code
-                        let JIRAerrorMessage = self.errors?.errorslist[0].error_message
-                        var errorExplanation = ""
-                        
-                        switch errorCode! {
-                            case 400: errorExplanation = "Search request failed. There was a problem with the jql query."
-                            default: errorExplanation = "Don't know what exactly went wrong. Try again and contact me if you the problem persists."
-                        }
-                        
-                        let alert: UIAlertController = UIAlertController(
-                            title: "Oops",
-                            message: "\(errorExplanation) \n Error code: \(errorCode!), \n Message: \(JIRAerrorMessage!)",
-                            preferredStyle: UIAlertControllerStyle.Alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                        self.presentViewController(alert, animated: true, completion: nil)
                     }
-                } else {
-                    // Looks like we can't access the JIRA instance.
-                    var networkError: String = ""
-                    switch error {
-                    // There is still a case when there was no error, but we got here because of data == nil
-                    case nil: networkError = "Seems there was no error, but the answer from JIRA unexpectedly was empty. Please contact developer to investigate this case."
-                    default: networkError = (error?.localizedDescription)!
-                    }
-                    
-                    if error?.code != -999 { // code -999 means the request query was cancelled by the app itself
-                                             // we do it in the viewWillDisappear. Alert not needed in this case.
-                        let alert: UIAlertController = UIAlertController(title: "Oops", message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                        self.presentViewController(alert, animated: true, completion: nil)
-                    }
-                }
             })
         }
         dataTask.resume()
