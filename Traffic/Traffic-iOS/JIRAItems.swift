@@ -28,12 +28,21 @@ struct Error {
     var error_message: String?
 }
 
+struct aReqiredField {
+    var allowedValues: [Dictionary<String, String>]
+    var operations: [String]
+    var name: String
+}
+
 struct Transition {
     var transition_id: String
     var transition_name: String
     var target_status: String
-    var required_fields: [(String, AnyObject)] //this one will never be nil, but still can be just an empty array
+    var required_fields: [aReqiredField] //this one will never be nil, but still can be just an empty array
 }
+
+
+
 
 class JIRATasks {
     var taskslist: [Task]
@@ -83,8 +92,6 @@ class JIRATasks {
             guard let issue_summary = issue_fields_Dict["summary"] as? String else {
                 continue
             }
-            
-            
             newTasks.append(Task(task_key: issue_key ?? "(no title)",
                                 task_summary: issue_summary,
                                 task_priority: issue_priority,
@@ -137,7 +144,7 @@ class JIRATransitions {
     convenience init? (data: NSData) {
         let fixedData = fixJsonData(data)
         var newTransitions = [Transition]()
-        var the_req_fields = [(String, AnyObject)]()
+        var the_req_fields = [aReqiredField]()
         var jsonObject: Dictionary<String, AnyObject>?
         do {
             jsonObject = try NSJSONSerialization.JSONObjectWithData(fixedData, options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject>
@@ -165,13 +172,29 @@ class JIRATransitions {
             guard let transition_target = transition_toDict["name"] as? String else {
                 continue
             }
-            
             guard let transition_fields = itemDict["fields"] as? Dictionary<String,AnyObject> else {
                 continue
             }
-            for (field_name, item) in transition_fields {
+            for (_, item) in transition_fields {
                 if let required_field = item["required"] as? Bool where required_field == true {
-                    the_req_fields.append(field_name, item)
+                    
+                    guard let fieldDict = item as? Dictionary<String,AnyObject> else {
+                        continue
+                    }
+                    
+                    guard let name = fieldDict["name"] as? String else {
+                        continue
+                    }
+                    
+                    guard let allowedValues = fieldDict["allowedValues"] as? [Dictionary<String, String>] else {
+                        continue
+                    }
+
+                    guard let operations = fieldDict["operations"] as? Array<String> else {
+                        continue
+                    }
+                    
+                    the_req_fields.append(aReqiredField(allowedValues: allowedValues, operations: operations, name: name))
                 }
             }
             newTransitions.append(Transition(transition_id: transition_id, transition_name: transition_name, target_status: transition_target, required_fields: the_req_fields))
