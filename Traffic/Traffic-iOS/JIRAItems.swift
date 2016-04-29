@@ -28,9 +28,10 @@ struct Error {
 }
 
 struct aReqiredField {
-    var allowedValues: [Dictionary<String, String>]
+    var allowedValues: [Dictionary<String, AnyObject>]
     var operations: [String]
     var name: String
+    var type: String
 }
 
 struct Transition {
@@ -153,6 +154,8 @@ class JIRATransitions {
             return nil
         }
         for item in items {
+            var the_req_fields = [aReqiredField]()
+            
             guard let itemDict = item as? Dictionary<String,AnyObject> else {
                 continue
             }
@@ -182,7 +185,7 @@ class JIRATransitions {
                         continue
                     }
                     
-                    guard let allowedValues = fieldDict["allowedValues"] as? [Dictionary<String, String>] else {
+                    guard let allowedValues = fieldDict["allowedValues"] as? [Dictionary<String, AnyObject>] else {
                         continue
                     }
 
@@ -190,9 +193,17 @@ class JIRATransitions {
                         continue
                     }
                     
-                    the_req_fields.append(aReqiredField(allowedValues: allowedValues, operations: operations, name: name))
+                    guard let schemaDict = fieldDict["schema"] as? Dictionary<String,String> else {
+                        continue
+                    }
+                    guard let type = schemaDict["type"] else {
+                        continue
+                    }
+                    
+                    the_req_fields.append(aReqiredField(allowedValues: allowedValues, operations: operations, name: name, type: type))
                 }
             }
+            
             newTransitions.append(Transition(transition_id: transition_id, transition_name: transition_name, target_status: transition_target, required_fields: the_req_fields))
         }
         self.init(transitions: newTransitions)

@@ -365,6 +365,7 @@
                         <outlet property="label_priority" destination="ee5-MM-5hj" id="mQT-vW-9r7"/>
                         <outlet property="label_required_field_name" destination="kKM-ZK-yqa" id="2Vt-Xh-Gp1"/>
                         <outlet property="label_status" destination="hTh-6U-cJO" id="V0n-a7-ZR6"/>
+                        <outlet property="table_view_resolution" destination="zDR-kP-oj5" id="NXM-Hi-VCB"/>
                         <outlet property="textview_IssueDetails" destination="A5Z-lD-kvr" id="WCT-qd-BNg"/>
                         <outlet property="textview_IssueSummary" destination="ZIc-rz-jOa" id="KXb-bE-8ZR"/>
                         <outlet property="view_list" destination="JjY-ai-akf" id="9om-TB-6Zg"/>

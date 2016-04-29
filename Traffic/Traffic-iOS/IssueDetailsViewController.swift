@@ -22,6 +22,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var button_change_status: UIButton!
     @IBOutlet var view_list: UIView!
     @IBOutlet weak var label_required_field_name: UILabel!
+    @IBOutlet weak var table_view_resolution: UITableView!
 
     var aTask: Task!
     var errors: JIRAerrors?
@@ -29,6 +30,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     var currentRequiredFieldForTransition: aReqiredField?
     var currentTransition: Transition?
     var aNetworkRequest = JIRANetworkRequest()
+    var fieldsQueue: [aReqiredField]!
+    var JSON: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,22 +88,12 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     }
                 } else {
                     // Do something only in case there are required fields
+                    var fields = [aReqiredField]()
                     for field in transition.required_fields {
-                        // need to make user fill in each of the required fields
-                        // TODO: here we need to choose what kind of additional view to show
-                        self.currentRequiredFieldForTransition = field
-                        self.currentTransition = transition
-                        self.view.addSubview(self.view_list)
-                        self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
-                        self.view_list.translatesAutoresizingMaskIntoConstraints = false
-                        let centerXconstraint = self.view_list.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor)
-                        let centerYconstraint = self.view_list.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor)
-                        let width = self.view_list.widthAnchor.constraintEqualToConstant(300)
-                        let height = self.view_list.heightAnchor.constraintEqualToConstant(300)
-                        centerYconstraint.constant = -100
-                        NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
-                        self.view_list.layoutIfNeeded()
+                        fields.append(field)
                     }
+                    self.fieldsQueue = fields
+                    self.queueGatheringDataAndSendThem()
                 }
             }))
         }
@@ -108,19 +101,63 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         self.presentViewController(change_status_actionSheet, animated: true, completion: nil)
     }
     
+    func queueGatheringDataAndSendThem() {
+        for field in self.fieldsQueue {
+            if field.type == "resolution" {
+                print ("need to gather resolution")
+            }
+            if field.type == "array" {
+                print ("need to gather array")
+            }
+        }
+        GatherUserDataIfNeeded()
+    }
+    
+    func GatherUserDataIfNeeded() {
+        if !self.fieldsQueue.isEmpty {
+            self.currentRequiredFieldForTransition = self.fieldsQueue[0]
+            table_view_resolution.reloadData()
+            // self.currentTransition = transition
+            self.view.addSubview(self.view_list)
+            self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
+            self.view_list.translatesAutoresizingMaskIntoConstraints = false
+            let centerXconstraint = self.view_list.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor)
+            let centerYconstraint = self.view_list.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor)
+            let width = self.view_list.widthAnchor.constraintEqualToConstant(300)
+            let height = self.view_list.heightAnchor.constraintEqualToConstant(300)
+            centerYconstraint.constant = -100
+            NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
+            self.view_list.layoutIfNeeded()
+            self.fieldsQueue.removeFirst()
+        } else {
+            print("\(JSON)")
+            self.JSON = ""
+            // we have finished gathering data. Can fire the request here.
+        }
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("required_cell", forIndexPath: indexPath) as! required_action_cell
-        cell.label_action.text = currentRequiredFieldForTransition!.allowedValues[indexPath.row]["name"]
+        cell.label_action.text = currentRequiredFieldForTransition!.allowedValues[indexPath.row]["name"] as? String
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let resolution = currentRequiredFieldForTransition?.allowedValues[indexPath.row]
-        let required_field = "\"fields\": { \"resolution\": { \"name\": \"\(resolution!["name"]!)\" } }"
-        let do_transition = "{ \(required_field),\"transition\": { \"id\": \"\(currentTransition!.transition_id)\" } }"
-        print(do_transition)
-        view_list.removeFromSuperview()
         
+      //  let required_field = "\"fields\": { \"resolution\": { \"name\": \"\(resolution!["name"]!)\" } }"
+      //  let do_transition = "{ \(required_field),\"transition\": { \"id\": \"\(currentTransition!.transition_id)\" } }"
+      //  print(do_transition)
+        
+        view_list.removeFromSuperview()
+
+        // TODO: Create a function that generates JSON object according to rules applied for current 
+        // required field and transition, and appends it to global JSON
+        // The function will be called from each piece of interaction presented for user to gather their data
+        
+        self.JSON += "{JSON object}"
+
+        GatherUserDataIfNeeded()
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

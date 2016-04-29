@@ -91,8 +91,7 @@ class LoginViewController: UIViewController {
         let JSON = logincredentials
         aNetworkRequest.getdata("POST", URL: URL, JSON: JSON) { (data, response, error) -> Void in
             if !anyErrors("do_login", controller: self, data: data, response: response, error: error) {
-                // Authorization succesfull. Great!
-                // Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
+                // Authorization succesfull. Great! Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
                 if self.switch_remember_me.on == true && save_to_keychain == true {
                     let userAccount = self.textfield_login.text!
                     let passwordData: NSData = self.textfield_password.text!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
