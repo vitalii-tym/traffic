@@ -18,7 +18,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var button_login: UIButton!
     @IBOutlet weak var switch_remember_me: UISwitch!
     
-    var urlSession: NSURLSession!
+    var aNetworkRequest = JIRANetworkRequest()
     var errors: JIRAerrors?
     
     override func viewDidLoad() {
@@ -59,17 +59,6 @@ class LoginViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        self.urlSession.invalidateAndCancel()
-        self.urlSession = nil
-    }
-    
     func checkFields(sender: UITextField) {
         sender.text = sender.text?.stringByTrimmingCharactersInSet(.whitespaceCharacterSet())
         guard
@@ -98,36 +87,37 @@ class LoginViewController: UIViewController {
 
     func login(with logincredentials: String, and domain: String, save_to_keychain: Bool) {
         let loginURLsuffix = "/rest/auth/1/session"
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        self.urlSession = NSURLSession(configuration: configuration)
-        let request = NSMutableURLRequest(URL: NSURL(string: domain+loginURLsuffix)!)
-        
-        request.HTTPMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = logincredentials.dataUsingEncoding(NSASCIIStringEncoding)!
-        
-        let dataTask: NSURLSessionDataTask = urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                if !anyErrors("do_login", controller: self, data: data, response: response, error: error) {
-                    // Authorization succesfull. Great!
-                    // Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
-                    if self.switch_remember_me.on == true && save_to_keychain == true {
-                        let userAccount = self.textfield_login.text!
-                        let passwordData: NSData = self.textfield_password.text!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-                        let keychainQuery: [NSString: NSObject] = [
-                            kSecClass: kSecClassGenericPassword,
-                            kSecAttrAccount: userAccount,
-                            kSecAttrService: domain, // we use JIRA URL as service string for Keychain
-                            kSecValueData: passwordData]
-                        SecItemDelete(keychainQuery as CFDictionaryRef) //Deletes the item just in case it already exists
-                        let keychain_save_status: OSStatus = SecItemAdd(keychainQuery as CFDictionaryRef, nil)
-                        print("Keychain saving code is: \(keychain_save_status)")
-                    }
-                    self.performSegueWithIdentifier("afterLogin", sender: nil)
+        let URL = domain+loginURLsuffix
+        let JSON = logincredentials
+        aNetworkRequest.getdata("POST", URL: URL, JSON: JSON) { (data, response, error) -> Void in
+            if !anyErrors("do_login", controller: self, data: data, response: response, error: error) {
+                // Authorization succesfull. Great!
+                // Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
+                if self.switch_remember_me.on == true && save_to_keychain == true {
+                    let userAccount = self.textfield_login.text!
+                    let passwordData: NSData = self.textfield_password.text!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+                    let keychainQuery: [NSString: NSObject] = [
+                        kSecClass: kSecClassGenericPassword,
+                        kSecAttrAccount: userAccount,
+                        kSecAttrService: domain, // we use JIRA URL as service string for Keychain
+                        kSecValueData: passwordData]
+                    SecItemDelete(keychainQuery as CFDictionaryRef) //Deletes the item just in case it already exists
+                    let keychain_save_status: OSStatus = SecItemAdd(keychainQuery as CFDictionaryRef, nil)
+                    print("Keychain saving code is: \(keychain_save_status)")
                 }
-            })
+                self.performSegueWithIdentifier("afterLogin", sender: nil)
+            }
         }
-        dataTask.resume()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        aNetworkRequest.cancel()
     }
     
     override func didReceiveMemoryWarning() {

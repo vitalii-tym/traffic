@@ -20,7 +20,6 @@ struct Task {
     var task_priority: String
     var task_description: String? //optional, because some tasks might have no description (JIRA returns "null")
     var task_status: String
-//    var task_id: Int
 }
 
 struct Error {
@@ -40,9 +39,6 @@ struct Transition {
     var target_status: String
     var required_fields: [aReqiredField] //this one will never be nil, but still can be just an empty array
 }
-
-
-
 
 class JIRATasks {
     var taskslist: [Task]

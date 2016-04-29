@@ -24,11 +24,11 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var label_required_field_name: UILabel!
 
     var aTask: Task!
-    var urlSession: NSURLSession!
     var errors: JIRAerrors?
     var availableTransitions: JIRATransitions?
     var currentRequiredFieldForTransition: aReqiredField?
     var currentTransition: Transition?
+    var aNetworkRequest = JIRANetworkRequest()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,22 +47,17 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-                
+        
+        // As soon as user opens a task we download possible transitions for the task.
+        // When succesful, it becomes possible to change task status (respective button becomes enabled)
         let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        self.urlSession = NSURLSession(configuration: configuration)
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://\(domain!)/rest/api/2/issue/\(aTask.task_key)/transitions?expand=transitions.fields")!)
-        //WARNING: JIRA query hardcoded in the line above - consider moving this logic out
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+        let URL = "https://\(domain!)/rest/api/2/issue/\(aTask.task_key)/transitions?expand=transitions.fields"
+        aNetworkRequest.getdata("GET", URL: URL, JSON: nil) { (data, response, error) -> Void in
                 if !anyErrors("get_transitions", controller: self, data: data, response: response, error: error) {
                     self.availableTransitions = JIRATransitions(data: data!)
                     self.button_change_status.enabled = true
-                }
-            })
+            }
         }
-        dataTask.resume()
     }
     
     @IBAction func action_change_status_pressed(sender: AnyObject) {
@@ -72,34 +67,22 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 action in
                 
                 let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
-                let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-                self.urlSession = NSURLSession(configuration: configuration)
-                var do_transition: String = ""
 
                 if transition.required_fields.isEmpty {
-                    do_transition = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
-                    
-                    let request = NSMutableURLRequest(URL: NSURL(string: "https://\(domain!)/rest/api/2/issue/\(self.aTask.task_key)/transitions")!)
-                    
-                    request.HTTPMethod = "POST"
-                    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                    request.HTTPBody = do_transition.dataUsingEncoding(NSASCIIStringEncoding)!
-                    let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                        NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                            if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
-                                let alert: UIAlertController = UIAlertController(
-                                    title: "Success",
-                                    message: "Status changed to \"\(transition.target_status)\".",
-                                    preferredStyle: UIAlertControllerStyle.Alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
-                                    action in
-                                    self.performSegueWithIdentifier("back_to_tasks", sender: self)
-                                }))
-                                self.presentViewController(alert, animated: true, completion: nil)
-                            }
-                        })
+                    let JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
+                    let URL = "https://\(domain!)/rest/api/2/issue/\(self.aTask.task_key)/transitions"
+                    self.aNetworkRequest.getdata("POST", URL: URL, JSON: JSON) { (data, response, error) -> Void in
+                        if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
+                            let alert: UIAlertController = UIAlertController(
+                                title: "Success",
+                                message: "Status changed to \"\(transition.target_status)\".",
+                                preferredStyle: UIAlertControllerStyle.Alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
+                                action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
+                            }))
+                            self.presentViewController(alert, animated: true, completion: nil)
+                        }
                     }
-                    dataTask.resume()
                 } else {
                     // Do something only in case there are required fields
                     for field in transition.required_fields {
@@ -147,10 +130,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.urlSession.invalidateAndCancel()
-        self.urlSession = nil
+        aNetworkRequest.cancel()
     }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

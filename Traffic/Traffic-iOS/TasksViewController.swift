@@ -10,7 +10,7 @@ import UIKit
 
 class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
-    var urlSession: NSURLSession!
+    var aNetworkRequest = JIRANetworkRequest()
     var tasks: JIRATasks? {
         didSet {
             self.view_collectionView.reloadData()
@@ -22,7 +22,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
     @IBOutlet weak var button_log_out: UIBarButtonItem!
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,21 +29,14 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+    
         let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        self.urlSession = NSURLSession(configuration: configuration)
-        let request = NSMutableURLRequest(URL: NSURL(string: "https://\(domain!)/rest/api/2/search?jql=assignee=currentUser()+order+by+rank+asc")!)
-            //WARNING: JIRA query hardcoded in the line above - consider moving this logic out
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
-            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
+        let URL = "https://\(domain!)/rest/api/2/search?jql=assignee=currentUser()+order+by+rank+asc"
+        aNetworkRequest.getdata("GET", URL: URL, JSON: nil) { (data, response, error) -> Void in
+            if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
                         self.tasks = JIRATasks(data: data!)
                     }
-            })
         }
-        dataTask.resume()
     }
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -106,28 +98,18 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
 
         if let hasDomain = domain, hasLogin = userLogin {
             let loginURLsuffix = "/rest/auth/1/session"
-            let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-            self.urlSession = NSURLSession(configuration: configuration)
-            let theURL = "https://\(hasDomain)"
-            let request = NSMutableURLRequest(URL: NSURL(string: theURL+loginURLsuffix)!)
-            request.HTTPMethod = "DELETE"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-            let dataTask: NSURLSessionDataTask = urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
-                NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                   // if !anyErrors("do_logout", controller: self, data: data, response: response, error: error) {
-                        //Deleting users's credentials from Keychain
+            let baseURL = "https://\(hasDomain)"
+            let URL = baseURL + loginURLsuffix
+            aNetworkRequest.getdata("DELETE", URL: URL, JSON: nil) { (data, response, error) -> Void in
                         let keychainQuery: [NSString: NSObject] = [
                             kSecClass: kSecClassGenericPassword,
                             kSecAttrAccount: hasLogin,
-                            kSecAttrService: theURL]
+                            kSecAttrService: baseURL]
                         let keychain_delete_status: OSStatus = SecItemDelete(keychainQuery as CFDictionaryRef)
                         print("Keychain deleting code is: \(keychain_delete_status)")
-                        // Loggin out was succesful, can go back to login screen
+                        // Logout was succesful, can go back to login screen
                         self.performSegueWithIdentifier("back_to_login", sender: self)
-                })
             }
-            dataTask.resume()
         } else {
         // Don't know what to do in this case.
         // Looks like user happened to be logged in but for some reason his login or domain were not saved in User Data at all.
@@ -145,8 +127,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.urlSession.invalidateAndCancel()
-        self.urlSession = nil
+        aNetworkRequest.cancel()
     }
     
     override func didReceiveMemoryWarning() {
