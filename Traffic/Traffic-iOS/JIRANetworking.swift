@@ -13,13 +13,13 @@ class JIRANetworkRequest: NSObject {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         let session = NSURLSession(configuration: configuration)
         return session }
+    let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
     
-    func getdata(request_type: String, URL: String, JSON: String?, completionHandler: (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void) {
-        
+    func getdata(request_type: String, URLEnding: String, JSON: String?, completionHandler: (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void) {
+
+        let URL = "https://" + domain! + URLEnding
         let request = NSMutableURLRequest(URL: NSURL(string: URL)!)
-
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
         switch request_type {
             case "POST":
                 request.HTTPMethod = request_type

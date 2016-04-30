@@ -53,9 +53,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         
         // As soon as user opens a task we download possible transitions for the task.
         // When succesful, it becomes possible to change task status (respective button becomes enabled)
-        let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
-        let URL = "https://\(domain!)/rest/api/2/issue/\(aTask.task_key)/transitions?expand=transitions.fields"
-        aNetworkRequest.getdata("GET", URL: URL, JSON: nil) { (data, response, error) -> Void in
+        let URLEnding = "/rest/api/2/issue/\(aTask.task_key)/transitions?expand=transitions.fields"
+        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
                 if !anyErrors("get_transitions", controller: self, data: data, response: response, error: error) {
                     self.availableTransitions = JIRATransitions(data: data!)
                     self.button_change_status.enabled = true
@@ -68,13 +67,11 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         for transition in (availableTransitions!.transitionsList) {
             change_status_actionSheet.addAction(UIAlertAction(title: "\(transition.transition_name)", style: .Default, handler: {
                 action in
-                
-                let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
 
                 if transition.required_fields.isEmpty {
                     let JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
-                    let URL = "https://\(domain!)/rest/api/2/issue/\(self.aTask.task_key)/transitions"
-                    self.aNetworkRequest.getdata("POST", URL: URL, JSON: JSON) { (data, response, error) -> Void in
+                    let URLEnding = "/rest/api/2/issue/\(self.aTask.task_key)/transitions"
+                    self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON) { (data, response, error) -> Void in
                         if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
                             let alert: UIAlertController = UIAlertController(
                                 title: "Success",

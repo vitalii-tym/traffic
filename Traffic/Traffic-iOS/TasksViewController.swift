@@ -30,9 +30,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
     
-        let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
-        let URL = "https://\(domain!)/rest/api/2/search?jql=assignee=currentUser()+order+by+rank+asc"
-        aNetworkRequest.getdata("GET", URL: URL, JSON: nil) { (data, response, error) -> Void in
+        let URLEnding = "/rest/api/2/search?jql=assignee=currentUser()+order+by+rank+asc"
+        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
                         self.tasks = JIRATasks(data: data!)
                     }
@@ -99,8 +98,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         if let hasDomain = domain, hasLogin = userLogin {
             let loginURLsuffix = "/rest/auth/1/session"
             let baseURL = "https://\(hasDomain)"
-            let URL = baseURL + loginURLsuffix
-            aNetworkRequest.getdata("DELETE", URL: URL, JSON: nil) { (data, response, error) -> Void in
+          //  let URL = baseURL + loginURLsuffix
+            aNetworkRequest.getdata("DELETE", URLEnding: loginURLsuffix, JSON: nil) { (data, response, error) -> Void in
                         let keychainQuery: [NSString: NSObject] = [
                             kSecClass: kSecClassGenericPassword,
                             kSecAttrAccount: hasLogin,
@@ -115,8 +114,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         // Looks like user happened to be logged in but for some reason his login or domain were not saved in User Data at all.
         // We can't log user out because we simply don't know the JIRA URL to do this upon.
         // However most probaly he/she will land on the login screen on next app launch because auto-login
-        // won't work without valid User Data.
-        // So... let's just inform him/her suggesting to relaunch the application.
+        // won't work without valid User Data. So... let's just inform him/her suggesting to relaunch the application.
             
             let alert: UIAlertController = UIAlertController(title: "Oops", message: "Something weird happened. We can't log you out. But restarting the applicaiton should get you to the login screen.", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))

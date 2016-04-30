@@ -141,7 +141,6 @@ class JIRATransitions {
     convenience init? (data: NSData) {
         let fixedData = fixJsonData(data)
         var newTransitions = [Transition]()
-        var the_req_fields = [aReqiredField]()
         var jsonObject: Dictionary<String, AnyObject>?
         do {
             jsonObject = try NSJSONSerialization.JSONObjectWithData(fixedData, options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject>
