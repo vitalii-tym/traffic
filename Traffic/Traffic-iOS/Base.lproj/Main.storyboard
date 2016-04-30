@@ -267,7 +267,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="596"/>
                                         <subviews>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="249" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="task details" translatesAutoresizingMaskIntoConstraints="NO" id="A5Z-lD-kvr">
-                                                <rect key="frame" x="0.0" y="66" width="600" height="33"/>
+                                                <rect key="frame" x="0.0" y="127" width="600" height="33"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -298,7 +298,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textView clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="749" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZIc-rz-jOa">
-                                                <rect key="frame" x="0.0" y="44" width="600" height="22"/>
+                                                <rect key="frame" x="0.0" y="44" width="600" height="83"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <accessibility key="accessibilityConfiguration">
                                                     <accessibilityTraits key="traits" staticText="YES"/>
@@ -324,7 +324,6 @@
                                             <constraint firstItem="ee5-MM-5hj" firstAttribute="leading" secondItem="Lxt-FL-sQD" secondAttribute="trailing" constant="5" id="JbA-Og-pnv"/>
                                             <constraint firstItem="Lxt-FL-sQD" firstAttribute="top" secondItem="dM1-aC-gje" secondAttribute="top" constant="5" id="KCX-Ka-xcO"/>
                                             <constraint firstItem="hTh-6U-cJO" firstAttribute="leading" secondItem="WAi-ML-M6n" secondAttribute="trailing" constant="5" id="PPx-Hd-btx"/>
-                                            <constraint firstItem="A5Z-lD-kvr" firstAttribute="top" secondItem="dM1-aC-gje" secondAttribute="top" constant="66" id="SLn-CC-A3G"/>
                                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="A5Z-lD-kvr" secondAttribute="bottom" id="T00-lk-WEK"/>
                                             <constraint firstItem="ee5-MM-5hj" firstAttribute="top" secondItem="dM1-aC-gje" secondAttribute="top" constant="5" id="TcD-ti-R5n"/>
                                             <constraint firstItem="ZIc-rz-jOa" firstAttribute="top" secondItem="WAi-ML-M6n" secondAttribute="bottom" constant="5" id="XbX-2D-CJ9"/>
