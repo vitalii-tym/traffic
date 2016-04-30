@@ -21,14 +21,32 @@
         "iconUrl": "https://fastlane.atlassian.net/images/icons/statuses/inprogress.png",
         "self": "https://fastlane.atlassian.net/rest/api/2/status/3"
       },
+      "hasScreen": false,
       "name": "Start Progress"
     },
     {
       "fields": {
+        "assignee": {
+          "autoCompleteUrl": "https://fastlane.atlassian.net/rest/api/latest/user/assignable/search?issueKey=TEST-18&username=",
+          "operations": [
+            "set"
+          ],
+          "name": "Assignee",
+          "schema": {
+            "type": "user",
+            "system": "assignee"
+          },
+          "required": false
+        },
         "resolution": {
           "allowedValues": [
             {
-              "name": "Done",
+              "name": "Resolved",
+              "id": "10100",
+              "self": "https://fastlane.atlassian.net/rest/api/2/resolution/10100"
+            },
+            {
+              "name": "Closed",
               "id": "10000",
               "self": "https://fastlane.atlassian.net/rest/api/2/resolution/10000"
             },
@@ -57,62 +75,6 @@
             "system": "resolution"
           },
           "required": true
-        },
-        "fixVersions": {
-          "allowedValues": [
-            {
-              "archived": false,
-              "id": "10000",
-              "projectId": 10000,
-              "name": "1.0",
-              "self": "https://fastlane.atlassian.net/rest/api/2/version/10000",
-              "released": true
-            },
-            {
-              "archived": false,
-              "id": "10001",
-              "projectId": 10000,
-              "name": "0.0.1",
-              "self": "https://fastlane.atlassian.net/rest/api/2/version/10001",
-              "released": false
-            }
-          ],
-          "operations": [
-            "set",
-            "add",
-            "remove"
-          ],
-          "name": "Fix Version/s",
-          "schema": {
-            "type": "array",
-            "items": "version",
-            "system": "fixVersions"
-          },
-          "required": false
-        },
-        "worklog": {
-          "operations": [
-            "add"
-          ],
-          "name": "Log Work",
-          "schema": {
-            "type": "array",
-            "items": "worklog",
-            "system": "worklog"
-          },
-          "required": false
-        },
-        "assignee": {
-          "autoCompleteUrl": "https://fastlane.atlassian.net/rest/api/latest/user/assignable/search?issueKey=TEST-18&username=",
-          "operations": [
-            "set"
-          ],
-          "name": "Assignee",
-          "schema": {
-            "type": "user",
-            "system": "assignee"
-          },
-          "required": false
         }
       },
       "id": "5",
@@ -130,6 +92,7 @@
         "iconUrl": "https://fastlane.atlassian.net/images/icons/statuses/resolved.png",
         "self": "https://fastlane.atlassian.net/rest/api/2/status/5"
       },
+      "hasScreen": true,
       "name": "Resolve Issue"
     },
     {
@@ -137,7 +100,12 @@
         "resolution": {
           "allowedValues": [
             {
-              "name": "Done",
+              "name": "Resolved",
+              "id": "10100",
+              "self": "https://fastlane.atlassian.net/rest/api/2/resolution/10100"
+            },
+            {
+              "name": "Closed",
               "id": "10000",
               "self": "https://fastlane.atlassian.net/rest/api/2/resolution/10000"
             },
@@ -197,7 +165,7 @@
             "items": "version",
             "system": "fixVersions"
           },
-          "required": false
+          "required": true
         },
         "worklog": {
           "operations": [
@@ -239,6 +207,7 @@
         "iconUrl": "https://fastlane.atlassian.net/images/icons/statuses/closed.png",
         "self": "https://fastlane.atlassian.net/rest/api/2/status/6"
       },
+      "hasScreen": true,
       "name": "Close Issue"
     }
   ]

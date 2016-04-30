@@ -62,7 +62,7 @@ let actionTypes: [String:
     
     "do_transition": ("Oops",
                         [204],
-                            [400: "No transition specified",
+                            [400: "There was a problem with transition.",
                             404: "The issue does not exist or you don't have permission to view it",
                             0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
         // STATUS 204 - Returned if the transition was successful.
@@ -99,11 +99,13 @@ func anyErrors(actionType: String, controller: UIViewController, data: NSData?, 
             errors = JIRAerrors(data: data!, response: theResponse!)
             
             var errorExplanation = ""
-            if  let errorCode = errors?.errorslist[0].error_code,
-                let JIRAerrorMessage = errors?.errorslist[0].error_message {
+            if !(errors!.errorslist.isEmpty) {
+                for error in errors!.errorslist {
+                    let errorCode = error.error_code
+                    let JIRAerrorMessage = error.error_message
                     // This is the case when we have some info from JIRA about what happened
                 
-                    if let errorText = actionTypes[actionType]?.2[errorCode] {
+                    if let errorText = actionTypes[actionType]?.2[errorCode!] {
                         errorExplanation = errorText
                     } else {
                         errorExplanation = (actionTypes[actionType]?.2[0])! // That's a generic explanation when the code was not found in our list
@@ -111,11 +113,11 @@ func anyErrors(actionType: String, controller: UIViewController, data: NSData?, 
                 
                     let alert: UIAlertController = UIAlertController(
                             title: actionTypes[actionType]!.0,
-                            message: "\(errorExplanation) \n Error code: \(errorCode) \n Message: \(JIRAerrorMessage)",
+                            message: "\(errorExplanation) \n Error code: \(errorCode!) \n Message: \(JIRAerrorMessage!)",
                             preferredStyle: UIAlertControllerStyle.Alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
                     controller.presentViewController(alert, animated: true, completion: nil)
-
+                }
             } else {
                     // We couldn't get info from JIRA, so showing just a generic alert for the chosen type of action
                 errorExplanation = "Looks like something went wrong. There was an error, but we couldn't parse it, most probably JIRA returned HTML. This could happen in case we had wrong URL in request."

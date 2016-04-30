@@ -33,3 +33,18 @@
 				["Login failed"],
 	"errors": {}
 }
+
+// one more sample error message
+
+{
+    "errorMessages": [],
+    "errors": {
+        "fixVersions": "data was not an array"
+    }
+}
+
+// one more sample error
+
+{
+    "errorMessages": ["Unexpected character ('[' (code 91)): was expecting double-quote to start field name\n at [Source: org.apache.catalina.connector.CoyoteInputStream@ff5751; line: 1, column: 97]"]
+}

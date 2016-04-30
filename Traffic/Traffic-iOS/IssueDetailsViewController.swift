@@ -84,12 +84,13 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                         }
                     }
                 } else {
-                    // Do something only in case there are required fields
+                    self.JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\"}, \"fields\": {"
                     var fields = [aReqiredField]()
                     for field in transition.required_fields {
                         fields.append(field)
                     }
                     self.fieldsQueue = fields
+                    self.currentTransition = transition
                     self.queueGatheringDataAndSendThem()
                 }
             }))
@@ -114,7 +115,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         if !self.fieldsQueue.isEmpty {
             self.currentRequiredFieldForTransition = self.fieldsQueue[0]
             table_view_resolution.reloadData()
-            // self.currentTransition = transition
             self.view.addSubview(self.view_list)
             self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
             self.view_list.translatesAutoresizingMaskIntoConstraints = false
@@ -127,9 +127,23 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             self.view_list.layoutIfNeeded()
             self.fieldsQueue.removeFirst()
         } else {
+            self.JSON = String(self.JSON.characters.dropLast()) + "}}" //Replacing last comma with curly brackets
             print("\(JSON)")
-            self.JSON = ""
+            
             // we have finished gathering data. Can fire the request here.
+            let URLEnding = "/rest/api/2/issue/\(self.aTask.task_key)/transitions"
+            self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON) { (data, response, error) -> Void in
+                if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
+                    let alert: UIAlertController = UIAlertController(
+                        title: "Success",
+                        message: "Status changed to \"\(self.currentTransition!.target_status)\".",
+                        preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
+                        action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
+                    }))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                }
+            }
         }
     }
     
@@ -140,20 +154,25 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let resolution = currentRequiredFieldForTransition?.allowedValues[indexPath.row]
-        
-      //  let required_field = "\"fields\": { \"resolution\": { \"name\": \"\(resolution!["name"]!)\" } }"
-      //  let do_transition = "{ \(required_field),\"transition\": { \"id\": \"\(currentTransition!.transition_id)\" } }"
-      //  print(do_transition)
         
         view_list.removeFromSuperview()
-
-        // TODO: Create a function that generates JSON object according to rules applied for current 
-        // required field and transition, and appends it to global JSON
-        // The function will be called from each piece of interaction presented for user to gather their data
         
-        self.JSON += "{JSON object}"
+        if currentRequiredFieldForTransition?.fieldName == "resolution" &&
+            (currentRequiredFieldForTransition!.operations.contains("set")) {
+            let chosenValue = currentRequiredFieldForTransition?.allowedValues[indexPath.row]
+            let required_field = "\"resolution\": { \"name\": \"\(chosenValue!["name"]!)\" },"
+            self.JSON += required_field
+        }
 
+        if currentRequiredFieldForTransition?.fieldName == "fixVersions" &&
+            (currentRequiredFieldForTransition?.operations.contains("set"))! {
+            // Temporary treating fixVersions as one-selection.
+            // TODO: Need to add logic here to make it treated as an Array
+            let chosenValue = currentRequiredFieldForTransition?.allowedValues[indexPath.row]
+            let required_field = "\"fixVersions\": [{ \"name\": \"\(chosenValue!["name"]!)\" }],"
+            self.JSON += required_field
+        }
+        
         GatherUserDataIfNeeded()
     }
 

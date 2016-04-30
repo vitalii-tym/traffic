@@ -4,6 +4,10 @@
 
 { "transition": { "id": "5" } }
 
+"fields": { "resolution": { "name": "Won't Do" } }
+
+
+
 // sample POST request for /rest/api/2/issue/{issueIdOrKey}/transitions
 {
     "update": {
