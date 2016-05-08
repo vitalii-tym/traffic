@@ -16,7 +16,6 @@ class JIRANetworkRequest: NSObject {
     let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
     
     func getdata(request_type: String, URLEnding: String, JSON: String?, completionHandler: (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void) {
-
         let URL = "https://" + domain! + URLEnding
         let request = NSMutableURLRequest(URL: NSURL(string: URL)!)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -37,8 +36,7 @@ class JIRANetworkRequest: NSObject {
         
         let dataTask: NSURLSessionDataTask = urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in completionHandler(data: data, response: response, error: error) })
-            
-            //-- for debuggin only ---
+            //-- for debugging only ---
             print ("Request: \(URL)")
             if (JSON != nil) { print ("JSON: \(JSON!)")
             //-- end of debugging ---
@@ -49,7 +47,5 @@ class JIRANetworkRequest: NSObject {
  
     func cancel() {
         urlSession.invalidateAndCancel()
-//      urlSession = nil
     }
-    
 }

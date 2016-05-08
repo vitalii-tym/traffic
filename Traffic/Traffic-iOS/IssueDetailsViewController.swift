@@ -68,7 +68,16 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             change_status_actionSheet.addAction(UIAlertAction(title: "\(transition.transition_name)", style: .Default, handler: {
                 action in
 
-                if transition.required_fields.isEmpty {
+                if let theRequiredFields = transition.required_fields {
+                    self.JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\"}, \"fields\": {"
+                    var fields = [aReqiredField]()
+                    for field in theRequiredFields {
+                        fields.append(field)
+                    }
+                    self.fieldsQueue = fields
+                    self.currentTransition = transition
+                    self.queueGatheringDataAndSendThem()
+                } else {
                     let JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
                     let URLEnding = "/rest/api/2/issue/\(self.aTask.task_key)/transitions"
                     self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON) { (data, response, error) -> Void in
@@ -83,15 +92,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                             self.presentViewController(alert, animated: true, completion: nil)
                         }
                     }
-                } else {
-                    self.JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\"}, \"fields\": {"
-                    var fields = [aReqiredField]()
-                    for field in transition.required_fields {
-                        fields.append(field)
-                    }
-                    self.fieldsQueue = fields
-                    self.currentTransition = transition
-                    self.queueGatheringDataAndSendThem()
                 }
             }))
         }
@@ -149,7 +149,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("required_cell", forIndexPath: indexPath) as! required_action_cell
-        cell.label_action.text = currentRequiredFieldForTransition!.allowedValues[indexPath.row]["name"] as? String
+        cell.label_action.text = currentRequiredFieldForTransition!.allowedValues![indexPath.row]["name"] as? String
         return cell
     }
     
@@ -159,7 +159,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         
         if currentRequiredFieldForTransition?.fieldName == "resolution" &&
             (currentRequiredFieldForTransition!.operations.contains("set")) {
-            let chosenValue = currentRequiredFieldForTransition?.allowedValues[indexPath.row]
+            let chosenValue = currentRequiredFieldForTransition?.allowedValues![indexPath.row]
             let required_field = "\"resolution\": { \"name\": \"\(chosenValue!["name"]!)\" },"
             self.JSON += required_field
         }
@@ -168,7 +168,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             (currentRequiredFieldForTransition?.operations.contains("set"))! {
             // Temporary treating fixVersions as one-selection.
             // TODO: Need to add logic here to make it treated as an Array
-            let chosenValue = currentRequiredFieldForTransition?.allowedValues[indexPath.row]
+            let chosenValue = currentRequiredFieldForTransition?.allowedValues![indexPath.row]
             let required_field = "\"fixVersions\": [{ \"name\": \"\(chosenValue!["name"]!)\" }],"
             self.JSON += required_field
         }
@@ -177,7 +177,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentRequiredFieldForTransition!.allowedValues.count
+        return currentRequiredFieldForTransition!.allowedValues!.count
     }
     
     override func viewWillDisappear(animated: Bool) {

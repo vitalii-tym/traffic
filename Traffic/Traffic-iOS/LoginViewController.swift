@@ -27,8 +27,7 @@ class LoginViewController: UIViewController {
         textfield_login.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
         textfield_password.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
         
-        // Cheking whether there are saved login and pass in User Data and if exists we try to get pass from
-        // keychain and automatically login
+        // Cheking whether there are saved login and pass in User Data and if exists we try to get pass from keychain and automatically login
         let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
         let userLogin = NSUserDefaults.standardUserDefaults().objectForKey("login") as? String
         
@@ -53,8 +52,7 @@ class LoginViewController: UIViewController {
                 let loginParameters: String = "{ \"username\": \"\(hasLogin)\", \"password\": \"\(str!)\" }"
             login(with: loginParameters, and: theURL, save_to_keychain: false)
         } else {
-            print("No login data found in Keychain.")
-            // We don't autologin in this case and simply leave user on login screen
+            print("No login data found in Keychain.")  // We don't autologin in this case and simply leave user on login screen
             }
         }
     }

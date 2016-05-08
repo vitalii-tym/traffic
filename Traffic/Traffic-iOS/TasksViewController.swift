@@ -18,6 +18,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         }
     var aTasktoPass: Task!
     var errors: JIRAerrors?
+    var createMetadata: JIRAMetadataToCreateIssue?
     
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
@@ -30,11 +31,25 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
     
-        let URLEnding = "/rest/api/2/search?jql=assignee=currentUser()+order+by+rank+asc"
+        let URLEnding = "/rest/api/2/search?jql=assignee=currentUser()+AND+status+not+in+(Done)+order+by+rank+asc"
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
                         self.tasks = JIRATasks(data: data!)
                     }
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let URLEnding = "/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields"
+        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
+            if !anyErrors("create_meta", controller: self, data: data, response: response, error: error) {
+                
+                self.createMetadata = JIRAMetadataToCreateIssue(data: data!)
+
+                self.button_NewTask.enabled = true
+            }
         }
     }
 
@@ -86,6 +101,19 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     @IBAction func button_pressed_NewTask(sender: AnyObject) {
+        
+// TODO: Create new tasks
+//        let URLEnding = "/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields"
+//        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
+//            if !anyErrors("create_meta", controller: self, data: data, response: response, error: error) {
+//
+//                
+//                //  self.tasks = JIRATasks(data: data!)
+//
+//            }
+//        }
+//        
+        
         let alert: UIAlertController = UIAlertController(title: "Wait!", message: "This feature is still in construction", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
@@ -98,7 +126,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         if let hasDomain = domain, hasLogin = userLogin {
             let loginURLsuffix = "/rest/auth/1/session"
             let baseURL = "https://\(hasDomain)"
-          //  let URL = baseURL + loginURLsuffix
             aNetworkRequest.getdata("DELETE", URLEnding: loginURLsuffix, JSON: nil) { (data, response, error) -> Void in
                         let keychainQuery: [NSString: NSObject] = [
                             kSecClass: kSecClassGenericPassword,
@@ -110,12 +137,10 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                         self.performSegueWithIdentifier("back_to_login", sender: self)
             }
         } else {
-        // Don't know what to do in this case.
-        // Looks like user happened to be logged in but for some reason his login or domain were not saved in User Data at all.
-        // We can't log user out because we simply don't know the JIRA URL to do this upon.
-        // However most probaly he/she will land on the login screen on next app launch because auto-login
-        // won't work without valid User Data. So... let's just inform him/her suggesting to relaunch the application.
-            
+            // Don't know what to do. Looks like user happened to be logged in but for some reason his login or domain were not saved in User Data at all.
+            // We can't log user out because we simply don't know the JIRA URL to do this upon.
+            // However most probaly he/she will land on the login screen on next app launch because auto-login
+            // won't work without valid User Data. So... let's just inform him/her suggesting to relaunch the application.
             let alert: UIAlertController = UIAlertController(title: "Oops", message: "Something weird happened. We can't log you out. But restarting the applicaiton should get you to the login screen.", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)

@@ -36,9 +36,9 @@ let actionTypes: [String:
                         [401: "Check your login and password and try again.",
                         403: "Looks like there is a problem with captcha.",
                         0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
-        // STATUS 200 - Returns information about the caller's session if the caller is authenticated.
-        // STATUS 401 - Returned if the login fails due to invalid credentials.
-        // STATUS 403 - Returned if the login is denied due to a CAPTCHA requirement, throtting, or any other reason.
+        // 200 - Returns information about the caller's session if the caller is authenticated.
+        // 401 - Returned if the login fails due to invalid credentials.
+        // 403 - Returned if the login is denied due to a CAPTCHA requirement, throtting, or any other reason.
         // In case of a 403 status code it is possible that the supplied credentials are valid but the user is not allowed to log in at this point in time.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-login
 
@@ -46,8 +46,8 @@ let actionTypes: [String:
                         [204],
                         [401: "Looks like you have been logged out already.",
                         0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
-        // STATUS 401 - Returned if the caller is not authenticated.
-        // STATUS 204 - Returned if the user was successfully logged out.
+        // 401 - Returned if the caller is not authenticated.
+        // 204 - Returned if the user was successfully logged out.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-logout
 
     "get_transitions": ("Oops",  // This is message header
@@ -55,9 +55,8 @@ let actionTypes: [String:
                             [404: "There was a problem with transitions", // This is the list of unsuccesful codes
                             0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),                              // with respective messages to user
                                                                           // 0 - is a generic text for the case when we can't interpret the code
-        // STATUS 200 - application/jsonReturns a full representation of the transitions possible for
-        // the specified issue and the fields required to perform the transition.
-        // STATUS 404 - Returned if the requested issue is not found or the user does not have permission to view it.
+        // 200 - application/jsonReturns a full representation of the transitions possible for the specified issue and the fields required to perform the transition.
+        // 404 - Returned if the requested issue is not found or the user does not have permission to view it.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getTransitions
     
     "do_transition": ("Oops",
@@ -65,18 +64,26 @@ let actionTypes: [String:
                             [400: "There was a problem with transition.",
                             404: "The issue does not exist or you don't have permission to view it",
                             0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
-        // STATUS 204 - Returned if the transition was successful.
-        // STATUS 400 - If there is no transition specified.
-        // STATUS 404 - The issue does not exist or the user does not have permission to view it
+        // 204 - Returned if the transition was successful.
+        // 400 - If there is no transition specified.
+        // 404 - The issue does not exist or the user does not have permission to view it
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-doTransition
         
     "do_search": ("Oops",
                         [200],
                         [400: "Search request failed. There was a problem with the jql query.",
-                         0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."])
+                         0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
         // 200 - application/json Returns a JSON representation of the search results.
         // 400 - Returned if there is a problem with the JQL query.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/search-searchUsingSearchRequest
+        
+    "create_meta": ("Oops",
+                        [200],
+                        [403: "There are no projects where you can create issues. Ask your administrator to give you permissions.",
+                        0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."])
+        // 200 - application/jsonReturns the meta data for creating issues.
+        // 403 - Returned if the user does not have permission to view any of the requested projects.
+        // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getCreateIssueMeta
     ]
 
 func anyErrors(actionType: String, controller: UIViewController, data: NSData?, response: NSURLResponse?, error: NSError?) -> Bool {
@@ -85,12 +92,11 @@ func anyErrors(actionType: String, controller: UIViewController, data: NSData?, 
     if error == nil && data != nil {
         let theResponse = response as? NSHTTPURLResponse
         let responseStatus = theResponse!.statusCode
-        
+    
         if  actionTypes[actionType]!.1.contains(responseStatus) {
             // Everything is fine, we found that the response code matches to one of succes codes in out list above
             // (usually these range from 200 to 205 or something)
             is_there_error = false
-            
         } else {
             // Well, there was a problem with JIRA instance, let's try to parse answer from JIRA and show it if possible
             is_there_error = true
