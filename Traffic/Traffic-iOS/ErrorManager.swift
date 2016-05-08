@@ -5,7 +5,7 @@
 //  Created by Vitaliy Tim on 4/27/16.
 //  Copyright © 2016 Vitaliy Timoshenko. All rights reserved.
 //
-
+//
 //  An example on how to use the anyErrors() function:
 //
 //  let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
@@ -81,7 +81,6 @@ let actionTypes: [String:
 
 func anyErrors(actionType: String, controller: UIViewController, data: NSData?, response: NSURLResponse?, error: NSError?) -> Bool {
     var is_there_error: Bool
-    var errors: JIRAerrors?
     
     if error == nil && data != nil {
         let theResponse = response as? NSHTTPURLResponse
@@ -96,11 +95,9 @@ func anyErrors(actionType: String, controller: UIViewController, data: NSData?, 
             // Well, there was a problem with JIRA instance, let's try to parse answer from JIRA and show it if possible
             is_there_error = true
             
-            errors = JIRAerrors(data: data!, response: theResponse!)
-            
             var errorExplanation = ""
-            if !(errors!.errorslist.isEmpty) {
-                for error in errors!.errorslist {
+            if let errors = JIRAerrors(data: data!, response: theResponse!) where !(errors.errorslist.isEmpty) {
+                for error in errors.errorslist {
                     let errorCode = error.error_code
                     let JIRAerrorMessage = error.error_message
                     // This is the case when we have some info from JIRA about what happened
@@ -120,6 +117,7 @@ func anyErrors(actionType: String, controller: UIViewController, data: NSData?, 
                 }
             } else {
                     // We couldn't get info from JIRA, so showing just a generic alert for the chosen type of action
+                    // TODO: Parse HTML returned from JIRA to provide user with more info about the issue
                 errorExplanation = "Looks like something went wrong. There was an error, but we couldn't parse it, most probably JIRA returned HTML. This could happen in case we had wrong URL in request."
                 
                     let alert: UIAlertController = UIAlertController(
