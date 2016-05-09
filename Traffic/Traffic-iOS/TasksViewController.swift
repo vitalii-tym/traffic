@@ -16,9 +16,9 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             self.view_collectionView.reloadData()
             }
         }
-    var aTasktoPass: Task!
+    var aTasktoPass: Task?
     var errors: JIRAerrors?
-    var createMetadata: JIRAMetadataToCreateIssue?
+    var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
@@ -37,6 +37,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                         self.tasks = JIRATasks(data: data!)
                     }
         }
+        aTasktoPass = nil
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -46,7 +47,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
             if !anyErrors("create_meta", controller: self, data: data, response: response, error: error) {
                 
-                self.createMetadata = JIRAMetadataToCreateIssue(data: data!)
+                self.IssueCreationMetadata = JIRAMetadataToCreateIssue(data: data!)
 
                 self.button_NewTask.enabled = true
             }
@@ -96,27 +97,13 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             guard let destionationViewController = segue.destinationViewController as? IssueDetailsViewController else {
                 return
             }
-            destionationViewController.aTask = aTasktoPass
+            destionationViewController.aTask = self.aTasktoPass
+            destionationViewController.IssueCreationMetadata = self.IssueCreationMetadata
         }
     }
     
     @IBAction func button_pressed_NewTask(sender: AnyObject) {
-        
-// TODO: Create new tasks
-//        let URLEnding = "/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields"
-//        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
-//            if !anyErrors("create_meta", controller: self, data: data, response: response, error: error) {
-//
-//                
-//                //  self.tasks = JIRATasks(data: data!)
-//
-//            }
-//        }
-//        
-        
-        let alert: UIAlertController = UIAlertController(title: "Wait!", message: "This feature is still in construction", preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.performSegueWithIdentifier("issueDetails", sender: nil)
     }
     
     @IBAction func button_pressed_log_out(sender: UIButton) {
@@ -156,9 +143,5 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    @IBAction func unwindToTasksList(segue: UIStoryboardSegue) {
-    }
-    
 }
 

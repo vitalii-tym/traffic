@@ -24,7 +24,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var label_required_field_name: UILabel!
     @IBOutlet weak var table_view_resolution: UITableView!
 
-    var aTask: Task!
+    var aTask: Task?
+    var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     var errors: JIRAerrors?
     var availableTransitions: JIRATransitions?
     var currentRequiredFieldForTransition: aReqiredField?
@@ -36,15 +37,23 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        textview_IssueSummary.text = aTask.task_summary
-        if aTask.task_description != nil
-            { textview_IssueDetails.text = aTask.task_description }
-        else {
-            textview_IssueDetails.text = "(no description)"
-            textview_IssueDetails.font = UIFont.italicSystemFontOfSize(12.0)
-            }
-        label_priority.text = aTask.task_priority
-        label_status.text = aTask.task_status
+        if let theTask = aTask {
+            textview_IssueSummary.text = theTask.task_summary
+            if theTask.task_description != nil
+                { textview_IssueDetails.text = theTask.task_description }
+            else {
+                textview_IssueDetails.text = "(no description)"
+                textview_IssueDetails.font = UIFont.italicSystemFontOfSize(12.0)
+                }
+            label_priority.text = theTask.task_priority
+            label_status.text = theTask.task_status
+
+        } else {
+            textview_IssueSummary.text = ""
+            textview_IssueDetails.text = ""
+            label_priority.text = ""
+            label_status.text = ""
+        }
         button_change_status.enabled = false
     }
     
@@ -53,50 +62,56 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         
         // As soon as user opens a task we download possible transitions for the task.
         // When succesful, it becomes possible to change task status (respective button becomes enabled)
-        let URLEnding = "/rest/api/2/issue/\(aTask.task_key)/transitions?expand=transitions.fields"
-        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
+        
+        if let theTask = aTask {
+            let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions?expand=transitions.fields"
+            aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
                 if !anyErrors("get_transitions", controller: self, data: data, response: response, error: error) {
                     self.availableTransitions = JIRATransitions(data: data!)
                     self.button_change_status.enabled = true
+                }
             }
         }
     }
     
+    
     @IBAction func action_change_status_pressed(sender: AnyObject) {
-        let change_status_actionSheet = UIAlertController(title: "Set status", message: nil, preferredStyle: .ActionSheet)
-        for transition in (availableTransitions!.transitionsList) {
-            change_status_actionSheet.addAction(UIAlertAction(title: "\(transition.transition_name)", style: .Default, handler: {
-                action in
-
-                if let theRequiredFields = transition.required_fields {
-                    self.JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\"}, \"fields\": {"
-                    var fields = [aReqiredField]()
-                    for field in theRequiredFields {
-                        fields.append(field)
-                    }
-                    self.fieldsQueue = fields
-                    self.currentTransition = transition
-                    self.queueGatheringDataAndSendThem()
-                } else {
-                    let JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
-                    let URLEnding = "/rest/api/2/issue/\(self.aTask.task_key)/transitions"
-                    self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON) { (data, response, error) -> Void in
-                        if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
-                            let alert: UIAlertController = UIAlertController(
-                                title: "Success",
-                                message: "Status changed to \"\(transition.target_status)\".",
-                                preferredStyle: UIAlertControllerStyle.Alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
-                                action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
-                            }))
-                            self.presentViewController(alert, animated: true, completion: nil)
+        if let theTask = aTask {
+        
+            let change_status_actionSheet = UIAlertController(title: "Set status", message: nil, preferredStyle: .ActionSheet)
+            for transition in (availableTransitions!.transitionsList) {
+                change_status_actionSheet.addAction(UIAlertAction(title: "\(transition.transition_name)", style: .Default, handler: {
+                    action in
+                    if let theRequiredFields = transition.required_fields {
+                        self.JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\"}, \"fields\": {"
+                        var fields = [aReqiredField]()
+                        for field in theRequiredFields {
+                            fields.append(field)
+                        }
+                        self.fieldsQueue = fields
+                        self.currentTransition = transition
+                        self.queueGatheringDataAndSendThem()
+                    } else {
+                        let JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
+                        let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
+                        self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON) { (data, response, error) -> Void in
+                            if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
+                                let alert: UIAlertController = UIAlertController(
+                                    title: "Success",
+                                    message: "Status changed to \"\(transition.target_status)\".",
+                                    preferredStyle: UIAlertControllerStyle.Alert)
+                                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
+                                    action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
+                                }))
+                                self.presentViewController(alert, animated: true, completion: nil)
+                            }
                         }
                     }
-                }
-            }))
+                }))
+            }
+            change_status_actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            self.presentViewController(change_status_actionSheet, animated: true, completion: nil)
         }
-        change_status_actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-        self.presentViewController(change_status_actionSheet, animated: true, completion: nil)
     }
     
     func queueGatheringDataAndSendThem() {
@@ -131,17 +146,19 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             print("\(JSON)")
             
             // we have finished gathering data. Can fire the request here.
-            let URLEnding = "/rest/api/2/issue/\(self.aTask.task_key)/transitions"
-            self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON) { (data, response, error) -> Void in
-                if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
-                    let alert: UIAlertController = UIAlertController(
-                        title: "Success",
-                        message: "Status changed to \"\(self.currentTransition!.target_status)\".",
-                        preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
-                        action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
-                    }))
-                    self.presentViewController(alert, animated: true, completion: nil)
+            if let theTask = aTask {
+                let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
+                self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON) { (data, response, error) -> Void in
+                    if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
+                        let alert: UIAlertController = UIAlertController(
+                            title: "Success",
+                            message: "Status changed to \"\(self.currentTransition!.target_status)\".",
+                            preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
+                            action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
+                        }))
+                        self.presentViewController(alert, animated: true, completion: nil)
+                    }
                 }
             }
         }
@@ -184,9 +201,9 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         super.viewWillDisappear(animated)
         
         aNetworkRequest.cancel()
+        aTask = nil
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
 }
