@@ -25,13 +25,13 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var table_view_resolution: UITableView!
 
     var aTask: Task?
-    var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     var errors: JIRAerrors?
     var availableTransitions: JIRATransitions?
     var currentRequiredFieldForTransition: aReqiredField?
     var currentTransition: Transition?
+    var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     var aNetworkRequest = JIRANetworkRequest()
-    var fieldsQueue: [aReqiredField]!
+    var fieldsQueue = [aReqiredField]()
     var JSON: String = ""
     
     override func viewDidLoad() {
@@ -62,7 +62,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         
         // As soon as user opens a task we download possible transitions for the task.
         // When succesful, it becomes possible to change task status (respective button becomes enabled)
-        
         if let theTask = aTask {
             let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions?expand=transitions.fields"
             aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
@@ -74,7 +73,55 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if aTask == nil {
+            // If after entering the screen we have no task, consider user intended to create new one
+            action_create_new_task()
+        }
+    }
     
+    func action_create_new_task() {
+        if let metadata = IssueCreationMetadata {
+            
+            var aRequiredFieldOfTypeProject: aReqiredField?
+            var aRequiredFieldOfTypeIssueType: aReqiredField?
+            
+            // Retrieving fields of type "project" and "issueType" and adding them to the data gathering Queue
+            for project in metadata.availableProjects {
+                for issueType in project.issueTypes {
+                    if let requiredFields = issueType.requiredfields {
+                        for requiredField in requiredFields {
+                            if requiredField.fieldName == "project" {
+                                if aRequiredFieldOfTypeProject == nil {
+                                    aRequiredFieldOfTypeProject = requiredField
+                                }
+                            }
+                            if requiredField.fieldName == "issuetype" {
+                                if aRequiredFieldOfTypeIssueType == nil {
+                                    aRequiredFieldOfTypeIssueType = requiredField
+                                } else {
+                                    aRequiredFieldOfTypeIssueType?.allowedValues?.append(requiredField.allowedValues![0])
+                                }
+                            }
+                        }
+                    } else {
+                        print("unexpectedly found an issue type in a project with no required fields at all")
+                    }
+                }
+            }
+            if (aRequiredFieldOfTypeProject != nil) {
+                fieldsQueue.append(aRequiredFieldOfTypeProject!)
+            }
+            if (aRequiredFieldOfTypeIssueType != nil) {
+                fieldsQueue.append(aRequiredFieldOfTypeIssueType!)
+            }
+            
+            GatherUserDataIfNeeded()
+        }
+    }
+        
     @IBAction func action_change_status_pressed(sender: AnyObject) {
         if let theTask = aTask {
         
@@ -90,7 +137,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                         }
                         self.fieldsQueue = fields
                         self.currentTransition = transition
-                        self.queueGatheringDataAndSendThem()
+                        self.GatherUserDataIfNeeded()
                     } else {
                         let JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
                         let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
@@ -113,19 +160,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             self.presentViewController(change_status_actionSheet, animated: true, completion: nil)
         }
     }
-    
-    func queueGatheringDataAndSendThem() {
-        for field in self.fieldsQueue {
-            if field.type == "resolution" {
-                print ("need to gather resolution")
-            }
-            if field.type == "array" {
-                print ("need to gather array")
-            }
-        }
-        GatherUserDataIfNeeded()
-    }
-    
+        
     func GatherUserDataIfNeeded() {
         if !self.fieldsQueue.isEmpty {
             self.currentRequiredFieldForTransition = self.fieldsQueue[0]
@@ -171,7 +206,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
         view_list.removeFromSuperview()
         
         if currentRequiredFieldForTransition?.fieldName == "resolution" &&
@@ -189,6 +223,18 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             let required_field = "\"fixVersions\": [{ \"name\": \"\(chosenValue!["name"]!)\" }],"
             self.JSON += required_field
         }
+        
+        if currentRequiredFieldForTransition?.fieldName == "project" &&
+            (currentRequiredFieldForTransition?.operations.contains("set"))! {
+            
+            print("project chosen: \(currentRequiredFieldForTransition!.allowedValues![indexPath.row]["name"]!)")
+        }
+        
+        if currentRequiredFieldForTransition?.fieldName == "issuetype" {
+            
+            print("issue type chosen: \(currentRequiredFieldForTransition!.allowedValues![indexPath.row]["name"]!)")
+        }
+        
         
         GatherUserDataIfNeeded()
     }

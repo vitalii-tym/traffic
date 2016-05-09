@@ -140,6 +140,9 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         aNetworkRequest.cancel()
     }
     
+    @IBAction func unwindToTasksList(segue: UIStoryboardSegue) {
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

@@ -41,7 +41,7 @@ struct IssueType {
     var description: String
     var id: String
     var subtask: Bool
-    var requredfields: [aReqiredField]?
+    var requiredfields: [aReqiredField]?
 }
 
 struct availableProject {
@@ -120,7 +120,7 @@ class JIRAMetadataToCreateIssue {
                                     issueTypeIsSubtask = issueTypeDict["subtask"] as? Bool,
                                     issueTypeFields = issueTypeDict["fields"] as? Dictionary<String,AnyObject> {
                                         let requiredFields = JIRARequiredFields(fields: issueTypeFields)
-                                        issueTypesList.append(IssueType(name: issueTypeName, description: issueTypeDescription, id: issueTypeID, subtask: issueTypeIsSubtask, requredfields: (requiredFields?.requiredFields)))
+                                        issueTypesList.append(IssueType(name: issueTypeName, description: issueTypeDescription, id: issueTypeID, subtask: issueTypeIsSubtask, requiredfields: (requiredFields?.requiredFields)))
                             }
                         }
                     }
