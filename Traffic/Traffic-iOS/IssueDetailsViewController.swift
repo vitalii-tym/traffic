@@ -33,6 +33,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     var aNetworkRequest = JIRANetworkRequest()
     var fieldsQueue = [aReqiredField]()
     var JSON: String = ""
+    var JSONfieldstoSend: Dictionary<String, [Dictionary<String, AnyObject>]> = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,7 +78,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         super.viewDidAppear(animated)
         
         if aTask == nil {
-            // If after entering the screen we have no task, consider user intended to create new one
+            // If after entering the screen we have no task, consider user intends to create new one
             action_create_new_task()
         }
     }
@@ -117,7 +118,10 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             if (aRequiredFieldOfTypeIssueType != nil) {
                 fieldsQueue.append(aRequiredFieldOfTypeIssueType!)
             }
-            
+
+            // This empty field added to the end of array will indicate to the processor that the job is not finished, there more required fields to find and add here
+            fieldsQueue.append(aReqiredField(allowedValues: nil,operations: [],name: "",fieldName: "there_will_be_more_fields_to_be_added",type: ""))
+
             GatherUserDataIfNeeded()
         }
     }
@@ -163,24 +167,86 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         
     func GatherUserDataIfNeeded() {
         if !self.fieldsQueue.isEmpty {
-            self.currentRequiredFieldForTransition = self.fieldsQueue[0]
-            table_view_resolution.reloadData()
-            self.view.addSubview(self.view_list)
-            self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
-            self.view_list.translatesAutoresizingMaskIntoConstraints = false
-            let centerXconstraint = self.view_list.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor)
-            let centerYconstraint = self.view_list.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor)
-            let width = self.view_list.widthAnchor.constraintEqualToConstant(300)
-            let height = self.view_list.heightAnchor.constraintEqualToConstant(300)
-            centerYconstraint.constant = -100
-            NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
-            self.view_list.layoutIfNeeded()
-            self.fieldsQueue.removeFirst()
+            self.currentRequiredFieldForTransition = self.fieldsQueue.removeFirst()
+            
+            // here we need to choose an appropriate custom view for data gathering
+            
+            switch self.currentRequiredFieldForTransition!.fieldName as String! {
+                case "project", "issuetype":
+                    if let allowedValuesList = self.currentRequiredFieldForTransition!.allowedValues where !allowedValuesList.isEmpty {
+                    
+                        table_view_resolution.reloadData()
+                        self.view.addSubview(self.view_list)
+                        self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
+                        self.view_list.translatesAutoresizingMaskIntoConstraints = false
+                        let centerXconstraint = self.view_list.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor)
+                        let centerYconstraint = self.view_list.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor)
+                        let width = self.view_list.widthAnchor.constraintEqualToConstant(300)
+                        let height = self.view_list.heightAnchor.constraintEqualToConstant(300)
+                        centerYconstraint.constant = -100
+                        NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
+                        self.view_list.layoutIfNeeded()
+                    } else {
+                        print("Error: Unexpectedly found no allowed values listed for required fields of types \"project\" and \"issue type\"")
+                }
+                case "reporter":
+                    // TODO: We need to fill in the reporter field. Actually we can automatically fill it with user's name without bothering him/her
+                    // and continue gathering data
+                
+                    // Sample string: "reporter": { "name": "smithers" },
+                
+                    GatherUserDataIfNeeded()
+                
+                case "summary":
+                    // TODO: Gather data about issue summary - that a simple text field
+                    
+                    GatherUserDataIfNeeded()
+                
+                case "parent":
+                    // TODO: We need to indicate the parent issue key here.
+                    // This is when user has chosen to create a sub-task
+                    
+                    GatherUserDataIfNeeded()
+                
+                case "there_will_be_more_fields_to_be_added":
+                    let theProject = JSONfieldstoSend["project"]
+                    let theProjectID = theProject![0]["id"] as! String // Taking the first one assuming user can't choose more than one project for this kind of field
+                    let theIssueType = JSONfieldstoSend["issuetype"]
+                    let theIssueTypeID = theIssueType![0]["id"] as! String // Assuming user can'e choose more than one issue type for this kind of field
+                    let ProjIndex = self.IssueCreationMetadata?.availableProjects.indexOf({$0.id == theProjectID})
+                    let IssueTypeIndex = self.IssueCreationMetadata?.availableProjects[ProjIndex!].issueTypes.indexOf({$0.id == theIssueTypeID})
+                    
+                    // TODO: Need to get rid of the "!s" in the code above. Assuming all the data in place is very risky here.
+                    
+                    self.fieldsQueue = self.IssueCreationMetadata!.availableProjects[ProjIndex!].issueTypes[IssueTypeIndex!].requiredfields!
+                    
+                    // Since user has already chosen the project and issuetype we should get rid of these fields from the additinal fields array to not ask them again
+                    for (index, aRequiredField) in self.fieldsQueue.enumerate() {
+                        if aRequiredField.fieldName == "project" {
+                            self.fieldsQueue.removeAtIndex(index)
+                            break
+                        }
+                    }
+                    
+                    for (index, aRequiredField) in self.fieldsQueue.enumerate() {
+                        if aRequiredField.fieldName == "issuetype" {
+                            self.fieldsQueue.removeAtIndex(index)
+                            break
+                        }
+                    }
+                    
+                    GatherUserDataIfNeeded()
+                
+                default:
+                    print ("Error: operation with required field of type \"\(self.currentRequiredFieldForTransition!.fieldName)\" not supported yet. Process interrupted.")
+            } // End of switch
+            
         } else {
             self.JSON = String(self.JSON.characters.dropLast()) + "}}" //Replacing last comma with curly brackets
             print("\(JSON)")
             
             // we have finished gathering data. Can fire the request here.
+            
             if let theTask = aTask {
                 let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
                 self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON) { (data, response, error) -> Void in
@@ -211,30 +277,44 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         if currentRequiredFieldForTransition?.fieldName == "resolution" &&
             (currentRequiredFieldForTransition!.operations.contains("set")) {
             let chosenValue = currentRequiredFieldForTransition?.allowedValues![indexPath.row]
-            let required_field = "\"resolution\": { \"name\": \"\(chosenValue!["name"]!)\" },"
-            self.JSON += required_field
+            self.JSON += "\"resolution\": { \"name\": \"\(chosenValue!["name"]!)\" },"
+            // TODO: Need to write JSON generator and remove the self.JSON as redundant
+            
+            var dataArray = [Dictionary<String, AnyObject>()]
+            dataArray.append(["name" : "\(chosenValue!["name"]!)"])
+            self.JSONfieldstoSend["resolution"] = dataArray
         }
 
         if currentRequiredFieldForTransition?.fieldName == "fixVersions" &&
             (currentRequiredFieldForTransition?.operations.contains("set"))! {
             // Temporary treating fixVersions as one-selection.
-            // TODO: Need to add logic here to make it treated as an Array
+            // TODO: Need to add logic here to treat the fixVersions field as an Array, not as a list
             let chosenValue = currentRequiredFieldForTransition?.allowedValues![indexPath.row]
-            let required_field = "\"fixVersions\": [{ \"name\": \"\(chosenValue!["name"]!)\" }],"
-            self.JSON += required_field
+            self.JSON += "\"fixVersions\": [{ \"name\": \"\(chosenValue!["name"]!)\" }],"
+            
+            var dataArray = [Dictionary<String, AnyObject>()]
+            dataArray.append(["name" : "\(chosenValue!["name"]!)"])
+            self.JSONfieldstoSend["fixVersions"] = dataArray
         }
         
         if currentRequiredFieldForTransition?.fieldName == "project" &&
             (currentRequiredFieldForTransition?.operations.contains("set"))! {
-            
-            print("project chosen: \(currentRequiredFieldForTransition!.allowedValues![indexPath.row]["name"]!)")
+            let chosenValue = currentRequiredFieldForTransition?.allowedValues![indexPath.row]
+            self.JSON += "\"project\": { \"id\":  \"\(chosenValue!["id"]!)\" },"
+
+            var dataArray: [Dictionary<String, AnyObject>] = []
+            dataArray.append(["id" : "\(chosenValue!["id"]!)"])
+            self.JSONfieldstoSend["project"] = dataArray
         }
         
         if currentRequiredFieldForTransition?.fieldName == "issuetype" {
+            let chosenValue = currentRequiredFieldForTransition?.allowedValues![indexPath.row]
+            self.JSON += "\"issuetype\": { \"id\":  \"\(chosenValue!["id"]!)\" },"
             
-            print("issue type chosen: \(currentRequiredFieldForTransition!.allowedValues![indexPath.row]["name"]!)")
+            var dataArray: [Dictionary<String, AnyObject>] = []
+            dataArray.append(["id" : "\(chosenValue!["id"]!)"])
+            self.JSONfieldstoSend["issuetype"] = dataArray
         }
-        
         
         GatherUserDataIfNeeded()
     }

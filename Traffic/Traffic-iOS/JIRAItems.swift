@@ -25,7 +25,7 @@ struct aReqiredField {
     var allowedValues: [Dictionary<String, AnyObject>]?
     var operations: [String]
     var name: String // This is a name as shown to user, it can be changed in JIRA settings. To be used only in UI.
-    var fieldName: String
+    var fieldName: String // This is an internal field name that we use to identify the type of the field. Hope this can't be changed by JIRA admin.
     var type: String
 }
 
@@ -47,6 +47,7 @@ struct IssueType {
 struct availableProject {
     var name: String
     var key: String
+    var id: String
     var issueTypes: [IssueType]
 }
 
@@ -109,6 +110,7 @@ class JIRAMetadataToCreateIssue {
             if let theProjectDict = project as? Dictionary<String, AnyObject> {
                 if let projName = theProjectDict["name"] as? String,
                         projKey = theProjectDict["key"] as? String,
+                        projID = theProjectDict["id"] as? String,
                         theIssueTypes = theProjectDict["issuetypes"] as? Array<AnyObject> {
                     
                     var issueTypesList = [IssueType]()
@@ -124,7 +126,7 @@ class JIRAMetadataToCreateIssue {
                             }
                         }
                     }
-                    newAvailableProjects.append(availableProject(name: projName, key: projKey, issueTypes: issueTypesList))
+                    newAvailableProjects.append(availableProject(name: projName, key: projKey, id: projID, issueTypes: issueTypesList))
                 }
             }
         }
