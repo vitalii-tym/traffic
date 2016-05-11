@@ -13,10 +13,10 @@ class JIRANetworkRequest: NSObject {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         let session = NSURLSession(configuration: configuration)
         return session }
-    let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
+    let domainFromKeychain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
     
-    func getdata(request_type: String, URLEnding: String, JSON: String?, completionHandler: (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void) {
-        let URL = "https://" + domain! + URLEnding
+    func getdata(request_type: String, URLEnding: String, JSON: String?, domain: String?, completionHandler: (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void) {
+        let URL = ((domain) ?? (domainFromKeychain) ?? "https://") + URLEnding //If we don't know domain it will show some error, but at least won't crash
         let request = NSMutableURLRequest(URL: NSURL(string: URL)!)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         switch request_type {

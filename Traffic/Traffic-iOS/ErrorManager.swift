@@ -77,13 +77,27 @@ let actionTypes: [String:
         // 400 - Returned if there is a problem with the JQL query.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/search-searchUsingSearchRequest
         
-    "create_meta": ("Oops",
+    "get_create_meta": ("Oops",
                         [200],
                         [403: "There are no projects where you can create issues. Ask your administrator to give you permissions.",
-                        0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."])
+                        0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
         // 200 - application/jsonReturns the meta data for creating issues.
         // 403 - Returned if the user does not have permission to view any of the requested projects.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getCreateIssueMeta
+    "current_user": ("Oops",
+            [200],
+            [401: "Looks like you are not logged in. You can not create isses, sorry.",
+                0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
+        // 200 - everything is fine
+        // 401 - Returned if the caller is not authenticated.
+        // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-currentUser
+    "create_issue": ("Oops",
+            [201],
+            [400: "Looks like you are not logged in. You can not create isses, sorry.",
+                0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."])
+        // 201 - application/jsonReturns a link to the created issue.
+        // 400 - Returned if the input is invalid (e.g. missing required fields, invalid field values, and so forth).
+        // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-createIssue
     ]
 
 func anyErrors(actionType: String, controller: UIViewController, data: NSData?, response: NSURLResponse?, error: NSError?) -> Bool {

@@ -51,6 +51,25 @@ struct availableProject {
     var issueTypes: [IssueType]
 }
 
+class JIRAcurrentUser {
+    var name: String = ""
+    init? (data: NSData) {
+        var jsonObject: Dictionary<String, AnyObject>?
+        do {
+        jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(data), options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject>
+        }
+        catch { }
+        guard let jsonObjectRoot = jsonObject else {
+            return nil
+        }
+        guard let userName = jsonObjectRoot["name"] as? String else {
+            return nil
+        }
+        self.name = userName
+    }
+    
+}
+
 class JIRARequiredFields {
     var requiredFields: [aReqiredField]?
     
@@ -92,7 +111,8 @@ class JIRAMetadataToCreateIssue {
     convenience init? (data: NSData) {
         var newAvailableProjects = [availableProject]()
         
-    var jsonObject: Dictionary<String, AnyObject>?
+        var jsonObject: Dictionary<String, AnyObject>?
+        
         do {
             jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(data), options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject>
         }
@@ -249,6 +269,27 @@ class JIRATransitions {
         }
         self.init(transitions: newTransitions)
     }
+}
+
+func generateJSONString (inputDataForGeneration: Dictionary<String, [AnyObject]>) -> String {
+    var generatedString = "{ \"fields\": {"
+    for field in inputDataForGeneration {
+        generatedString += "\"\(field.0)\": "
+        switch field.0 {
+        case "reporter":
+            generatedString += " { \"name\" : \(field.1[0]["name"] as! String) },"
+        case "issuetype", "project":
+            generatedString += " { \"id\" : \(field.1[0]["id"] as! String) },"
+        case "summary":
+            generatedString += "\"\(field.1[0] as! String)\","
+        default:
+            generatedString += "<unknknown field>"
+        }
+    }
+    
+    generatedString = String(generatedString.characters.dropLast()) + "}}"
+    print(generatedString)
+    return generatedString
 }
 
 func fixJsonData (data: NSData) -> NSData {

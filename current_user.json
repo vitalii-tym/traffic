@@ -1,0 +1,62 @@
+// Sample answer from JIRA
+
+{
+  "self": "https://pocketjira.atlassian.net/rest/api/latest/user?username=admin",
+  "name": "admin",
+  "loginInfo": {
+    "failedLoginCount": 4,
+    "loginCount": 404,
+    "lastFailedLoginTime": "2016-05-11T13:50:44.478+0300",
+    "previousLoginTime": "2016-05-11T13:50:53.957+0300"
+  }
+}
+
+// Another sample answer from JIRA
+
+{
+    "self": "http://www.example.com/jira/rest/api/2.0/user/fred",
+    "name": "fred",
+    "loginInfo": {
+        "failedLoginCount": 10,
+        "loginCount": 127,
+        "lastFailedLoginTime": "2016-05-04T12:25:54.828+0000",
+        "previousLoginTime": "2016-05-04T12:25:54.828+0000"
+    }
+}
+
+// Schema
+
+{
+    "id": "https://docs.atlassian.com/jira/REST/schema/current-user#",
+    "title": "Current User",
+    "type": "object",
+    "properties": {
+        "self": {
+            "type": "string",
+            "format": "uri"
+        },
+        "name": {
+            "type": "string"
+        },
+        "loginInfo": {
+            "title": "Login Info",
+            "type": "object",
+            "properties": {
+                "failedLoginCount": {
+                    "type": "integer"
+                },
+                "loginCount": {
+                    "type": "integer"
+                },
+                "lastFailedLoginTime": {
+                    "type": "string"
+                },
+                "previousLoginTime": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

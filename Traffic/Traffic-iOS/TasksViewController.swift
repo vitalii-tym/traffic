@@ -19,6 +19,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var aTasktoPass: Task?
     var errors: JIRAerrors?
     var IssueCreationMetadata: JIRAMetadataToCreateIssue?
+    var currentUser: JIRAcurrentUser?
     
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
@@ -32,7 +33,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         super.viewWillAppear(animated)
     
         let URLEnding = "/rest/api/2/search?jql=assignee=currentUser()+AND+status+not+in+(Done)+order+by+rank+asc"
-        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
+        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
                         self.tasks = JIRATasks(data: data!)
                     }
@@ -44,12 +45,17 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         super.viewDidAppear(animated)
         
         let URLEnding = "/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields"
-        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
-            if !anyErrors("create_meta", controller: self, data: data, response: response, error: error) {
-                
+        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+            if !anyErrors("get_create_meta", controller: self, data: data, response: response, error: error) {
                 self.IssueCreationMetadata = JIRAMetadataToCreateIssue(data: data!)
-
-                self.button_NewTask.enabled = true
+                // We have got metadata, but to be able to create tasks we still need to know current user, so that we can fill in the "creator" field
+                let URLEnding = "/rest/auth/1/session"
+                self.aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                    if !anyErrors("current_user", controller: self, data: data, response: response, error: error) {
+                        self.currentUser = JIRAcurrentUser(data: data!)
+                        self.button_NewTask.enabled = true
+                    }
+                }
             }
         }
     }
@@ -99,6 +105,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             }
             destionationViewController.aTask = self.aTasktoPass
             destionationViewController.IssueCreationMetadata = self.IssueCreationMetadata
+            destionationViewController.currentUser = self.currentUser
         }
     }
     
@@ -112,12 +119,11 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
 
         if let hasDomain = domain, hasLogin = userLogin {
             let loginURLsuffix = "/rest/auth/1/session"
-            let baseURL = "https://\(hasDomain)"
-            aNetworkRequest.getdata("DELETE", URLEnding: loginURLsuffix, JSON: nil) { (data, response, error) -> Void in
+            aNetworkRequest.getdata("DELETE", URLEnding: loginURLsuffix, JSON: nil, domain: nil) { (data, response, error) -> Void in
                         let keychainQuery: [NSString: NSObject] = [
                             kSecClass: kSecClassGenericPassword,
                             kSecAttrAccount: hasLogin,
-                            kSecAttrService: baseURL]
+                            kSecAttrService: hasDomain]
                         let keychain_delete_status: OSStatus = SecItemDelete(keychainQuery as CFDictionaryRef)
                         print("Keychain deleting code is: \(keychain_delete_status)")
                         // Logout was succesful, can go back to login screen

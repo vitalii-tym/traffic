@@ -12,7 +12,7 @@ class required_action_cell : UITableViewCell {
     @IBOutlet weak var label_action: UILabel!
 }
 
-class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     
     @IBOutlet weak var textview_IssueDetails: UITextView!
     @IBOutlet weak var button_Back: UIBarButtonItem!
@@ -21,8 +21,11 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var label_status: UILabel!
     @IBOutlet weak var button_change_status: UIButton!
     @IBOutlet var view_list: UIView!
+    @IBOutlet var view_text_input: UIView!
     @IBOutlet weak var label_required_field_name: UILabel!
     @IBOutlet weak var table_view_resolution: UITableView!
+    @IBOutlet weak var button_done_editing: UIButton!
+    @IBOutlet weak var textedit_input_text: UITextView!
 
     var aTask: Task?
     var errors: JIRAerrors?
@@ -30,13 +33,15 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     var currentRequiredFieldForTransition: aReqiredField?
     var currentTransition: Transition?
     var IssueCreationMetadata: JIRAMetadataToCreateIssue?
+    var currentUser: JIRAcurrentUser?
     var aNetworkRequest = JIRANetworkRequest()
     var fieldsQueue = [aReqiredField]()
     var JSON: String = ""
-    var JSONfieldstoSend: Dictionary<String, [Dictionary<String, AnyObject>]> = [:]
+    var JSONfieldstoSend: Dictionary<String, [AnyObject]> = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        textedit_input_text.delegate = self
 
         if let theTask = aTask {
             textview_IssueSummary.text = theTask.task_summary
@@ -65,7 +70,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         // When succesful, it becomes possible to change task status (respective button becomes enabled)
         if let theTask = aTask {
             let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions?expand=transitions.fields"
-            aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil) { (data, response, error) -> Void in
+            aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
                 if !anyErrors("get_transitions", controller: self, data: data, response: response, error: error) {
                     self.availableTransitions = JIRATransitions(data: data!)
                     self.button_change_status.enabled = true
@@ -145,7 +150,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     } else {
                         let JSON = "{ \"transition\": { \"id\": \"\(transition.transition_id)\" } }"
                         let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
-                        self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON) { (data, response, error) -> Void in
+                        self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
                             if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
                                 let alert: UIAlertController = UIAlertController(
                                     title: "Success",
@@ -190,17 +195,24 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                         print("Error: Unexpectedly found no allowed values listed for required fields of types \"project\" and \"issue type\"")
                 }
                 case "reporter":
-                    // TODO: We need to fill in the reporter field. Actually we can automatically fill it with user's name without bothering him/her
-                    // and continue gathering data
-                
-                    // Sample string: "reporter": { "name": "smithers" },
-                
+                    // No need to ask user anything on this step, automatically filling in the reporter field and going further
+                    var dataArray: [Dictionary<String, AnyObject>] = []
+                    dataArray.append(["name" : "\"\(currentUser!.name)\""])
+                    self.JSONfieldstoSend["reporter"] = dataArray
                     GatherUserDataIfNeeded()
                 
                 case "summary":
-                    // TODO: Gather data about issue summary - that a simple text field
-                    
-                    GatherUserDataIfNeeded()
+
+                    self.view.addSubview(self.view_text_input)
+                    //self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
+                    self.view_text_input.translatesAutoresizingMaskIntoConstraints = false
+                    let centerXconstraint = self.view_text_input.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor)
+                    let centerYconstraint = self.view_text_input.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor)
+                    let width = self.view_text_input.widthAnchor.constraintEqualToConstant(300)
+                    let height = self.view_text_input.heightAnchor.constraintEqualToConstant(300)
+                    centerYconstraint.constant = -100
+                    NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
+                    self.view_text_input.layoutIfNeeded()
                 
                 case "parent":
                     // TODO: We need to indicate the parent issue key here.
@@ -242,25 +254,44 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             } // End of switch
             
         } else {
-            self.JSON = String(self.JSON.characters.dropLast()) + "}}" //Replacing last comma with curly brackets
+
+            // self.JSON = String(self.JSON.characters.dropLast()) + "}}" //Replacing last comma with curly brackets
+
+            self.JSON = generateJSONString(JSONfieldstoSend)
+            
             print("\(JSON)")
             
             // we have finished gathering data. Can fire the request here.
             
-            if let theTask = aTask {
-                let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
-                self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON) { (data, response, error) -> Void in
-                    if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
-                        let alert: UIAlertController = UIAlertController(
-                            title: "Success",
-                            message: "Status changed to \"\(self.currentTransition!.target_status)\".",
-                            preferredStyle: UIAlertControllerStyle.Alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
-                            action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
-                        }))
-                        self.presentViewController(alert, animated: true, completion: nil)
-                    }
+                let URLEnding = "/rest/api/2/issue"
+                self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
+                if !anyErrors("create_issue", controller: self, data: data, response: response, error: error) {
+                    let alert: UIAlertController = UIAlertController(
+                        title: "Success",
+                        message: "Create new issue.",
+                        preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
+                        action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
+                    }))
+                    self.presentViewController(alert, animated: true, completion: nil)
                 }
+            
+            // TODO: Temporary hardcoded here to create tasks. Need to make the code analyze what user is doing and fire respective URLEnding.
+
+            // if let theTask = aTask {
+//                let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
+//                self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
+//                    if !anyErrors("create_issue", controller: self, data: data, response: response, error: error) {
+//                        let alert: UIAlertController = UIAlertController(
+//                            title: "Success",
+//                            message: "Status changed to \"\(self.currentTransition!.target_status)\".",
+//                            preferredStyle: UIAlertControllerStyle.Alert)
+//                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
+//                            action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
+//                        }))
+//                        self.presentViewController(alert, animated: true, completion: nil)
+//                    }
+                // }
             }
         }
     }
@@ -280,7 +311,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             self.JSON += "\"resolution\": { \"name\": \"\(chosenValue!["name"]!)\" },"
             // TODO: Need to write JSON generator and remove the self.JSON as redundant
             
-            var dataArray = [Dictionary<String, AnyObject>()]
+            var dataArray: [Dictionary<String, AnyObject>] = []
             dataArray.append(["name" : "\(chosenValue!["name"]!)"])
             self.JSONfieldstoSend["resolution"] = dataArray
         }
@@ -292,7 +323,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             let chosenValue = currentRequiredFieldForTransition?.allowedValues![indexPath.row]
             self.JSON += "\"fixVersions\": [{ \"name\": \"\(chosenValue!["name"]!)\" }],"
             
-            var dataArray = [Dictionary<String, AnyObject>()]
+            var dataArray: [Dictionary<String, AnyObject>] = []
             dataArray.append(["name" : "\(chosenValue!["name"]!)"])
             self.JSONfieldstoSend["fixVersions"] = dataArray
         }
@@ -323,6 +354,25 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         return currentRequiredFieldForTransition!.allowedValues!.count
     }
     
+    @IBAction func action_done_editing(sender: UIButton) {
+        
+        // TODO: need to take user's text from the input field
+        let dataArray = [textedit_input_text.text]
+        JSONfieldstoSend["summary"] = dataArray
+        
+        view_text_input.removeFromSuperview()
+        GatherUserDataIfNeeded()
+    
+    }
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        // Preventing user from entering more than 250 characters in the text field.
+        let maxtext: Int = 250
+        textview_IssueSummary.text = textedit_input_text.text + text
+        
+        return textView.text.characters.count + (text.characters.count - range.length) <= maxtext
+    }
+
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
