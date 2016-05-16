@@ -24,8 +24,6 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         button_login.enabled = false
-        textfield_login.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
-        textfield_password.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
 
         // Cheking whether there are saved login and pass in User Data and if exists we try to get pass from keychain and automatically login
         let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
@@ -108,6 +106,9 @@ class LoginViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        textfield_login.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
+        textfield_password.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
     }
     
     override func viewWillDisappear(animated: Bool) {

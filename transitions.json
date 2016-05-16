@@ -27,6 +27,7 @@
     {
       "fields": {
         "assignee": {
+          
           "autoCompleteUrl": "https://fastlane.atlassian.net/rest/api/latest/user/assignable/search?issueKey=TEST-18&username=",
           "operations": [
             "set"

@@ -2,10 +2,7 @@
 // in this case results in weird results, for example it is possible to have isse with status "Resolved" and resolution "Unresolved"
 // so probably need to always check for required field and provide them in the transition
 
-{ "transition": { "id": "5" } }
-
-"fields": { "resolution": { "name": "Won't Do" } }
-
+{ "transition": { "id": "5"}, "fields": {"resolution": { "name": "Cannot Reproduce" }}
 
 
 // sample POST request for /rest/api/2/issue/{issueIdOrKey}/transitions

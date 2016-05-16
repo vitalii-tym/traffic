@@ -183,14 +183,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                         table_view_resolution.reloadData()
                         self.view.addSubview(self.view_list)
                         self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
-                        self.view_list.translatesAutoresizingMaskIntoConstraints = false
-                        let centerXconstraint = self.view_list.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor)
-                        let centerYconstraint = self.view_list.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor)
-                        let width = self.view_list.widthAnchor.constraintEqualToConstant(300)
-                        let height = self.view_list.heightAnchor.constraintEqualToConstant(300)
-                        centerYconstraint.constant = -100
-                        NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
-                        self.view_list.layoutIfNeeded()
+                        layoutView(view_list, layoutTarget: self.view)
                     } else {
                         print("Error: Unexpectedly found no allowed values listed for required fields of types \"project\" and \"issue type\"")
                 }
@@ -205,14 +198,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
 
                     self.view.addSubview(self.view_text_input)
                     //self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
-                    self.view_text_input.translatesAutoresizingMaskIntoConstraints = false
-                    let centerXconstraint = self.view_text_input.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor)
-                    let centerYconstraint = self.view_text_input.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor)
-                    let width = self.view_text_input.widthAnchor.constraintEqualToConstant(300)
-                    let height = self.view_text_input.heightAnchor.constraintEqualToConstant(300)
-                    centerYconstraint.constant = -100
-                    NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
-                    self.view_text_input.layoutIfNeeded()
+                    
+                    layoutView(view_text_input, layoutTarget: self.view)
                 
                 case "parent":
                     // TODO: We need to indicate the parent issue key here.
@@ -268,7 +255,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 if !anyErrors("create_issue", controller: self, data: data, response: response, error: error) {
                     let alert: UIAlertController = UIAlertController(
                         title: "Success",
-                        message: "Create new issue.",
+                        message: "New issue created.",
                         preferredStyle: UIAlertControllerStyle.Alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
                         action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
@@ -381,5 +368,54 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    
+    func layoutView(layoutSource: UIView, layoutTarget: UIView) {
+        layoutSource.translatesAutoresizingMaskIntoConstraints = false
+        if #available(iOS 9.0, *) {
+            let centerXconstraint = layoutSource.centerXAnchor.constraintEqualToAnchor(layoutTarget.centerXAnchor)
+            let centerYconstraint = layoutSource.centerYAnchor.constraintEqualToAnchor(layoutTarget.centerYAnchor)
+            let width = layoutSource.widthAnchor.constraintEqualToConstant(300)
+            let height = layoutSource.heightAnchor.constraintEqualToConstant(300)
+            centerYconstraint.constant = -100
+            NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
+        } else {
+            let centerXconstraint = NSLayoutConstraint(item: layoutSource,
+                                                       attribute: NSLayoutAttribute.CenterX,
+                                                       relatedBy: NSLayoutRelation.Equal,
+                                                       toItem: layoutTarget,
+                                                       attribute: NSLayoutAttribute.CenterX,
+                                                       multiplier: 1.0,
+                                                       constant: 0.0)
+            
+            let centerYconstraint = NSLayoutConstraint(item: layoutSource,
+                                                       attribute: NSLayoutAttribute.CenterY,
+                                                       relatedBy: NSLayoutRelation.Equal,
+                                                       toItem: layoutTarget,
+                                                       attribute: NSLayoutAttribute.CenterY,
+                                                       multiplier: 1.0,
+                                                       constant: 0.0)
+            
+            let width = NSLayoutConstraint(item: layoutSource,
+                                           attribute: NSLayoutAttribute.Width,
+                                           relatedBy: NSLayoutRelation.Equal,
+                                           toItem: nil,
+                                           attribute: NSLayoutAttribute.NotAnAttribute,
+                                           multiplier: 1.0,
+                                           constant: 300)
+            
+            let height = NSLayoutConstraint(item: layoutSource,
+                                            attribute: NSLayoutAttribute.Height,
+                                            relatedBy: NSLayoutRelation.Equal,
+                                            toItem: nil,
+                                            attribute: NSLayoutAttribute.NotAnAttribute,
+                                            multiplier: 1.0,
+                                            constant: 300)
+            centerYconstraint.constant = -100
+            NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
+        }
+        
+        layoutSource.layoutIfNeeded()
     }
 }
