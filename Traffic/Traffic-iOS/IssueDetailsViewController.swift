@@ -166,6 +166,11 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 }))
             }
             change_status_actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            
+            // required for iPad
+            change_status_actionSheet.popoverPresentationController?.sourceView = button_change_status
+            change_status_actionSheet.popoverPresentationController?.sourceRect = button_change_status.bounds
+            
             self.presentViewController(change_status_actionSheet, animated: true, completion: nil)
         }
     }
