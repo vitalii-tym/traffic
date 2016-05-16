@@ -125,7 +125,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             }
 
             // This empty field added to the end of array will indicate to the processor that the job is not finished, there more required fields to find and add here
-            fieldsQueue.append(aReqiredField(allowedValues: nil,operations: [],name: "",fieldName: "there_will_be_more_fields_to_be_added",type: ""))
+            fieldsQueue.append(aReqiredField(allowedValues: nil,operations: [],name: "",fieldName: "",type: "there_will_be_more_fields_to_be_added"))
 
             GatherUserDataIfNeeded()
         }
@@ -181,8 +181,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             
             // here we need to choose an appropriate custom view for data gathering
             
-            switch self.currentRequiredFieldForTransition!.fieldName as String! {
-                case "project", "issuetype":
+            switch self.currentRequiredFieldForTransition!.type as String! {
+                case "project", "issuetype", "array":
                     if let allowedValuesList = self.currentRequiredFieldForTransition!.allowedValues where !allowedValuesList.isEmpty {
                     
                         table_view_resolution.reloadData()
@@ -192,14 +192,14 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     } else {
                         print("Error: Unexpectedly found no allowed values listed for required fields of types \"project\" and \"issue type\"")
                 }
-                case "reporter":
+                case "user":
                     // No need to ask user anything on this step, automatically filling in the reporter field and going further
                     var dataArray: [Dictionary<String, AnyObject>] = []
                     dataArray.append(["name" : "\"\(currentUser!.name)\""])
                     self.JSONfieldstoSend["reporter"] = dataArray
                     GatherUserDataIfNeeded()
                 
-                case "summary":
+                case "string":
 
                     self.view.addSubview(self.view_text_input)
                     //self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
@@ -211,7 +211,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     // This is when user has chosen to create a sub-task
                     
                     GatherUserDataIfNeeded()
-                
+                                
                 case "there_will_be_more_fields_to_be_added":
                     let theProject = JSONfieldstoSend["project"]
                     let theProjectID = theProject![0]["id"] as! String // Taking the first one assuming user can't choose more than one project for this kind of field
