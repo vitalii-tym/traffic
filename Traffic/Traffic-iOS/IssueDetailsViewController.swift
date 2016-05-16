@@ -26,7 +26,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var table_view_resolution: UITableView!
     @IBOutlet weak var button_done_editing: UIButton!
     @IBOutlet weak var textedit_input_text: UITextView!
-
+    @IBOutlet weak var label_require_text_name: UILabel!
+    
     var aTask: Task?
     var errors: JIRAerrors?
     var availableTransitions: JIRATransitions?
@@ -185,6 +186,15 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 case "project", "issuetype", "array":
                     if let allowedValuesList = self.currentRequiredFieldForTransition!.allowedValues where !allowedValuesList.isEmpty {
                     
+                        // Hiding the "Sub-Task" issue type, because we don't support it yet
+                        for (index, allowedValue) in (self.currentRequiredFieldForTransition!.allowedValues?.enumerate())! {
+                            if allowedValue["name"] as? String == "Sub-task" {
+                                currentRequiredFieldForTransition?.allowedValues?.removeAtIndex(index)
+                                print ("Sub-Task was hidden from the list")
+                                break
+                            }
+                        }
+                        
                         table_view_resolution.reloadData()
                         self.view.addSubview(self.view_list)
                         self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
@@ -202,8 +212,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 case "string":
 
                     self.view.addSubview(self.view_text_input)
-                    //self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
-                    
+                    self.label_require_text_name.text = self.currentRequiredFieldForTransition!.name
                     layoutView(view_text_input, layoutTarget: self.view)
                 
                 case "parent":
@@ -348,10 +357,13 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     
     @IBAction func action_done_editing(sender: UIButton) {
         
-        // TODO: need to take user's text from the input field
+        // TODO: need to correctly determine different types of fields + validate text input depending on its type
         let dataArray = [textedit_input_text.text]
-        JSONfieldstoSend["summary"] = dataArray
+
+
+        JSONfieldstoSend["\(currentRequiredFieldForTransition!.fieldName)"] = dataArray
         
+        textedit_input_text.text = ""
         view_text_input.removeFromSuperview()
         GatherUserDataIfNeeded()
     

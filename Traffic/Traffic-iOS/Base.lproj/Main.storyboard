@@ -363,7 +363,8 @@
                         <outlet property="button_change_status" destination="urK-n4-J4V" id="9er-QS-Dll"/>
                         <outlet property="button_done_editing" destination="e0I-4u-aDK" id="S1u-6b-dfJ"/>
                         <outlet property="label_priority" destination="ee5-MM-5hj" id="mQT-vW-9r7"/>
-                        <outlet property="label_required_field_name" destination="kKM-ZK-yqa" id="2Vt-Xh-Gp1"/>
+                        <outlet property="label_require_text_name" destination="Lht-uD-shV" id="HJx-av-8Ps"/>
+                        <outlet property="label_required_field_name" destination="kKM-ZK-yqa" id="r3z-Ov-Oh9"/>
                         <outlet property="label_status" destination="hTh-6U-cJO" id="V0n-a7-ZR6"/>
                         <outlet property="table_view_resolution" destination="zDR-kP-oj5" id="NXM-Hi-VCB"/>
                         <outlet property="textedit_input_text" destination="X7K-F4-t42" id="GX0-1x-rvH"/>
@@ -379,12 +380,6 @@
                     <rect key="frame" x="0.0" y="0.0" width="240" height="129"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kKM-ZK-yqa">
-                            <rect key="frame" x="91" y="8" width="59" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zDR-kP-oj5">
                             <rect key="frame" x="0.0" y="29" width="240" height="100"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -427,6 +422,12 @@
                                 <outlet property="delegate" destination="sz5-hb-Gft" id="GGH-Jl-twX"/>
                             </connections>
                         </tableView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kKM-ZK-yqa">
+                            <rect key="frame" x="91" y="8" width="59" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>

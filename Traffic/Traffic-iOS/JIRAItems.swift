@@ -84,8 +84,8 @@ class JIRARequiredFields {
                 if let fieldDict = item as? Dictionary<String,AnyObject> {
                     if let name = fieldDict["name"] as? String,
                         let operations = fieldDict["operations"] as? Array<String>,
-                        let schemaDict = fieldDict["schema"] as? Dictionary<String,String>,
-                        let type = schemaDict["type"] {
+                        let schemaDict = fieldDict["schema"] as? Dictionary<String,AnyObject>,
+                        let type = schemaDict["type"] as? String {
                             let allowedValues = fieldDict["allowedValues"] as? [Dictionary<String, AnyObject>] // For some field types AllowedValues can actually be nil
                             the_req_fields.append(aReqiredField(allowedValues: allowedValues, operations: operations, name: name, fieldName: fieldName, type: type))
                     }
@@ -280,11 +280,13 @@ func generateJSONString (inputDataForGeneration: Dictionary<String, [AnyObject]>
             generatedString += " { \"name\" : \(field.1[0]["name"] as! String) },"
         case "issuetype", "project":
             generatedString += " { \"id\" : \(field.1[0]["id"] as! String) },"
-        case "summary":
+        case "summary", "customfield_10006":
             generatedString += "\"\(field.1[0] as! String)\","
         default:
-            generatedString += "<unknknown field>"
+            generatedString += "<unknown field>"
         }
+        
+        // TODO: We are tied to actual field names here. Need to think about changing to field types - this would be much more universal approach.
     }
     
     generatedString = String(generatedString.characters.dropLast()) + "}}"
