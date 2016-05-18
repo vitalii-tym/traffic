@@ -32,7 +32,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
     
-        let URLEnding = "/rest/api/2/search?jql=assignee=currentUser()+AND+status+not+in+(Done)+order+by+rank+asc"
+//        let URLEnding = "/rest/api/2/search?jql=assignee=currentUser()+AND+status+not+in+(Done)+order+by+rank+asc"
+        let URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
                         self.tasks = JIRATasks(data: data!)

@@ -4,7 +4,6 @@
 //
 //  Created by Vitaliy Tim on 4/11/16.
 //  Copyright © 2016 Vitaliy Timoshenko. All rights reserved.
-//
 
 import Foundation
 
@@ -67,7 +66,6 @@ class JIRAcurrentUser {
         }
         self.name = userName
     }
-    
 }
 
 class JIRARequiredFields {
@@ -97,7 +95,6 @@ class JIRARequiredFields {
         } else {
             self.init(fields: nil)
         }
-
     }
 }
 
@@ -229,7 +226,6 @@ class JIRAerrors {
                 newErrors.append(Error(error_code: response_code, error_message: "Problem with \(target): \(error)"))
             }
         }
-        
         self.init(errors: newErrors)
     }
 }
@@ -271,27 +267,32 @@ class JIRATransitions {
     }
 }
 
-func generateJSONString (inputDataForGeneration: Dictionary<String, [AnyObject]>) -> String {
-    var generatedString = "{ \"fields\": {"
-    for field in inputDataForGeneration {
-        generatedString += "\"\(field.0)\": "
-        switch field.0 {
-        case "reporter":
-            generatedString += " { \"name\" : \(field.1[0]["name"] as! String) },"
-        case "issuetype", "project":
-            generatedString += " { \"id\" : \(field.1[0]["id"] as! String) },"
-        case "summary", "customfield_10006":
-            generatedString += "\"\(field.1[0] as! String)\","
-        default:
-            generatedString += "<unknown field>"
+func generateJSONString(prefix: String, inputDataForGeneration: Dictionary<String, [AnyObject]>) -> String {
+    if !inputDataForGeneration.isEmpty {
+        var generatedString = prefix
+        if prefix == "" {
+            generatedString += "{ \"fields\": {"
+        } else {
+            generatedString = String(generatedString.characters.dropLast()) + ", \"fields\": {"
         }
-        
-        // TODO: We are tied to actual field names here. Need to think about changing to field types - this would be much more universal approach.
+        for field in inputDataForGeneration {
+            generatedString += "\"\(field.0)\": "
+            switch field.0 { // TODO: We are tied to actual field names here. Need to think about changing to field types - this would be much more universal approach.
+            case "reporter", "resolution":
+                generatedString += " { \"name\" : \"\(field.1[0]["name"] as! String)\" },"
+            case "issuetype", "project":
+                generatedString += " { \"id\" : \(field.1[0]["id"] as! String) },"
+            case "summary", "customfield_10006":
+                generatedString += "\"\(field.1[0] as! String)\","
+            default:
+                generatedString += "<unknown field>"
+            }
+        }
+        generatedString = String(generatedString.characters.dropLast()) + "}}"
+        return generatedString
+    } else {
+        return prefix
     }
-    
-    generatedString = String(generatedString.characters.dropLast()) + "}}"
-    print(generatedString)
-    return generatedString
 }
 
 func fixJsonData (data: NSData) -> NSData {
