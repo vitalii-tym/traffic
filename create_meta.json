@@ -1,3 +1,1968 @@
+{
+  "expand": "projects",
+  "projects": [
+    {
+      "expand": "issuetypes",
+      "id": "10000",
+      "key": "SP",
+      "self": "https://pocketjira.atlassian.net/rest/api/2/project/10000",
+      "issuetypes": [
+        {
+          "expand": "fields",
+          "fields": {
+            "customfield_10003": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Sprint",
+              "schema": {
+                "customId": 10003,
+                "items": "string",
+                "type": "array",
+                "custom": "com.pyxis.greenhopper.jira:gh-sprint"
+              },
+              "required": false
+            },
+            "description": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Description",
+              "schema": {
+                "type": "string",
+                "system": "description"
+              },
+              "required": false
+            },
+            "issuelinks": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/2/issue/picker?currentProjectId=&showSubTaskParent=true&showSubTasks=true&currentIssueKey=null&query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add"
+              ],
+              "name": "Linked Issues",
+              "schema": {
+                "type": "array",
+                "items": "issuelinks",
+                "system": "issuelinks"
+              },
+              "required": false
+            },
+            "issuetype": {
+              "allowedValues": [
+                {
+                  "avatarId": 10318,
+                  "id": "10002",
+                  "iconUrl": "https://pocketjira.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+                  "subtask": false,
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10002",
+                  "description": "A task that needs to be done.",
+                  "name": "Task"
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Issue Type",
+              "schema": {
+                "type": "issuetype",
+                "system": "issuetype"
+              },
+              "required": true
+            },
+            "fixVersions": {
+              "allowedValues": [
+                {
+                  "archived": false,
+                  "id": "10000",
+                  "userReleaseDate": "23/Apr/16",
+                  "released": true,
+                  "releaseDate": "2016-04-23",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10000",
+                  "name": "Version 1.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10001",
+                  "userReleaseDate": "07/May/16",
+                  "overdue": true,
+                  "released": false,
+                  "releaseDate": "2016-05-07",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10001",
+                  "name": "Version 2.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10002",
+                  "projectId": 10000,
+                  "name": "Version 3.0",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10002",
+                  "released": false
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set",
+                "add",
+                "remove"
+              ],
+              "name": "Fix Version/s",
+              "schema": {
+                "type": "array",
+                "items": "version",
+                "system": "fixVersions"
+              },
+              "required": false
+            },
+            "project": {
+              "allowedValues": [
+                {
+                  "id": "10000",
+                  "key": "SP",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/project/10000",
+                  "name": "Scrum Project",
+                  "avatarUrls": {
+                    "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+                    "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+                    "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+                    "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+                  }
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Project",
+              "schema": {
+                "type": "project",
+                "system": "project"
+              },
+              "required": true
+            },
+            "labels": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/1.0/labels/suggest?query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Labels",
+              "schema": {
+                "type": "array",
+                "items": "string",
+                "system": "labels"
+              },
+              "required": false
+            },
+            "assignee": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/assignable/search?issueKey=null&username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Assignee",
+              "schema": {
+                "type": "user",
+                "system": "assignee"
+              },
+              "required": false
+            },
+            "priority": {
+              "allowedValues": [
+                {
+                  "id": "1",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/highest.svg",
+                  "name": "Highest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/1"
+                },
+                {
+                  "id": "2",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/high.svg",
+                  "name": "High",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/2"
+                },
+                {
+                  "id": "3",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/medium.svg",
+                  "name": "Medium",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/3"
+                },
+                {
+                  "id": "4",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/low.svg",
+                  "name": "Low",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/4"
+                },
+                {
+                  "id": "5",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/lowest.svg",
+                  "name": "Lowest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/5"
+                }
+              ],
+              "hasDefaultValue": true,
+              "operations": [
+                "set"
+              ],
+              "name": "Priority",
+              "schema": {
+                "type": "priority",
+                "system": "priority"
+              },
+              "required": false
+            },
+            "summary": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Summary",
+              "schema": {
+                "type": "string",
+                "system": "summary"
+              },
+              "required": true
+            },
+            "attachment": {
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Attachment",
+              "schema": {
+                "type": "array",
+                "items": "attachment",
+                "system": "attachment"
+              },
+              "required": false
+            },
+            "reporter": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/search?username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Reporter",
+              "schema": {
+                "type": "user",
+                "system": "reporter"
+              },
+              "required": true
+            },
+            "components": {
+              "allowedValues": [
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Component/s",
+              "schema": {
+                "type": "array",
+                "items": "component",
+                "system": "components"
+              },
+              "required": false
+            },
+            "customfield_10004": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Epic Link",
+              "schema": {
+                "type": "any",
+                "custom": "com.pyxis.greenhopper.jira:gh-epic-link",
+                "customId": 10004
+              },
+              "required": false
+            }
+          },
+          "id": "10002",
+          "iconUrl": "https://pocketjira.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+          "subtask": false,
+          "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10002",
+          "description": "A task that needs to be done.",
+          "name": "Task"
+        },
+        {
+          "expand": "fields",
+          "fields": {
+            "customfield_10003": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Sprint",
+              "schema": {
+                "customId": 10003,
+                "items": "string",
+                "type": "array",
+                "custom": "com.pyxis.greenhopper.jira:gh-sprint"
+              },
+              "required": false
+            },
+            "description": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Description",
+              "schema": {
+                "type": "string",
+                "system": "description"
+              },
+              "required": false
+            },
+            "issuelinks": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/2/issue/picker?currentProjectId=&showSubTaskParent=true&showSubTasks=true&currentIssueKey=null&query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add"
+              ],
+              "name": "Linked Issues",
+              "schema": {
+                "type": "array",
+                "items": "issuelinks",
+                "system": "issuelinks"
+              },
+              "required": false
+            },
+            "issuetype": {
+              "allowedValues": [
+                {
+                  "avatarId": 10316,
+                  "id": "10003",
+                  "iconUrl": "https://pocketjira.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+                  "subtask": true,
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10003",
+                  "description": "The sub-task of the issue",
+                  "name": "Sub-task"
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Issue Type",
+              "schema": {
+                "type": "issuetype",
+                "system": "issuetype"
+              },
+              "required": true
+            },
+            "project": {
+              "allowedValues": [
+                {
+                  "id": "10000",
+                  "key": "SP",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/project/10000",
+                  "name": "Scrum Project",
+                  "avatarUrls": {
+                    "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+                    "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+                    "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+                    "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+                  }
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Project",
+              "schema": {
+                "type": "project",
+                "system": "project"
+              },
+              "required": true
+            },
+            "fixVersions": {
+              "allowedValues": [
+                {
+                  "archived": false,
+                  "id": "10000",
+                  "userReleaseDate": "23/Apr/16",
+                  "released": true,
+                  "releaseDate": "2016-04-23",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10000",
+                  "name": "Version 1.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10001",
+                  "userReleaseDate": "07/May/16",
+                  "overdue": true,
+                  "released": false,
+                  "releaseDate": "2016-05-07",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10001",
+                  "name": "Version 2.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10002",
+                  "projectId": 10000,
+                  "name": "Version 3.0",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10002",
+                  "released": false
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set",
+                "add",
+                "remove"
+              ],
+              "name": "Fix Version/s",
+              "schema": {
+                "type": "array",
+                "items": "version",
+                "system": "fixVersions"
+              },
+              "required": false
+            },
+            "parent": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Parent",
+              "schema": {
+                "type": "issuelink",
+                "system": "parent"
+              },
+              "required": true
+            },
+            "labels": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/1.0/labels/suggest?query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Labels",
+              "schema": {
+                "type": "array",
+                "items": "string",
+                "system": "labels"
+              },
+              "required": false
+            },
+            "priority": {
+              "allowedValues": [
+                {
+                  "id": "1",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/highest.svg",
+                  "name": "Highest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/1"
+                },
+                {
+                  "id": "2",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/high.svg",
+                  "name": "High",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/2"
+                },
+                {
+                  "id": "3",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/medium.svg",
+                  "name": "Medium",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/3"
+                },
+                {
+                  "id": "4",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/low.svg",
+                  "name": "Low",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/4"
+                },
+                {
+                  "id": "5",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/lowest.svg",
+                  "name": "Lowest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/5"
+                }
+              ],
+              "hasDefaultValue": true,
+              "operations": [
+                "set"
+              ],
+              "name": "Priority",
+              "schema": {
+                "type": "priority",
+                "system": "priority"
+              },
+              "required": false
+            },
+            "assignee": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/assignable/search?issueKey=null&username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Assignee",
+              "schema": {
+                "type": "user",
+                "system": "assignee"
+              },
+              "required": false
+            },
+            "summary": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Summary",
+              "schema": {
+                "type": "string",
+                "system": "summary"
+              },
+              "required": true
+            },
+            "attachment": {
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Attachment",
+              "schema": {
+                "type": "array",
+                "items": "attachment",
+                "system": "attachment"
+              },
+              "required": false
+            },
+            "reporter": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/search?username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Reporter",
+              "schema": {
+                "type": "user",
+                "system": "reporter"
+              },
+              "required": true
+            },
+            "components": {
+              "allowedValues": [
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Component/s",
+              "schema": {
+                "type": "array",
+                "items": "component",
+                "system": "components"
+              },
+              "required": false
+            },
+            "customfield_10004": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Epic Link",
+              "schema": {
+                "type": "any",
+                "custom": "com.pyxis.greenhopper.jira:gh-epic-link",
+                "customId": 10004
+              },
+              "required": false
+            }
+          },
+          "id": "10003",
+          "iconUrl": "https://pocketjira.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+          "subtask": true,
+          "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10003",
+          "description": "The sub-task of the issue",
+          "name": "Sub-task"
+        },
+        {
+          "expand": "fields",
+          "fields": {
+            "customfield_10003": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Sprint",
+              "schema": {
+                "customId": 10003,
+                "items": "string",
+                "type": "array",
+                "custom": "com.pyxis.greenhopper.jira:gh-sprint"
+              },
+              "required": false
+            },
+            "description": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Description",
+              "schema": {
+                "type": "string",
+                "system": "description"
+              },
+              "required": false
+            },
+            "issuelinks": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/2/issue/picker?currentProjectId=&showSubTaskParent=true&showSubTasks=true&currentIssueKey=null&query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add"
+              ],
+              "name": "Linked Issues",
+              "schema": {
+                "type": "array",
+                "items": "issuelinks",
+                "system": "issuelinks"
+              },
+              "required": false
+            },
+            "issuetype": {
+              "allowedValues": [
+                {
+                  "name": "Story",
+                  "id": "10001",
+                  "subtask": false,
+                  "description": "gh.issue.story.desc",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10001",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/issuetypes/story.svg"
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Issue Type",
+              "schema": {
+                "type": "issuetype",
+                "system": "issuetype"
+              },
+              "required": true
+            },
+            "fixVersions": {
+              "allowedValues": [
+                {
+                  "archived": false,
+                  "id": "10000",
+                  "userReleaseDate": "23/Apr/16",
+                  "released": true,
+                  "releaseDate": "2016-04-23",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10000",
+                  "name": "Version 1.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10001",
+                  "userReleaseDate": "07/May/16",
+                  "overdue": true,
+                  "released": false,
+                  "releaseDate": "2016-05-07",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10001",
+                  "name": "Version 2.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10002",
+                  "projectId": 10000,
+                  "name": "Version 3.0",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10002",
+                  "released": false
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set",
+                "add",
+                "remove"
+              ],
+              "name": "Fix Version/s",
+              "schema": {
+                "type": "array",
+                "items": "version",
+                "system": "fixVersions"
+              },
+              "required": false
+            },
+            "project": {
+              "allowedValues": [
+                {
+                  "id": "10000",
+                  "key": "SP",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/project/10000",
+                  "name": "Scrum Project",
+                  "avatarUrls": {
+                    "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+                    "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+                    "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+                    "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+                  }
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Project",
+              "schema": {
+                "type": "project",
+                "system": "project"
+              },
+              "required": true
+            },
+            "labels": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/1.0/labels/suggest?query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Labels",
+              "schema": {
+                "type": "array",
+                "items": "string",
+                "system": "labels"
+              },
+              "required": false
+            },
+            "assignee": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/assignable/search?issueKey=null&username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Assignee",
+              "schema": {
+                "type": "user",
+                "system": "assignee"
+              },
+              "required": false
+            },
+            "priority": {
+              "allowedValues": [
+                {
+                  "id": "1",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/highest.svg",
+                  "name": "Highest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/1"
+                },
+                {
+                  "id": "2",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/high.svg",
+                  "name": "High",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/2"
+                },
+                {
+                  "id": "3",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/medium.svg",
+                  "name": "Medium",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/3"
+                },
+                {
+                  "id": "4",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/low.svg",
+                  "name": "Low",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/4"
+                },
+                {
+                  "id": "5",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/lowest.svg",
+                  "name": "Lowest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/5"
+                }
+              ],
+              "hasDefaultValue": true,
+              "operations": [
+                "set"
+              ],
+              "name": "Priority",
+              "schema": {
+                "type": "priority",
+                "system": "priority"
+              },
+              "required": false
+            },
+            "summary": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Summary",
+              "schema": {
+                "type": "string",
+                "system": "summary"
+              },
+              "required": true
+            },
+            "attachment": {
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Attachment",
+              "schema": {
+                "type": "array",
+                "items": "attachment",
+                "system": "attachment"
+              },
+              "required": false
+            },
+            "reporter": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/search?username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Reporter",
+              "schema": {
+                "type": "user",
+                "system": "reporter"
+              },
+              "required": true
+            },
+            "components": {
+              "allowedValues": [
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Component/s",
+              "schema": {
+                "type": "array",
+                "items": "component",
+                "system": "components"
+              },
+              "required": false
+            },
+            "customfield_10004": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Epic Link",
+              "schema": {
+                "type": "any",
+                "custom": "com.pyxis.greenhopper.jira:gh-epic-link",
+                "customId": 10004
+              },
+              "required": false
+            }
+          },
+          "id": "10001",
+          "iconUrl": "https://pocketjira.atlassian.net/images/icons/issuetypes/story.svg",
+          "subtask": false,
+          "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10001",
+          "description": "gh.issue.story.desc",
+          "name": "Story"
+        },
+        {
+          "expand": "fields",
+          "fields": {
+            "customfield_10003": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Sprint",
+              "schema": {
+                "customId": 10003,
+                "items": "string",
+                "type": "array",
+                "custom": "com.pyxis.greenhopper.jira:gh-sprint"
+              },
+              "required": false
+            },
+            "description": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Description",
+              "schema": {
+                "type": "string",
+                "system": "description"
+              },
+              "required": false
+            },
+            "issuelinks": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/2/issue/picker?currentProjectId=&showSubTaskParent=true&showSubTasks=true&currentIssueKey=null&query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add"
+              ],
+              "name": "Linked Issues",
+              "schema": {
+                "type": "array",
+                "items": "issuelinks",
+                "system": "issuelinks"
+              },
+              "required": false
+            },
+            "issuetype": {
+              "allowedValues": [
+                {
+                  "avatarId": 10303,
+                  "id": "10004",
+                  "iconUrl": "https://pocketjira.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+                  "subtask": false,
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10004",
+                  "description": "A problem which impairs or prevents the functions of the product.",
+                  "name": "Bug"
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Issue Type",
+              "schema": {
+                "type": "issuetype",
+                "system": "issuetype"
+              },
+              "required": true
+            },
+            "fixVersions": {
+              "allowedValues": [
+                {
+                  "archived": false,
+                  "id": "10000",
+                  "userReleaseDate": "23/Apr/16",
+                  "released": true,
+                  "releaseDate": "2016-04-23",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10000",
+                  "name": "Version 1.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10001",
+                  "userReleaseDate": "07/May/16",
+                  "overdue": true,
+                  "released": false,
+                  "releaseDate": "2016-05-07",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10001",
+                  "name": "Version 2.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10002",
+                  "projectId": 10000,
+                  "name": "Version 3.0",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10002",
+                  "released": false
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set",
+                "add",
+                "remove"
+              ],
+              "name": "Fix Version/s",
+              "schema": {
+                "type": "array",
+                "items": "version",
+                "system": "fixVersions"
+              },
+              "required": false
+            },
+            "project": {
+              "allowedValues": [
+                {
+                  "id": "10000",
+                  "key": "SP",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/project/10000",
+                  "name": "Scrum Project",
+                  "avatarUrls": {
+                    "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+                    "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+                    "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+                    "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+                  }
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Project",
+              "schema": {
+                "type": "project",
+                "system": "project"
+              },
+              "required": true
+            },
+            "labels": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/1.0/labels/suggest?query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Labels",
+              "schema": {
+                "type": "array",
+                "items": "string",
+                "system": "labels"
+              },
+              "required": false
+            },
+            "assignee": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/assignable/search?issueKey=null&username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Assignee",
+              "schema": {
+                "type": "user",
+                "system": "assignee"
+              },
+              "required": false
+            },
+            "priority": {
+              "allowedValues": [
+                {
+                  "id": "1",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/highest.svg",
+                  "name": "Highest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/1"
+                },
+                {
+                  "id": "2",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/high.svg",
+                  "name": "High",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/2"
+                },
+                {
+                  "id": "3",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/medium.svg",
+                  "name": "Medium",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/3"
+                },
+                {
+                  "id": "4",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/low.svg",
+                  "name": "Low",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/4"
+                },
+                {
+                  "id": "5",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/lowest.svg",
+                  "name": "Lowest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/5"
+                }
+              ],
+              "hasDefaultValue": true,
+              "operations": [
+                "set"
+              ],
+              "name": "Priority",
+              "schema": {
+                "type": "priority",
+                "system": "priority"
+              },
+              "required": false
+            },
+            "summary": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Summary",
+              "schema": {
+                "type": "string",
+                "system": "summary"
+              },
+              "required": true
+            },
+            "versions": {
+              "allowedValues": [
+                {
+                  "archived": false,
+                  "id": "10000",
+                  "userReleaseDate": "23/Apr/16",
+                  "released": true,
+                  "releaseDate": "2016-04-23",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10000",
+                  "name": "Version 1.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10001",
+                  "userReleaseDate": "07/May/16",
+                  "overdue": true,
+                  "released": false,
+                  "releaseDate": "2016-05-07",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10001",
+                  "name": "Version 2.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10002",
+                  "projectId": 10000,
+                  "name": "Version 3.0",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10002",
+                  "released": false
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set",
+                "add",
+                "remove"
+              ],
+              "name": "Affects Version/s",
+              "schema": {
+                "type": "array",
+                "items": "version",
+                "system": "versions"
+              },
+              "required": false
+            },
+            "attachment": {
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Attachment",
+              "schema": {
+                "type": "array",
+                "items": "attachment",
+                "system": "attachment"
+              },
+              "required": false
+            },
+            "reporter": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/search?username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Reporter",
+              "schema": {
+                "type": "user",
+                "system": "reporter"
+              },
+              "required": true
+            },
+            "components": {
+              "allowedValues": [
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Component/s",
+              "schema": {
+                "type": "array",
+                "items": "component",
+                "system": "components"
+              },
+              "required": false
+            },
+            "customfield_10004": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Epic Link",
+              "schema": {
+                "type": "any",
+                "custom": "com.pyxis.greenhopper.jira:gh-epic-link",
+                "customId": 10004
+              },
+              "required": false
+            },
+            "environment": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Environment",
+              "schema": {
+                "type": "string",
+                "system": "environment"
+              },
+              "required": false
+            }
+          },
+          "id": "10004",
+          "iconUrl": "https://pocketjira.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+          "subtask": false,
+          "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10004",
+          "description": "A problem which impairs or prevents the functions of the product.",
+          "name": "Bug"
+        },
+        {
+          "expand": "fields",
+          "fields": {
+            "customfield_10003": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Sprint",
+              "schema": {
+                "customId": 10003,
+                "items": "string",
+                "type": "array",
+                "custom": "com.pyxis.greenhopper.jira:gh-sprint"
+              },
+              "required": false
+            },
+            "description": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Description",
+              "schema": {
+                "type": "string",
+                "system": "description"
+              },
+              "required": false
+            },
+            "issuelinks": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/2/issue/picker?currentProjectId=&showSubTaskParent=true&showSubTasks=true&currentIssueKey=null&query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add"
+              ],
+              "name": "Linked Issues",
+              "schema": {
+                "type": "array",
+                "items": "issuelinks",
+                "system": "issuelinks"
+              },
+              "required": false
+            },
+            "issuetype": {
+              "allowedValues": [
+                {
+                  "name": "Epic",
+                  "id": "10000",
+                  "subtask": false,
+                  "description": "gh.issue.epic.desc",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10000",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/issuetypes/epic.svg"
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Issue Type",
+              "schema": {
+                "type": "issuetype",
+                "system": "issuetype"
+              },
+              "required": true
+            },
+            "fixVersions": {
+              "allowedValues": [
+                {
+                  "archived": false,
+                  "id": "10000",
+                  "userReleaseDate": "23/Apr/16",
+                  "released": true,
+                  "releaseDate": "2016-04-23",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10000",
+                  "name": "Version 1.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10001",
+                  "userReleaseDate": "07/May/16",
+                  "overdue": true,
+                  "released": false,
+                  "releaseDate": "2016-05-07",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10001",
+                  "name": "Version 2.0",
+                  "projectId": 10000
+                },
+                {
+                  "archived": false,
+                  "id": "10002",
+                  "projectId": 10000,
+                  "name": "Version 3.0",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/version/10002",
+                  "released": false
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set",
+                "add",
+                "remove"
+              ],
+              "name": "Fix Version/s",
+              "schema": {
+                "type": "array",
+                "items": "version",
+                "system": "fixVersions"
+              },
+              "required": false
+            },
+            "project": {
+              "allowedValues": [
+                {
+                  "id": "10000",
+                  "key": "SP",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/project/10000",
+                  "name": "Scrum Project",
+                  "avatarUrls": {
+                    "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+                    "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+                    "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+                    "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+                  }
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Project",
+              "schema": {
+                "type": "project",
+                "system": "project"
+              },
+              "required": true
+            },
+            "labels": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/1.0/labels/suggest?query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Labels",
+              "schema": {
+                "type": "array",
+                "items": "string",
+                "system": "labels"
+              },
+              "required": false
+            },
+            "assignee": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/assignable/search?issueKey=null&username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Assignee",
+              "schema": {
+                "type": "user",
+                "system": "assignee"
+              },
+              "required": false
+            },
+            "priority": {
+              "allowedValues": [
+                {
+                  "id": "1",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/highest.svg",
+                  "name": "Highest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/1"
+                },
+                {
+                  "id": "2",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/high.svg",
+                  "name": "High",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/2"
+                },
+                {
+                  "id": "3",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/medium.svg",
+                  "name": "Medium",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/3"
+                },
+                {
+                  "id": "4",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/low.svg",
+                  "name": "Low",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/4"
+                },
+                {
+                  "id": "5",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/lowest.svg",
+                  "name": "Lowest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/5"
+                }
+              ],
+              "hasDefaultValue": true,
+              "operations": [
+                "set"
+              ],
+              "name": "Priority",
+              "schema": {
+                "type": "priority",
+                "system": "priority"
+              },
+              "required": false
+            },
+            "customfield_10006": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Epic Name",
+              "schema": {
+                "type": "string",
+                "custom": "com.pyxis.greenhopper.jira:gh-epic-label",
+                "customId": 10006
+              },
+              "required": true
+            },
+            "summary": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Summary",
+              "schema": {
+                "type": "string",
+                "system": "summary"
+              },
+              "required": true
+            },
+            "attachment": {
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Attachment",
+              "schema": {
+                "type": "array",
+                "items": "attachment",
+                "system": "attachment"
+              },
+              "required": false
+            },
+            "reporter": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/search?username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Reporter",
+              "schema": {
+                "type": "user",
+                "system": "reporter"
+              },
+              "required": true
+            },
+            "components": {
+              "allowedValues": [
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Component/s",
+              "schema": {
+                "type": "array",
+                "items": "component",
+                "system": "components"
+              },
+              "required": false
+            },
+            "customfield_10004": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Epic Link",
+              "schema": {
+                "type": "any",
+                "custom": "com.pyxis.greenhopper.jira:gh-epic-link",
+                "customId": 10004
+              },
+              "required": false
+            }
+          },
+          "id": "10000",
+          "iconUrl": "https://pocketjira.atlassian.net/images/icons/issuetypes/epic.svg",
+          "subtask": false,
+          "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10000",
+          "description": "gh.issue.epic.desc",
+          "name": "Epic"
+        }
+      ],
+      "name": "Scrum Project",
+      "avatarUrls": {
+        "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+        "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+        "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+        "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+      }
+    },
+    {
+      "expand": "issuetypes",
+      "id": "10100",
+      "key": "TPPMK",
+      "self": "https://pocketjira.atlassian.net/rest/api/2/project/10100",
+      "issuetypes": [
+        {
+          "expand": "fields",
+          "fields": {
+            "summary": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Summary",
+              "schema": {
+                "type": "string",
+                "system": "summary"
+              },
+              "required": true
+            },
+            "issuetype": {
+              "allowedValues": [
+                {
+                  "avatarId": 10318,
+                  "id": "10002",
+                  "iconUrl": "https://pocketjira.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+                  "subtask": false,
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10002",
+                  "description": "A task that needs to be done.",
+                  "name": "Task"
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Issue Type",
+              "schema": {
+                "type": "issuetype",
+                "system": "issuetype"
+              },
+              "required": true
+            },
+            "labels": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/1.0/labels/suggest?query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Labels",
+              "schema": {
+                "type": "array",
+                "items": "string",
+                "system": "labels"
+              },
+              "required": false
+            },
+            "timetracking": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set",
+                "edit"
+              ],
+              "name": "Time Tracking",
+              "schema": {
+                "type": "timetracking",
+                "system": "timetracking"
+              },
+              "required": false
+            },
+            "duedate": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Due Date",
+              "schema": {
+                "type": "date",
+                "system": "duedate"
+              },
+              "required": false
+            },
+            "reporter": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/search?username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Reporter",
+              "schema": {
+                "type": "user",
+                "system": "reporter"
+              },
+              "required": true
+            },
+            "assignee": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/assignable/search?issueKey=null&username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Assignee",
+              "schema": {
+                "type": "user",
+                "system": "assignee"
+              },
+              "required": false
+            },
+            "project": {
+              "allowedValues": [
+                {
+                  "id": "10100",
+                  "key": "TPPMK",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/project/10100",
+                  "name": "Test project of \"Process Management\" kind",
+                  "avatarUrls": {
+                    "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+                    "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+                    "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+                    "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+                  }
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Project",
+              "schema": {
+                "type": "project",
+                "system": "project"
+              },
+              "required": true
+            },
+            "description": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Description",
+              "schema": {
+                "type": "string",
+                "system": "description"
+              },
+              "required": false
+            },
+            "priority": {
+              "allowedValues": [
+                {
+                  "id": "1",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/highest.svg",
+                  "name": "Highest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/1"
+                },
+                {
+                  "id": "2",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/high.svg",
+                  "name": "High",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/2"
+                },
+                {
+                  "id": "3",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/medium.svg",
+                  "name": "Medium",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/3"
+                },
+                {
+                  "id": "4",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/low.svg",
+                  "name": "Low",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/4"
+                },
+                {
+                  "id": "5",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/lowest.svg",
+                  "name": "Lowest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/5"
+                }
+              ],
+              "hasDefaultValue": true,
+              "operations": [
+                "set"
+              ],
+              "name": "Priority",
+              "schema": {
+                "type": "priority",
+                "system": "priority"
+              },
+              "required": false
+            },
+            "attachment": {
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Attachment",
+              "schema": {
+                "type": "array",
+                "items": "attachment",
+                "system": "attachment"
+              },
+              "required": false
+            }
+          },
+          "id": "10002",
+          "iconUrl": "https://pocketjira.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10318&avatarType=issuetype",
+          "subtask": false,
+          "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10002",
+          "description": "A task that needs to be done.",
+          "name": "Task"
+        },
+        {
+          "expand": "fields",
+          "fields": {
+            "description": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Description",
+              "schema": {
+                "type": "string",
+                "system": "description"
+              },
+              "required": false
+            },
+            "timetracking": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set",
+                "edit"
+              ],
+              "name": "Time Tracking",
+              "schema": {
+                "type": "timetracking",
+                "system": "timetracking"
+              },
+              "required": false
+            },
+            "issuetype": {
+              "allowedValues": [
+                {
+                  "avatarId": 10316,
+                  "id": "10003",
+                  "iconUrl": "https://pocketjira.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+                  "subtask": true,
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10003",
+                  "description": "The sub-task of the issue",
+                  "name": "Sub-task"
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Issue Type",
+              "schema": {
+                "type": "issuetype",
+                "system": "issuetype"
+              },
+              "required": true
+            },
+            "project": {
+              "allowedValues": [
+                {
+                  "id": "10100",
+                  "key": "TPPMK",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/project/10100",
+                  "name": "Test project of \"Process Management\" kind",
+                  "avatarUrls": {
+                    "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+                    "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+                    "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+                    "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+                  }
+                }
+              ],
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Project",
+              "schema": {
+                "type": "project",
+                "system": "project"
+              },
+              "required": true
+            },
+            "parent": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Parent",
+              "schema": {
+                "type": "issuelink",
+                "system": "parent"
+              },
+              "required": true
+            },
+            "labels": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/1.0/labels/suggest?query=",
+              "hasDefaultValue": false,
+              "operations": [
+                "add",
+                "set",
+                "remove"
+              ],
+              "name": "Labels",
+              "schema": {
+                "type": "array",
+                "items": "string",
+                "system": "labels"
+              },
+              "required": false
+            },
+            "assignee": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/assignable/search?issueKey=null&username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Assignee",
+              "schema": {
+                "type": "user",
+                "system": "assignee"
+              },
+              "required": false
+            },
+            "priority": {
+              "allowedValues": [
+                {
+                  "id": "1",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/highest.svg",
+                  "name": "Highest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/1"
+                },
+                {
+                  "id": "2",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/high.svg",
+                  "name": "High",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/2"
+                },
+                {
+                  "id": "3",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/medium.svg",
+                  "name": "Medium",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/3"
+                },
+                {
+                  "id": "4",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/low.svg",
+                  "name": "Low",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/4"
+                },
+                {
+                  "id": "5",
+                  "iconUrl": "https://pocketjira.atlassian.net/images/icons/priorities/lowest.svg",
+                  "name": "Lowest",
+                  "self": "https://pocketjira.atlassian.net/rest/api/2/priority/5"
+                }
+              ],
+              "hasDefaultValue": true,
+              "operations": [
+                "set"
+              ],
+              "name": "Priority",
+              "schema": {
+                "type": "priority",
+                "system": "priority"
+              },
+              "required": false
+            },
+            "summary": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Summary",
+              "schema": {
+                "type": "string",
+                "system": "summary"
+              },
+              "required": true
+            },
+            "attachment": {
+              "hasDefaultValue": false,
+              "operations": [
+              ],
+              "name": "Attachment",
+              "schema": {
+                "type": "array",
+                "items": "attachment",
+                "system": "attachment"
+              },
+              "required": false
+            },
+            "reporter": {
+              "autoCompleteUrl": "https://pocketjira.atlassian.net/rest/api/latest/user/search?username=",
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Reporter",
+              "schema": {
+                "type": "user",
+                "system": "reporter"
+              },
+              "required": true
+            },
+            "duedate": {
+              "hasDefaultValue": false,
+              "operations": [
+                "set"
+              ],
+              "name": "Due Date",
+              "schema": {
+                "type": "date",
+                "system": "duedate"
+              },
+              "required": false
+            }
+          },
+          "id": "10003",
+          "iconUrl": "https://pocketjira.atlassian.net/secure/viewavatar?size=xsmall&avatarId=10316&avatarType=issuetype",
+          "subtask": true,
+          "self": "https://pocketjira.atlassian.net/rest/api/2/issuetype/10003",
+          "description": "The sub-task of the issue",
+          "name": "Sub-task"
+        }
+      ],
+      "name": "Test project of \"Process Management\" kind",
+      "avatarUrls": {
+        "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+        "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+        "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+        "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+      }
+    }
+  ]
+}
 
 // sample answer
 

@@ -103,6 +103,16 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                             if requiredField.fieldName == "project" {
                                 if aRequiredFieldOfTypeProject == nil {
                                     aRequiredFieldOfTypeProject = requiredField
+                                } else {
+                                    // Since AllowedValues fields go separately in different projects and issue types, we'll have to merge them
+                                    // together in one list of allowed values, but make sure there are no dublicates.
+                                    // We assume AllowedValues for an issueType for a project always contains one item.
+                                    if aRequiredFieldOfTypeProject!.allowedValues != nil && requiredField.allowedValues != nil {
+                                        if let allowedValues = aRequiredFieldOfTypeProject!.allowedValues! as NSArray?
+                                            where !allowedValues.containsObject(requiredField.allowedValues![0]) {
+                                            aRequiredFieldOfTypeProject!.allowedValues!.append(requiredField.allowedValues![0])
+                                        }
+                                    }
                                 }
                             }
                             if requiredField.fieldName == "issuetype" {
