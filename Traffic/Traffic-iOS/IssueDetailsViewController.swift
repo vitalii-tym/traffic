@@ -93,7 +93,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         if let metadata = IssueCreationMetadata {
             
             var aRequiredFieldOfTypeProject: aReqiredField?
-            var aRequiredFieldOfTypeIssueType: aReqiredField?
             
             // Retrieving fields of type "project" and "issueType" and adding them to the data gathering Queue
             for project in metadata.availableProjects {
@@ -115,13 +114,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                                     }
                                 }
                             }
-                            if requiredField.fieldName == "issuetype" {
-                                if aRequiredFieldOfTypeIssueType == nil {
-                                    aRequiredFieldOfTypeIssueType = requiredField
-                                } else {
-                                    aRequiredFieldOfTypeIssueType?.allowedValues?.append(requiredField.allowedValues![0])
-                                }
-                            }
                         }
                     } else {
                         print("unexpectedly found an issue type in a project with no required fields at all")
@@ -131,12 +123,9 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             if (aRequiredFieldOfTypeProject != nil) {
                 fieldsQueue.append(aRequiredFieldOfTypeProject!)
             }
-            if (aRequiredFieldOfTypeIssueType != nil) {
-                fieldsQueue.append(aRequiredFieldOfTypeIssueType!)
-            }
 
             // This empty field added to the end of array will indicate to the processor that the job is not finished, there more required fields to find and add here
-            fieldsQueue.append(aReqiredField(allowedValues: nil,operations: [],name: "",fieldName: "",type: "there_will_be_more_fields_to_be_added"))
+            fieldsQueue.append(aReqiredField(allowedValues: nil,operations: [],name: "",fieldName: "",type: "there_are_still_issue_types_to_choose"))
 
             GatherUserDataIfNeeded()
         }
@@ -230,7 +219,41 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     // This is when user has chosen to create a sub-task
                     
                     GatherUserDataIfNeeded()
-                                
+                
+                case "there_are_still_issue_types_to_choose":
+                    var chosenProject: availableProject
+                    var aRequiredFieldOfTypeIssueType: aReqiredField?
+                    
+                    for aProject in (IssueCreationMetadata?.availableProjects)! {
+                        if aProject.id == JSONfieldstoSend["project"]![0]["id"] as! String {
+                            chosenProject = aProject
+                    
+                            for issueType in chosenProject.issueTypes {
+                                if let requiredFields = issueType.requiredfields {
+                                    for requiredField in requiredFields {
+                                        if requiredField.fieldName == "issuetype" {
+                                            if aRequiredFieldOfTypeIssueType == nil {
+                                                aRequiredFieldOfTypeIssueType = requiredField
+                                            } else {
+                                                aRequiredFieldOfTypeIssueType?.allowedValues?.append(requiredField.allowedValues![0])
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    print("unexpectedly found an issue type in a project with no required fields at all")
+                                }
+                            }
+                        }
+                    }
+
+                    if (aRequiredFieldOfTypeIssueType != nil) {
+                            fieldsQueue.append(aRequiredFieldOfTypeIssueType!)
+                    }
+            
+                    fieldsQueue.append(aReqiredField(allowedValues: nil,operations: [],name: "",fieldName: "",type: "there_will_be_more_fields_to_be_added"))
+                    
+                    GatherUserDataIfNeeded()
+                
                 case "there_will_be_more_fields_to_be_added":
                     let theProject = JSONfieldstoSend["project"]
                     let theProjectID = theProject![0]["id"] as! String // Taking the first one assuming user can't choose more than one project for this kind of field
@@ -405,7 +428,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             let centerYconstraint = layoutSource.centerYAnchor.constraintEqualToAnchor(layoutTarget.centerYAnchor)
             let width = layoutSource.widthAnchor.constraintEqualToConstant(300)
             let height = layoutSource.heightAnchor.constraintEqualToConstant(300)
-            centerYconstraint.constant = -100
+            centerYconstraint.constant = -50
             NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
         } else {
             let centerXconstraint = NSLayoutConstraint(item: layoutSource,
@@ -439,7 +462,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                                             attribute: NSLayoutAttribute.NotAnAttribute,
                                             multiplier: 1.0,
                                             constant: 300)
-            centerYconstraint.constant = -100
+            centerYconstraint.constant = -50
             NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
         }
         
