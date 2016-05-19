@@ -385,8 +385,11 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         // Preventing user from entering more than 250 characters in the text field.
         let maxtext: Int = 250
         textview_IssueSummary.text = textedit_input_text.text + text
-        
         return textView.text.characters.count + (text.characters.count - range.length) <= maxtext
+    }
+    
+    func textViewDidChange(textView: UITextView) {
+        button_done_editing.enabled = !textedit_input_text.text.isEmpty
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -398,8 +401,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    
+
     func layoutView(layoutSource: UIView, layoutTarget: UIView) {
         layoutSource.translatesAutoresizingMaskIntoConstraints = false
         if #available(iOS 9.0, *) {
