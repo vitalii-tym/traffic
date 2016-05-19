@@ -368,9 +368,11 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     @IBAction func action_done_editing(sender: UIButton) {
         
         // TODO: need to correctly determine different types of fields + validate text input depending on its type
-        let dataArray = [textedit_input_text.text]
+        var dataArray = [textedit_input_text.text]
 
-
+        dataArray[0] = dataArray[0].stringByReplacingOccurrencesOfString("\"", withString:"\\\"")
+        dataArray[0] = dataArray[0].stringByReplacingOccurrencesOfString("\\", withString:"\\\\")
+    
         JSONfieldstoSend["\(currentRequiredFieldForTransition!.fieldName)"] = dataArray
         
         textedit_input_text.text = ""

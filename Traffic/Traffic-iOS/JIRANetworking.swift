@@ -22,13 +22,13 @@ class JIRANetworkRequest: NSObject, NSURLSessionDelegate {
     func getdata(request_type: String, URLEnding: String, JSON: String?, domain: String?, completionHandler: (data: NSData?, response: NSURLResponse?, error: NSError?) -> Void) {
         let URL = ((domain) ?? (domainFromKeychain) ?? "https://") + URLEnding //If we don't know domain it will show some error, but at least won't crash
         let request = NSMutableURLRequest(URL: NSURL(string: URL)!)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
         switch request_type {
             case "POST":
                 request.HTTPMethod = request_type
                 if JSON != nil {
-                request.HTTPBody = JSON!.dataUsingEncoding(NSASCIIStringEncoding)
+                    request.HTTPBody = JSON!.dataUsingEncoding(NSUTF8StringEncoding)
                 } else {
                     print("Error: loks like your are trying to send POST request without providing it with JSON")
                     break
