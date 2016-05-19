@@ -20,19 +20,36 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var errors: JIRAerrors?
     var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     var currentUser: JIRAcurrentUser?
-    
+
+    var refreshControl: UIRefreshControl!
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
     @IBOutlet weak var button_log_out: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl.addTarget(self, action: #selector(TasksViewViewController.refresh(_:)),   forControlEvents: UIControlEvents.ValueChanged)
+        view_collectionView!.addSubview(refreshControl)
     }
 
+    func refresh(sender:AnyObject) {
+        print ("refreshing tasks...")
+        let URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
+        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+            if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
+                self.tasks = JIRATasks(data: data!)
+                self.refreshControl.endRefreshing()
+            }
+        }
+        aTasktoPass = nil
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
     
-//        let URLEnding = "/rest/api/2/search?jql=assignee=currentUser()+AND+status+not+in+(Done)+order+by+rank+asc"
+//      let URLEnding = "/rest/api/2/search?jql=assignee=currentUser()+AND+status+not+in+(Done)+order+by+rank+asc"
         let URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
@@ -45,6 +62,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        // Retreiving metadata for issue creation and enabling the "+" button as soon as metadata loading succesful
         let URLEnding = "/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields"
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
             if !anyErrors("get_create_meta", controller: self, data: data, response: response, error: error) {
@@ -96,6 +114,9 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         aTasktoPass = (tasks?.taskslist[indexPath.row])!
+        
+        refreshControl.endRefreshing()
+        
         self.performSegueWithIdentifier("issueDetails", sender: nil)
     }
 
