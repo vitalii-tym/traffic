@@ -218,7 +218,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                             for issueType in chosenProject.issueTypes {
                                 if let requiredFields = issueType.requiredfields {
                                     for requiredField in requiredFields {
-                                        if requiredField.fieldName == "issuetype" {
+                                        if requiredField.fieldName == "issuetype" || requiredField.fieldName == "issueType" || requiredField.fieldName == "IssueType" {
                                             if aRequiredFieldOfTypeIssueType == nil {
                                                 aRequiredFieldOfTypeIssueType = requiredField
                                             } else {
@@ -242,16 +242,16 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     GatherUserDataIfNeeded()
                 
                 case "there_will_be_more_fields_to_be_added":
-                    let theProject = JSONfieldstoSend["project"]
-                    let theProjectID = theProject![0]["id"] as! String // Taking the first one assuming user can't choose more than one project for this kind of field
-                    let theIssueType = JSONfieldstoSend["issuetype"]
-                    let theIssueTypeID = theIssueType![0]["id"] as! String // Assuming user can'e choose more than one issue type for this kind of field
-                    let ProjIndex = self.IssueCreationMetadata?.availableProjects.indexOf({$0.id == theProjectID})
-                    let IssueTypeIndex = self.IssueCreationMetadata?.availableProjects[ProjIndex!].issueTypes.indexOf({$0.id == theIssueTypeID})
-                    
+                    if let theProject = JSONfieldstoSend["project"],
+                       let theIssueType = JSONfieldstoSend["issuetype"] {
+                        if let theProjectID = theProject[0]["id"] as? String, // Taking the first one assuming user can't choose more than one project for this kind of field
+                            let theIssueTypeID = theIssueType[0]["id"] as? String { // Assuming user can'e choose more than one issue type for this kind of field
+                        let ProjIndex = self.IssueCreationMetadata?.availableProjects.indexOf({$0.id == theProjectID})
+                        let IssueTypeIndex = self.IssueCreationMetadata?.availableProjects[ProjIndex!].issueTypes.indexOf({$0.id == theIssueTypeID})
+                        self.fieldsQueue = self.IssueCreationMetadata!.availableProjects[ProjIndex!].issueTypes[IssueTypeIndex!].requiredfields!
+                        }
+                    }
                     // TODO: Need to get rid of the "!s" in the code above. Assuming all the data in place is very risky here.
-                    
-                    self.fieldsQueue = self.IssueCreationMetadata!.availableProjects[ProjIndex!].issueTypes[IssueTypeIndex!].requiredfields!
                     
                     // Since user has already chosen the project and issuetype we should get rid of these fields from the additinal fields array to not ask them again
                     for (index, aRequiredField) in self.fieldsQueue.enumerate() {
@@ -404,8 +404,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             let centerXconstraint = layoutSource.centerXAnchor.constraintEqualToAnchor(layoutTarget.centerXAnchor)
             let centerYconstraint = layoutSource.centerYAnchor.constraintEqualToAnchor(layoutTarget.centerYAnchor)
             let width = layoutSource.widthAnchor.constraintEqualToConstant(300)
-            let height = layoutSource.heightAnchor.constraintEqualToConstant(300)
-            centerYconstraint.constant = -50
+            let height = layoutSource.heightAnchor.constraintEqualToConstant(250)
+            centerYconstraint.constant = -90
             NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
         } else {
             let centerXconstraint = NSLayoutConstraint(item: layoutSource,
@@ -438,8 +438,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                                             toItem: nil,
                                             attribute: NSLayoutAttribute.NotAnAttribute,
                                             multiplier: 1.0,
-                                            constant: 300)
-            centerYconstraint.constant = -50
+                                            constant: 250)
+            centerYconstraint.constant = -90
             NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
         }
         

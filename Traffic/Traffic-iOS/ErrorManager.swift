@@ -93,7 +93,7 @@ let actionTypes: [String:
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-currentUser
     "create_issue": ("Oops",
             [201],
-            [400: "Looks like you are not logged in. You can not create isses, sorry.",
+            [400: "Issue was not created.",
                 0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."])
         // 201 - application/jsonReturns a link to the created issue.
         // 400 - Returned if the input is invalid (e.g. missing required fields, invalid field values, and so forth).

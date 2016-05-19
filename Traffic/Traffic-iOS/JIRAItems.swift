@@ -128,7 +128,7 @@ class JIRAMetadataToCreateIssue {
                 if let projName = theProjectDict["name"] as? String,
                         projKey = theProjectDict["key"] as? String,
                         projID = theProjectDict["id"] as? String,
-                        theIssueTypes = theProjectDict["issuetypes"] as? Array<AnyObject> {
+                        theIssueTypes = theProjectDict["issuetypes" ?? "issueTypes"] as? Array<AnyObject> {
                     
                     var issueTypesList = [IssueType]()
                     for issueType in theIssueTypes {
