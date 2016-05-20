@@ -84,6 +84,7 @@ class LoginViewController: UIViewController {
     func login(with logincredentials: String, and domain: String, save_to_keychain: Bool) {
         let loginURLsuffix = "/rest/auth/1/session"
         let JSON = logincredentials
+        self.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Logging in...")
         aNetworkRequest.getdata("POST", URLEnding: loginURLsuffix, JSON: JSON, domain: domain) { (data, response, error) -> Void in
             if !anyErrors("do_login", controller: self, data: data, response: response, error: error) {
                 // Authorization succesfull. Great! Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
@@ -101,6 +102,7 @@ class LoginViewController: UIViewController {
                 }
                 self.performSegueWithIdentifier("afterLogin", sender: nil)
             }
+            self.stopActivityIndicator()
         }
     }
     

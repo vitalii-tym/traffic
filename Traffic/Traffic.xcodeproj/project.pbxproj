@@ -16,6 +16,7 @@
 		FE0BC63D1CD101E90069196C /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0BC63C1CD101E90069196C /* ErrorManager.swift */; };
 		FE0D5E5C1CD360BA001D836E /* JIRANetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0D5E5B1CD360BA001D836E /* JIRANetworking.swift */; };
 		FE1011161CBE8AE100DE04CE /* IssueDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1011151CBE8AE100DE04CE /* IssueDetailsViewController.swift */; };
+		FE1E3E611CEF1F7000CD8C48 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1E3E601CEF1F7000CD8C48 /* Extensions.swift */; };
 		FE3DE4871CBBBCA300D35BF8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */; };
 		FE3DE4891CBBBCA300D35BF8 /* TasksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4881CBBBCA300D35BF8 /* TasksViewController.swift */; };
 		FE3DE48C1CBBBCA300D35BF8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE3DE48A1CBBBCA300D35BF8 /* Main.storyboard */; };
@@ -77,6 +78,7 @@
 		FE0BC63C1CD101E90069196C /* ErrorManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorManager.swift; sourceTree = "<group>"; };
 		FE0D5E5B1CD360BA001D836E /* JIRANetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIRANetworking.swift; sourceTree = "<group>"; };
 		FE1011151CBE8AE100DE04CE /* IssueDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssueDetailsViewController.swift; sourceTree = "<group>"; };
+		FE1E3E601CEF1F7000CD8C48 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		FE3DE4841CBBBCA300D35BF8 /* Traffic-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Traffic-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE3DE4881CBBBCA300D35BF8 /* TasksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksViewController.swift; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */,
+				FE1E3E601CEF1F7000CD8C48 /* Extensions.swift */,
 				FE49FE881CBD56C9009255EE /* LoginViewController.swift */,
 				FE3DE4881CBBBCA300D35BF8 /* TasksViewController.swift */,
 				FE1011151CBE8AE100DE04CE /* IssueDetailsViewController.swift */,
@@ -516,6 +519,7 @@
 				FE0D5E5C1CD360BA001D836E /* JIRANetworking.swift in Sources */,
 				FE0BC63D1CD101E90069196C /* ErrorManager.swift in Sources */,
 				FE3DE4B61CBBBF5300D35BF8 /* TaskCell.swift in Sources */,
+				FE1E3E611CEF1F7000CD8C48 /* Extensions.swift in Sources */,
 				FE3DE4891CBBBCA300D35BF8 /* TasksViewController.swift in Sources */,
 				FE1011161CBE8AE100DE04CE /* IssueDetailsViewController.swift in Sources */,
 				FE3DE48F1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld in Sources */,
@@ -760,7 +764,7 @@
 				INFOPLIST_FILE = "Traffic-iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vitaliy.traffic.TrafficiOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vitaliy.easyjira;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -778,7 +782,7 @@
 				INFOPLIST_FILE = "Traffic-iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vitaliy.traffic.TrafficiOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vitaliy.easyjira;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;

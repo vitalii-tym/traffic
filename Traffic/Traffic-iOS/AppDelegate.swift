@@ -5,6 +5,13 @@
 //  Created by Vitaliy Tim on 4/11/16.
 //  Copyright © 2016 Vitaliy Timoshenko. All rights reserved.
 //
+// 3rd-party tools and code used:
+// https://github.com/hilenium/HISwiftExtensions
+// License: MIT license/
+//
+//
+//
+//
 
 import UIKit
 import CoreData

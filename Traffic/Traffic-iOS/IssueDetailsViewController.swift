@@ -281,6 +281,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             
             switch currentUserIntention {
             case "create_issue":
+                self.parentViewController!.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Creating issue...")
                 let URLEnding = "/rest/api/2/issue"
                 self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
                     if !anyErrors("create_issue", controller: self, data: data, response: response, error: error) {
@@ -293,9 +294,11 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                         }))
                         self.presentViewController(alert, animated: true, completion: nil)
                     }
+                    self.parentViewController!.stopActivityIndicator()
                 }
             case "transition_issue":
                  if let theTask = aTask {
+                    self.parentViewController!.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Changing status...")
                     let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
                     self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
                         if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
@@ -308,6 +311,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                             }))
                             self.presentViewController(alert, animated: true, completion: nil)
                         }
+                        self.parentViewController!.stopActivityIndicator()
                     }
                 }
             default:

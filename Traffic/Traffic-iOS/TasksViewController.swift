@@ -51,10 +51,15 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
 //      let URLEnding = "/rest/api/2/search?jql=assignee=currentUser()+AND+status+not+in+(Done)+order+by+rank+asc"
         let URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
+        
+        if self.tasks == nil {
+            self.parentViewController!.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
+        }
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
                         self.tasks = JIRATasks(data: data!)
                     }
+            self.parentViewController!.stopActivityIndicator()
         }
         aTasktoPass = nil
     }
@@ -139,6 +144,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
         let userLogin = NSUserDefaults.standardUserDefaults().objectForKey("login") as? String
 
+        self.parentViewController!.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Logging you out...")
         if let hasDomain = domain, hasLogin = userLogin {
             let loginURLsuffix = "/rest/auth/1/session"
             aNetworkRequest.getdata("DELETE", URLEnding: loginURLsuffix, JSON: nil, domain: nil) { (data, response, error) -> Void in
@@ -150,8 +156,10 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                         print("Keychain deleting code is: \(keychain_delete_status)")
                         // Logout was succesful, can go back to login screen
                         self.performSegueWithIdentifier("back_to_login", sender: self)
+                        self.parentViewController!.stopActivityIndicator()
             }
         } else {
+            self.parentViewController!.stopActivityIndicator()
             // Don't know what to do. Looks like user happened to be logged in but for some reason his login or domain were not saved in User Data at all.
             // We can't log user out because we simply don't know the JIRA URL to do this upon.
             // However most probaly he/she will land on the login screen on next app launch because auto-login
