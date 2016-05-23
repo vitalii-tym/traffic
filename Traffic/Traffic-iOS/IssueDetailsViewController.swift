@@ -196,7 +196,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     GatherUserDataIfNeeded()
                 
                 case "string":
-
                     self.view.addSubview(self.view_text_input)
                     self.label_require_text_name.text = self.currentRequiredFieldForTransition!.name
                     layoutView(view_text_input, layoutTarget: self.view)

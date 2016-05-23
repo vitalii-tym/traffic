@@ -4,7 +4,6 @@
 //
 //  Created by Vitaliy Tim on 4/11/16.
 //  Copyright © 2016 Vitaliy Timoshenko. All rights reserved.
-//
 
 import UIKit
 
@@ -38,7 +37,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
 
     func refresh(sender:AnyObject) {
         print ("refreshing tasks...")
-        let URLEnding = "/rest/api/2/search?jql=project=\(aProject?.key)+AND+status+not+in+(Done)+order+by+rank+asc"
+        let URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+status+not+in+(Done)+order+by+rank+asc"
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
                 self.tasks = JIRATasks(data: data!)
@@ -102,19 +101,13 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         cell.label_priority.text = tasks?.taskslist[indexPath.row].task_priority
         cell.label_status.text = tasks?.taskslist[indexPath.row].task_status
         switch cell.label_priority.text! {
-        case "Highest":
-            cell.label_priority.textColor = UIColor.redColor()
-            cell.label_priority.font = UIFont.boldSystemFontOfSize(12.0)
-        case "High":
-            cell.label_priority.textColor = UIColor.redColor()
-        case "Medium":
-            cell.label_priority.textColor = UIColor.blackColor()
-        case "Low":
-            cell.label_priority.textColor = UIColor.greenColor()
-        case "Lowest":
-            cell.label_priority.textColor = UIColor.grayColor()
-        default:
-            cell.label_priority.textColor = UIColor.blackColor()
+            case "Highest": cell.label_priority.textColor = UIColor.redColor()
+                            cell.label_priority.font = UIFont.boldSystemFontOfSize(12.0)
+            case "High":    cell.label_priority.textColor = UIColor.redColor()
+            case "Medium":  cell.label_priority.textColor = UIColor.blackColor()
+            case "Low":     cell.label_priority.textColor = UIColor.greenColor()
+            case "Lowest":  cell.label_priority.textColor = UIColor.grayColor()
+            default:        cell.label_priority.textColor = UIColor.blackColor()
         }
         return cell
     }
