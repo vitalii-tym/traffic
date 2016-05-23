@@ -374,8 +374,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         // TODO: need to correctly determine different types of fields + validate text input depending on its type
         var dataArray = [textedit_input_text.text]
 
-        dataArray[0] = dataArray[0].stringByReplacingOccurrencesOfString("\"", withString:"\\\"")
         dataArray[0] = dataArray[0].stringByReplacingOccurrencesOfString("\\", withString:"\\\\")
+        dataArray[0] = dataArray[0].stringByReplacingOccurrencesOfString("\"", withString:"\\\"")
     
         JSONfieldstoSend["\(currentRequiredFieldForTransition!.fieldName)"] = dataArray
         
