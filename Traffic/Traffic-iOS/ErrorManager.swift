@@ -53,12 +53,19 @@ let actionTypes: [String:
     "get_transitions": ("Oops",  // This is message header
                         [200],   // This is a list of successful codes
                             [404: "There was a problem with transitions", // This is the list of unsuccesful codes
-                            0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),                              // with respective messages to user
-                                                                          // 0 - is a generic text for the case when we can't interpret the code
+                            0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),  // with respective messages to user
+        // 0 - is a generic text for the case when we can't interpret the code
         // 200 - application/jsonReturns a full representation of the transitions possible for the specified issue and the fields required to perform the transition.
         // 404 - Returned if the requested issue is not found or the user does not have permission to view it.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getTransitions
     
+    "get_projects": ("Oops",  // This is message header
+                        [200],   // This is a list of successful codes
+                        [0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
+        // 0 - is a generic text for the case when we can't interpret the code
+        // 200 - application/jsonReturns a list of projects for which the user has the BROWSE, ADMINISTER or PROJECT_ADMIN project permission.
+        // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getTransitions
+        
     "do_transition": ("Oops",
                         [204],
                             [400: "There was a problem with transition.",

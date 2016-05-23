@@ -7,6 +7,14 @@
 
 import Foundation
 
+
+struct Project {
+    var id: String
+    var key: String
+    var projectTypeKey: String
+    var name: String
+}
+
 struct Task {
     var task_key: String
     var task_summary: String
@@ -43,7 +51,7 @@ struct IssueType {
     var requiredfields: [aReqiredField]?
 }
 
-struct availableProject {
+struct MetadataProject {
     var name: String
     var key: String
     var id: String
@@ -98,15 +106,49 @@ class JIRARequiredFields {
     }
 }
 
-class JIRAMetadataToCreateIssue {
-    var availableProjects: [availableProject]
+class JIRAProjects {
+    var projectsList: [Project]
     
-    init (metadata newMetadata: [availableProject]) {
+    init (projects newProjectsList: [Project]){
+        self.projectsList = newProjectsList
+    }
+    
+    convenience init? (data: NSData) {
+        var formedProjectsList = [Project]()
+        var jsonObject: Array<AnyObject>?
+        
+        do {
+            jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(data), options: NSJSONReadingOptions(rawValue: 0)) as? Array<AnyObject>
+        }
+        catch { }
+        
+        guard let jsonObjectRoot = jsonObject else {
+            return nil
+        }
+        
+        for proj in jsonObjectRoot {
+            if let theProjectDict = proj as? Dictionary<String, AnyObject> {
+                if let projectID = theProjectDict["id"] as? String,
+                    let projectKey = theProjectDict["key"] as? String,
+                    let projectTypeKey = theProjectDict["projectTypeKey"] as? String,
+                    let projectName = theProjectDict["name"] as? String {
+                    formedProjectsList.append(Project(id: projectID, key: projectKey, projectTypeKey: projectTypeKey, name: projectName))
+                }
+            }
+        }
+        self.init(projects: formedProjectsList)
+    }
+}
+
+class JIRAMetadataToCreateIssue {
+    var availableProjects: [MetadataProject]
+    
+    init (metadata newMetadata: [MetadataProject]) {
         self.availableProjects = newMetadata
     }
     
     convenience init? (data: NSData) {
-        var newAvailableProjects = [availableProject]()
+        var newAvailableProjects = [MetadataProject]()
         
         var jsonObject: Dictionary<String, AnyObject>?
         
@@ -143,7 +185,7 @@ class JIRAMetadataToCreateIssue {
                             }
                         }
                     }
-                    newAvailableProjects.append(availableProject(name: projName, key: projKey, id: projID, issueTypes: issueTypesList))
+                    newAvailableProjects.append(MetadataProject(name: projName, key: projKey, id: projID, issueTypes: issueTypesList))
                 }
             }
         }

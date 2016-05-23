@@ -1,0 +1,100 @@
+[
+  {
+    "expand": "description,lead,url,projectKeys",
+    "id": "10000",
+    "key": "SP",
+    "self": "https://pocketjira.atlassian.net/rest/api/2/project/10000",
+    "projectTypeKey": "software",
+    "name": "Scrum Project",
+    "avatarUrls": {
+      "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+      "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+      "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+      "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+    }
+  },
+  {
+    "expand": "description,lead,url,projectKeys",
+    "id": "10101",
+    "key": "TBSDP",
+    "self": "https://pocketjira.atlassian.net/rest/api/2/project/10101",
+    "projectTypeKey": "software",
+    "name": "Test: Basic software development project",
+    "avatarUrls": {
+      "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+      "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+      "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+      "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+    }
+  },
+  {
+    "expand": "description,lead,url,projectKeys",
+    "id": "10102",
+    "key": "TKSDP",
+    "self": "https://pocketjira.atlassian.net/rest/api/2/project/10102",
+    "projectTypeKey": "software",
+    "name": "Test: Kanban software development project",
+    "avatarUrls": {
+      "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+      "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+      "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+      "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+    }
+  },
+  {
+    "expand": "description,lead,url,projectKeys",
+    "id": "10100",
+    "key": "TPPMK",
+    "self": "https://pocketjira.atlassian.net/rest/api/2/project/10100",
+    "projectTypeKey": "business",
+    "name": "Test: Process Management project",
+    "avatarUrls": {
+      "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+      "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+      "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+      "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+    }
+  },
+  {
+    "expand": "description,lead,url,projectKeys",
+    "id": "10107",
+    "key": "TPWCRF",
+    "self": "https://pocketjira.atlassian.net/rest/api/2/project/10107",
+    "projectTypeKey": "business",
+    "name": "Test: Proj with custom required fields",
+    "avatarUrls": {
+      "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+      "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+      "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+      "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+    }
+  },
+  {
+    "expand": "description,lead,url,projectKeys",
+    "id": "10105",
+    "key": "TPMP",
+    "self": "https://pocketjira.atlassian.net/rest/api/2/project/10105",
+    "projectTypeKey": "business",
+    "name": "Test: Project management project",
+    "avatarUrls": {
+      "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+      "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+      "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+      "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+    }
+  },
+  {
+    "expand": "description,lead,url,projectKeys",
+    "id": "10106",
+    "key": "TTMP",
+    "self": "https://pocketjira.atlassian.net/rest/api/2/project/10106",
+    "projectTypeKey": "business",
+    "name": "Test: Task management project",
+    "avatarUrls": {
+      "48x48": "https://pocketjira.atlassian.net/secure/projectavatar?avatarId=10324",
+      "24x24": "https://pocketjira.atlassian.net/secure/projectavatar?size=small&avatarId=10324",
+      "16x16": "https://pocketjira.atlassian.net/secure/projectavatar?size=xsmall&avatarId=10324",
+      "32x32": "https://pocketjira.atlassian.net/secure/projectavatar?size=medium&avatarId=10324"
+    }
+  }
+]

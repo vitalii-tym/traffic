@@ -208,7 +208,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     GatherUserDataIfNeeded()
                 
                 case "there_are_still_issue_types_to_choose":
-                    var chosenProject: availableProject
+                    var chosenProject: MetadataProject
                     var aRequiredFieldOfTypeIssueType: aReqiredField?
                     
                     for aProject in (IssueCreationMetadata?.availableProjects)! {

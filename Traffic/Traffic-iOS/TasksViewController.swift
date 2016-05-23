@@ -10,6 +10,7 @@ import UIKit
 
 class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
+    var aProject: Project?
     var aNetworkRequest = JIRANetworkRequest()
     var tasks: JIRATasks? {
         didSet {
@@ -25,7 +26,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
     @IBOutlet weak var button_log_out: UIBarButtonItem!
-    
+    @IBOutlet weak var label_no_tasks: UILabel!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.refreshControl = UIRefreshControl()
@@ -36,7 +38,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
 
     func refresh(sender:AnyObject) {
         print ("refreshing tasks...")
-        let URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
+        let URLEnding = "/rest/api/2/search?jql=project=\(aProject?.key)+AND+status+not+in+(Done)+order+by+rank+asc"
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
                 self.tasks = JIRATasks(data: data!)
@@ -48,10 +50,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-    
-//      let URLEnding = "/rest/api/2/search?jql=assignee=currentUser()+AND+status+not+in+(Done)+order+by+rank+asc"
-        let URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
-        
+        let URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+status+not+in+(Done)+order+by+rank+asc"
         if self.tasks == nil {
             self.parentViewController!.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
         }
@@ -89,16 +88,19 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if self.tasks != nil {
+            label_no_tasks.hidden = !(self.tasks?.taskslist.isEmpty)!
+        }
         return self.tasks?.taskslist.count ?? 0
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TaskCell", forIndexPath: indexPath) as! aTask
+        
         cell.label_name.text = tasks?.taskslist[indexPath.row].task_key
         cell.label_description.text = tasks?.taskslist[indexPath.row].task_summary
         cell.label_priority.text = tasks?.taskslist[indexPath.row].task_priority
         cell.label_status.text = tasks?.taskslist[indexPath.row].task_status
-
         switch cell.label_priority.text! {
         case "Highest":
             cell.label_priority.textColor = UIColor.redColor()
@@ -119,9 +121,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         aTasktoPass = (tasks?.taskslist[indexPath.row])!
-        
         refreshControl.endRefreshing()
-        
         self.performSegueWithIdentifier("issueDetails", sender: nil)
     }
 
