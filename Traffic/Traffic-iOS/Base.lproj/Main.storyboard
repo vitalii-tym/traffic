@@ -516,27 +516,39 @@
                                 <rect key="frame" x="20" y="32" width="560" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="project_сell" id="P85-Tv-e8T" customClass="aProject" customModule="Traffic_iOS" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="project_сell" id="P85-Tv-e8T" customClass="aProjectCell" customModule="Traffic_iOS" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="92" width="560" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="P85-Tv-e8T" id="Bbj-kn-0V0">
-                                            <rect key="frame" x="0.0" y="0.0" width="560" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="527" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wGq-qX-fI8">
+                                                    <rect key="frame" x="8" y="8" width="20" height="28"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="20" id="qcn-6h-lO6"/>
+                                                    </constraints>
+                                                    <state key="normal" title="&gt;"/>
+                                                </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Project Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Cc-3o-2rE">
-                                                    <rect key="frame" x="8" y="8" width="544" height="21"/>
+                                                    <rect key="frame" x="28" y="9" width="491" height="27"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="5Cc-3o-2rE" firstAttribute="leading" secondItem="Bbj-kn-0V0" secondAttribute="leadingMargin" id="egf-cR-IO0"/>
-                                                <constraint firstItem="5Cc-3o-2rE" firstAttribute="top" secondItem="Bbj-kn-0V0" secondAttribute="topMargin" id="qr5-gA-Xrs"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="5Cc-3o-2rE" secondAttribute="trailing" id="rNU-EV-FeG"/>
+                                                <constraint firstItem="wGq-qX-fI8" firstAttribute="leading" secondItem="Bbj-kn-0V0" secondAttribute="leadingMargin" id="CZh-dE-Bfp"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="wGq-qX-fI8" secondAttribute="bottom" id="HFm-N6-DCe"/>
+                                                <constraint firstItem="5Cc-3o-2rE" firstAttribute="leading" secondItem="wGq-qX-fI8" secondAttribute="trailing" id="Yan-Kg-V8p"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="5Cc-3o-2rE" secondAttribute="bottom" id="cgK-5k-5jI"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="5Cc-3o-2rE" secondAttribute="trailing" id="dcY-tu-WNU"/>
+                                                <constraint firstAttribute="topMargin" secondItem="wGq-qX-fI8" secondAttribute="top" id="tP2-7i-nyD"/>
+                                                <constraint firstItem="5Cc-3o-2rE" firstAttribute="top" secondItem="Bbj-kn-0V0" secondAttribute="topMargin" constant="1" id="yCU-iQ-4Hk"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="button_expand" destination="wGq-qX-fI8" id="OJP-yU-QNx"/>
                                             <outlet property="label_name" destination="5Cc-3o-2rE" id="l53-Vr-5tD"/>
                                         </connections>
                                     </tableViewCell>

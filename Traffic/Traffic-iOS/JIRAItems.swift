@@ -7,12 +7,22 @@
 
 import Foundation
 
-
 struct Project {
     var id: String
     var key: String
     var projectTypeKey: String
     var name: String
+    var versions: [Version]
+}
+
+struct Version {
+    var id: String
+    var description: String
+    var name: String
+    var archived: Bool
+    var released: Bool
+    var overdue: Bool
+    var projectID: Int
 }
 
 struct Task {
@@ -132,11 +142,46 @@ class JIRAProjects {
                     let projectKey = theProjectDict["key"] as? String,
                     let projectTypeKey = theProjectDict["projectTypeKey"] as? String,
                     let projectName = theProjectDict["name"] as? String {
-                    formedProjectsList.append(Project(id: projectID, key: projectKey, projectTypeKey: projectTypeKey, name: projectName))
+                    formedProjectsList.append(Project(id: projectID, key: projectKey, projectTypeKey: projectTypeKey, name: projectName, versions: []))
                 }
             }
         }
         self.init(projects: formedProjectsList)
+    }
+    
+    func setVersionsForProject(data: NSData, projectID: String) {
+        var versionsToSet = [Version]()
+        var jsonObject: Array<AnyObject>?
+        
+        do {
+            jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(data), options: NSJSONReadingOptions(rawValue: 0)) as? Array<AnyObject>
+        }
+        catch { }
+        
+        guard let jsonObjectRoot = jsonObject else {
+            return
+        }
+        
+        for version in jsonObjectRoot {
+            if let theVersionDict = version as? Dictionary<String, AnyObject> {
+                if let versionID = theVersionDict["id"] as? String,
+                    let versionDescription = theVersionDict["description"] as? String,
+                    let versionName = theVersionDict["name"] as? String,
+                    let versionArchived = theVersionDict["archived"] as? Bool,
+                    let versionReleased = theVersionDict["released"] as? Bool,
+                    let versionOverdue = theVersionDict["overdue"] as? Bool,
+                    let versionProjID = theVersionDict["projectId"] as? Int {
+                        versionsToSet.append(Version(id: versionID, description: versionDescription, name: versionName, archived: versionArchived, released: versionReleased, overdue: versionOverdue, projectID: versionProjID))
+                }
+            }
+        
+        for (index, project) in self.projectsList.enumerate() {
+            if project.id == projectID {
+                self.projectsList[index].versions = versionsToSet
+                break //We expect that there can be more than one project with the same ID, so no need to continue once we found that one
+            }
+            }
+        }
     }
 }
 

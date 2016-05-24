@@ -65,6 +65,15 @@ let actionTypes: [String:
         // 0 - is a generic text for the case when we can't interpret the code
         // 200 - application/jsonReturns a list of projects for which the user has the BROWSE, ADMINISTER or PROJECT_ADMIN project permission.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getTransitions
+
+    "get_versions": ("Oops",  // This is message header
+                        [200],   // This is a list of successful codes
+                        [404: "Couldn't retreive versions list.", // This is the list of unsuccesful codes
+                        0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
+        // 0 - is a generic text for the case when we can't interpret the code
+        // 200 - application/jsonReturned if the project exists and the user has permission to view its versions. Contains a full representation of the project's versions in JSON format.
+        // 404 - Returned if the project is not found, or the calling user does not have permission to view it.
+        // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getTransitions
         
     "do_transition": ("Oops",
                         [204],
@@ -108,56 +117,58 @@ let actionTypes: [String:
     ]
 
 func anyErrors(actionType: String, controller: UIViewController, data: NSData?, response: NSURLResponse?, error: NSError?) -> Bool {
-    var is_there_error: Bool
+    var is_there_error: Bool = true
     
     if error == nil && data != nil {
         let theResponse = response as? NSHTTPURLResponse
         let responseStatus = theResponse!.statusCode
     
-        if  actionTypes[actionType]!.1.contains(responseStatus) {
-            // Everything is fine, we found that the response code matches to one of succes codes in out list above
-            // (usually these range from 200 to 205 or something)
-            is_there_error = false
-        } else {
-            // Well, there was a problem with JIRA instance, let's try to parse answer from JIRA and show it if possible
-            is_there_error = true
-            
-            var errorExplanation = ""
-            if let errors = JIRAerrors(data: data!, response: theResponse!) where !(errors.errorslist.isEmpty) {
-                for error in errors.errorslist {
-                    let errorCode = error.error_code
-                    let JIRAerrorMessage = error.error_message
-                    // This is the case when we have some info from JIRA about what happened
-                
-                    if let errorText = actionTypes[actionType]?.2[errorCode!] {
-                        errorExplanation = errorText
-                    } else {
-                        errorExplanation = (actionTypes[actionType]?.2[0])! // That's a generic explanation when the code was not found in our list
-                    }
-                
-                    let alert: UIAlertController = UIAlertController(
-                            title: actionTypes[actionType]!.0,
-                            message: "\(errorExplanation) \n Error code: \(errorCode!) \n Message: \(JIRAerrorMessage!)",
-                            preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                    controller.presentViewController(alert, animated: true, completion: nil)
-                }
+        if let theActionType = actionTypes[actionType] {
+        
+            if theActionType.1.contains(responseStatus) {
+                // Everything is fine, we found that the response code matches to one of succes codes in out list above
+                // (usually these range from 200 to 205 or something)
+                is_there_error = false
             } else {
-                    // We couldn't get info from JIRA, so showing just a generic alert for the chosen type of action
-                    // TODO: Parse HTML returned from JIRA to provide user with more info about the issue
-                errorExplanation = "Looks like something went wrong. There was an error, but we couldn't parse it, most probably JIRA returned HTML. This could happen in case we had wrong URL in request."
-                
-                    let alert: UIAlertController = UIAlertController(
-                            title: actionTypes[actionType]!.0,
-                            message: "\(errorExplanation)",
-                            preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                    controller.presentViewController(alert, animated: true, completion: nil)
+                // Well, there was a problem with JIRA instance, let's try to parse answer from JIRA and show it if possible
+                var errorExplanation = ""
+                if let errors = JIRAerrors(data: data!, response: theResponse!) where !(errors.errorslist.isEmpty) {
+                    for error in errors.errorslist {
+                        let errorCode = error.error_code
+                        let JIRAerrorMessage = error.error_message
+                        // This is the case when we have some info from JIRA about what happened
+                    
+                        if let errorText = actionTypes[actionType]?.2[errorCode!] {
+                            errorExplanation = errorText
+                        } else {
+                            errorExplanation = (actionTypes[actionType]?.2[0])! // That's a generic explanation when the code was not found in our list
+                        }
+                    
+                        let alert: UIAlertController = UIAlertController(
+                                title: actionTypes[actionType]!.0,
+                                message: "\(errorExplanation) \n Error code: \(errorCode!) \n Message: \(JIRAerrorMessage!)",
+                                preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                        controller.presentViewController(alert, animated: true, completion: nil)
+                    }
+                } else {
+                        // We couldn't get info from JIRA, so showing just a generic alert for the chosen type of action
+                        // TODO: Parse HTML returned from JIRA to provide user with more info about the issue
+                    errorExplanation = "Looks like something went wrong. There was an error, but we couldn't parse it, most probably JIRA returned HTML. This could happen in case we had wrong URL in request."
+                    
+                        let alert: UIAlertController = UIAlertController(
+                                title: actionTypes[actionType]!.0,
+                                message: "\(errorExplanation)",
+                                preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                        controller.presentViewController(alert, animated: true, completion: nil)
+                }
             }
+        } else {
+            print("Error manager doesn't know about action type: \(actionType)")
         }
     } else {
         // Looks like we can't access the JIRA instance at all
-        is_there_error = true
         var networkError: String = ""
 
         switch error {

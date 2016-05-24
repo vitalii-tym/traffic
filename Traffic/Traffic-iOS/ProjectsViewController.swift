@@ -20,7 +20,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBOutlet weak var view_projects_list: UITableView!
     @IBOutlet weak var button_log_out: UIBarButtonItem!
-
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -34,7 +34,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
             if !anyErrors("get_projects", controller: self, data: data, response: response, error: error) {
                 let projlist = JIRAProjects(data: data!)
                 // Manually adding the "All Projects" item to the list
-                projlist?.projectsList.insert(Project(id: "", key: "", projectTypeKey: "", name: "All projects"), atIndex: 0)
+                projlist?.projectsList.insert(Project(id: "", key: "", projectTypeKey: "", name: "All projects", versions: []), atIndex: 0)
                 self.projects = projlist
             }
             self.parentViewController?.stopActivityIndicator()
@@ -55,8 +55,16 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("project_сell", forIndexPath: indexPath) as! aProject
+        let cell = tableView.dequeueReusableCellWithIdentifier("project_сell", forIndexPath: indexPath) as! aProjectCell
         cell.label_name.text = projects?.projectsList[indexPath.row].name
+        
+        cell.button_expand.tag = indexPath.row
+        cell.button_expand.addTarget(self, action: #selector(self.button_expand_pressed(_:)), forControlEvents: .TouchUpInside)
+        // We don't need the expand button for "All Projects" type of project (which always goes first in the list)
+        if indexPath.row == 0 {
+            cell.button_expand.hidden = true
+        }
+        
         return cell
     }
     
@@ -72,9 +80,26 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         aProjectToPass = (projects?.projectsList[indexPath.row])!
-        
-       // refreshControl.endRefreshing()
+        // refreshControl.endRefreshing()
         self.performSegueWithIdentifier("tasks_list", sender: nil)
+    }
+        
+    @IBAction func button_expand_pressed(sender: UIButton) {
+        if projects != nil {
+            getVersionsForProject(projects!.projectsList[sender.tag])
+        }
+        print("Adding version to project: \(projects?.projectsList[sender.tag].name)")
+    }
+    
+    func getVersionsForProject(project: Project) {
+        let URLEnding = "/rest/api/2/project/\(project.id)/versions"
+        parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
+        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+            if !anyErrors("get_versions", controller: self, data: data, response: response, error: error) {
+                self.projects?.setVersionsForProject(data!, projectID: project.id)
+            }
+            self.parentViewController?.stopActivityIndicator()
+        }
     }
 
     @IBAction func action_log_out(sender: UIBarButtonItem) {

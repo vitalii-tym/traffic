@@ -8,6 +8,7 @@
 
 import UIKit
 
-class aProject: UITableViewCell {
+class aProjectCell: UITableViewCell {
     @IBOutlet weak var label_name: UILabel!
+    @IBOutlet weak var button_expand: UIButton!
 }
