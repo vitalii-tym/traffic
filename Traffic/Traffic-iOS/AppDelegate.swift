@@ -8,10 +8,6 @@
 // 3rd-party tools and code used:
 // https://github.com/hilenium/HISwiftExtensions
 // License: MIT license/
-//
-//
-//
-//
 
 import UIKit
 import CoreData

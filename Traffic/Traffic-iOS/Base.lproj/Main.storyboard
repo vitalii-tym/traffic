@@ -4,7 +4,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Login View Controller-->
@@ -214,7 +213,7 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="q9F-FR-etT"/>
                                 </connections>
                             </collectionView>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No tasks in this project to show." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RDy-9f-H8Y">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="No items in this project to show." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RDy-9f-H8Y">
                                 <rect key="frame" x="179" y="290" width="243" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -233,30 +232,20 @@
                     </view>
                     <navigationItem key="navigationItem" title="Tasks" id="6PO-bB-dUa">
                         <barButtonItem key="backBarButtonItem" title="Tasks" id="OpN-Nl-Wgv"/>
-                        <rightBarButtonItems>
-                            <barButtonItem enabled="NO" systemItem="add" id="SKp-Hq-Qc0">
-                                <connections>
-                                    <action selector="button_pressed_NewTask:" destination="BYZ-38-t0r" id="YUa-Cs-EBN"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Log out" id="bKO-tE-R8N">
-                                <connections>
-                                    <action selector="button_pressed_log_out:" destination="BYZ-38-t0r" id="wHK-lX-Jo0"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" systemItem="add" id="SKp-Hq-Qc0">
+                            <connections>
+                                <action selector="button_pressed_NewTask:" destination="BYZ-38-t0r" id="YUa-Cs-EBN"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="button_NewTask" destination="SKp-Hq-Qc0" id="tII-SY-7iW"/>
-                        <outlet property="button_log_out" destination="bKO-tE-R8N" id="0dy-nT-shj"/>
                         <outlet property="label_no_tasks" destination="RDy-9f-H8Y" id="iIY-Vg-sI4"/>
                         <outlet property="view_collectionView" destination="zJh-zy-Kuh" id="b5D-cL-x7G"/>
                         <segue destination="sz5-hb-Gft" kind="show" identifier="issueDetails" id="u8H-kH-fNc"/>
-                        <segue destination="5ik-pa-11d" kind="unwind" identifier="back_to_login" unwindAction="unwindToLogin:" id="uhu-SN-8La"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <exit id="5ik-pa-11d" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2416" y="503"/>
         </scene>
@@ -566,13 +555,22 @@
                             <constraint firstItem="6pS-Pg-lJf" firstAttribute="top" secondItem="vj6-8D-cEY" secondAttribute="bottom" id="ffu-Mo-tgp"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Projects" id="lLI-Ej-Lnq"/>
+                    <navigationItem key="navigationItem" title="Projects" id="lLI-Ej-Lnq">
+                        <barButtonItem key="leftBarButtonItem" title="Log out" id="d4o-sO-ex3">
+                            <connections>
+                                <action selector="action_log_out:" destination="Zeq-j0-b0u" id="1u5-G6-acy"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="button_log_out" destination="d4o-sO-ex3" id="nRw-qA-jVf"/>
                         <outlet property="view_projects_list" destination="vj6-8D-cEY" id="HYH-iO-Zrl"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="tasks_list" id="KHt-sa-aiq"/>
+                        <segue destination="Hyo-tB-9HY" kind="unwind" identifier="back_to_login" unwindAction="unwindToLogin:" id="2Lm-gU-Y7R"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vyP-DR-leB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Hyo-tB-9HY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1740" y="503"/>
         </scene>
