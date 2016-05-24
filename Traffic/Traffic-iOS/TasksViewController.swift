@@ -38,7 +38,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     func refresh(sender:AnyObject) {
         
         var URLEnding = ""
-        if aProject!.key != "" {
+        if aProject?.key != "" {
             URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+status+not+in+(Done)+order+by+rank+asc"
         } else {
             URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
@@ -55,7 +55,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         var URLEnding = ""
-        if aProject!.key != "" {
+        if aProject?.key != "" {
             URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+status+not+in+(Done)+order+by+rank+asc"
         } else {
             URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
@@ -136,6 +136,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             destionationViewController.aTask = self.aTasktoPass
             destionationViewController.IssueCreationMetadata = self.IssueCreationMetadata
             destionationViewController.currentUser = self.currentUser
+            destionationViewController.aProject = self.aProject
         }
     }
     

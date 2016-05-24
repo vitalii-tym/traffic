@@ -28,6 +28,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var textedit_input_text: UITextView!
     @IBOutlet weak var label_require_text_name: UILabel!
     
+    var aProject: Project?
     var aTask: Task?
     var errors: JIRAerrors?
     var availableTransitions: JIRATransitions?
@@ -168,19 +169,22 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         if !self.fieldsQueue.isEmpty {
             self.currentRequiredFieldForTransition = self.fieldsQueue.removeFirst()
             
-            switch self.currentRequiredFieldForTransition!.type as String! {  // We need to choose an appropriate custom view for data gathering
+            switch self.currentRequiredFieldForTransition?.type as String! {  // We need to choose an appropriate custom view for data gathering
                 case "project", "issuetype", "array", "resolution":
-                    if let allowedValuesList = self.currentRequiredFieldForTransition!.allowedValues where !allowedValuesList.isEmpty {
-                    
+                    if self.currentRequiredFieldForTransition?.type == "project" && aProject != nil && aProject?.id != "" {
+                        // If we are in a context of some project we can fill it in right away without asking user to choose project
+                        var dataArray: [Dictionary<String, AnyObject>] = []
+                        dataArray.append(["id" : "\(aProject!.id)"])
+                        self.JSONfieldstoSend["project"] = dataArray
+                        GatherUserDataIfNeeded()
+                    } else if let allowedValuesList = self.currentRequiredFieldForTransition!.allowedValues where !allowedValuesList.isEmpty {
                         // Hiding the "Sub-Task" issue type, because we don't support it yet
                         for (index, allowedValue) in (self.currentRequiredFieldForTransition!.allowedValues?.enumerate())! {
                             if allowedValue["name"] as? String == "Sub-task" {
                                 currentRequiredFieldForTransition?.allowedValues?.removeAtIndex(index)
-                                print ("Sub-Task was hidden from the list")
                                 break
                             }
                         }
-                        
                         table_view_resolution.reloadData()
                         self.view.addSubview(self.view_list)
                         self.label_required_field_name.text = self.currentRequiredFieldForTransition!.name
