@@ -8,38 +8,57 @@
 
 import UIKit
 
+class aProjectCell: UITableViewCell {
+    @IBOutlet weak var label_name: UILabel!
+    @IBOutlet weak var button_expand: UIButton!
+}
+
+class aVersionCell: UITableViewCell {
+    @IBOutlet weak var label_name: UILabel!
+}
+
 class ProjectsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
  
     var aNetworkRequest = JIRANetworkRequest()
     var projects: JIRAProjects? {
         didSet {
+            for (index, _) in projects!.projectsList.enumerate() {
+                projectsVersionsMap.append((Type: 0, ProjIndex: index, VerIndex: nil))
+                // This structure will be used for tables. Once we retreive versions for a project they will be incorporated into this atructure 
+                // so that the structure continues to be flat, while any its item will represent either a project or a version in a project,
+                // then a project can be accessed in projectsList by knowing ProjIndex or version can be accessed by known ProjIndex and VerIndex.
             self.view_projects_list.reloadData()
+            }
         }
     }
     var aProjectToPass: Project?
+    var aVersionToPass: Version?
+    var currentExpandedCell: (Index: Int, NumOfItemsToFit: Int) = (-1, 1)
+    var projectsVersionsMap: [(Type: Int, ProjIndex: Int, VerIndex: Int?)] = [] // This is a flattened representation of projects and versions in them
     
     @IBOutlet weak var view_projects_list: UITableView!
     @IBOutlet weak var button_log_out: UIBarButtonItem!
+    @IBOutlet var view_versions_list: UIView!
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         let URLEnding = "/rest/api/2/project"
-        
         if projects == nil {
             parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting projects...")
-        }
+            aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                if !anyErrors("get_projects", controller: self, data: data, response: response, error: error) {
+                    let projlist = JIRAProjects(data: data!)
+                    // Manually adding the "All Projects" item to the list
+                    projlist?.projectsList.insert(Project(id: "", key: "", projectTypeKey: "", name: "All projects", versions: []), atIndex: 0)
+                    self.projects = projlist
+                }
+                self.parentViewController?.stopActivityIndicator()
 
-        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-            if !anyErrors("get_projects", controller: self, data: data, response: response, error: error) {
-                let projlist = JIRAProjects(data: data!)
-                // Manually adding the "All Projects" item to the list
-                projlist?.projectsList.insert(Project(id: "", key: "", projectTypeKey: "", name: "All projects", versions: []), atIndex: 0)
-                self.projects = projlist
             }
-            self.parentViewController?.stopActivityIndicator()
         }
         aProjectToPass = nil
+        aVersionToPass = nil
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -47,25 +66,28 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.projects != nil {
-            return self.projects!.projectsList.count
-        } else {
-            return 0
-        }
+            return projectsVersionsMap.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("project_сell", forIndexPath: indexPath) as! aProjectCell
-        cell.label_name.text = projects?.projectsList[indexPath.row].name
-        
-        cell.button_expand.tag = indexPath.row
-        cell.button_expand.addTarget(self, action: #selector(self.button_expand_pressed(_:)), forControlEvents: .TouchUpInside)
-        // We don't need the expand button for "All Projects" type of project (which always goes first in the list)
-        if indexPath.row == 0 {
-            cell.button_expand.hidden = true
+        let currentMaping = projectsVersionsMap[indexPath.row]
+        if currentMaping.Type == 0 {
+            if let projectCell = tableView.dequeueReusableCellWithIdentifier("project_сell", forIndexPath: indexPath) as? aProjectCell {
+                projectCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].name
+                projectCell.button_expand.tag = indexPath.row
+                projectCell.button_expand.addTarget(self, action: #selector(button_expand_pressed(_:)), forControlEvents: .TouchUpInside) 
+                if currentMaping.ProjIndex == 0 { // We don't need the expand button for "All Projects" type of project (which always goes first in the list)
+                    projectCell.button_expand.hidden = true
+                }
+                return projectCell
+            }
+        } else {
+            if let versionCell = tableView.dequeueReusableCellWithIdentifier("version_cell", forIndexPath: indexPath) as? aVersionCell  {
+            versionCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].versions[currentMaping.VerIndex!].name
+            return versionCell
+            }
         }
-        
-        return cell
+        return UITableViewCell()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -74,31 +96,94 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                 return
             }
             destionationViewController.aProject = self.aProjectToPass
+            destionationViewController.aVersion = self.aVersionToPass
             destionationViewController.navigationItem.title = self.aProjectToPass?.name
         }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        aProjectToPass = (projects?.projectsList[indexPath.row])!
-        // refreshControl.endRefreshing()
+        let currentMaping = projectsVersionsMap[indexPath.row]
+        aProjectToPass = projects?.projectsList[currentMaping.ProjIndex]
+        if let versionIndex = currentMaping.VerIndex {
+            aVersionToPass = projects?.projectsList[currentMaping.ProjIndex].versions[versionIndex]
+        }
         self.performSegueWithIdentifier("tasks_list", sender: nil)
     }
-        
-    @IBAction func button_expand_pressed(sender: UIButton) {
-        if projects != nil {
-            getVersionsForProject(projects!.projectsList[sender.tag])
-        }
-        print("Adding version to project: \(projects?.projectsList[sender.tag].name)")
-    }
     
-    func getVersionsForProject(project: Project) {
-        let URLEnding = "/rest/api/2/project/\(project.id)/versions"
-        parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
-        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-            if !anyErrors("get_versions", controller: self, data: data, response: response, error: error) {
-                self.projects?.setVersionsForProject(data!, projectID: project.id)
+    @IBAction func button_expand_pressed(sender: UIButton) {
+        
+        CATransaction.begin()
+        CATransaction.setCompletionBlock({() in self.view_projects_list.reloadData() }) // We need to reload table each time we make changes in it in order to reassign tags to the expand/collapse buttons (their tags should be always equal to row index)
+        self.view_projects_list.beginUpdates()
+        
+        var indexPathsToDeleteForAnimation: [NSIndexPath] = []
+        var indexPathsToAddForAnimation: [NSIndexPath] = []
+        if sender.selected { // Collapsing the cell here
+            if projects != nil {
+                let selectedCellIndex = sender.tag
+                let currentProject = projects!.projectsList[projectsVersionsMap[selectedCellIndex].ProjIndex]
+                var numOfVersionsToRemove = self.projects?.getVersionsForProject(currentProject.id).count ?? 0
+                if selectedCellIndex + numOfVersionsToRemove < projectsVersionsMap.count {
+                    while numOfVersionsToRemove > 0 {
+                        // Removing all versions of the chosen project from the projectsVerwionsMap
+                        self.projectsVersionsMap.removeAtIndex(selectedCellIndex + 1)
+                        indexPathsToDeleteForAnimation.append(NSIndexPath(forRow: selectedCellIndex+numOfVersionsToRemove, inSection: 0))
+                        numOfVersionsToRemove -= 1
+                    }
+                    self.view_projects_list.deleteRowsAtIndexPaths(indexPathsToDeleteForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
+                }
+
             }
-            self.parentViewController?.stopActivityIndicator()
+            self.view_projects_list.endUpdates()
+            CATransaction.commit()
+            sender.selected = false
+        } else { // Expanding the cell here
+            sender.selected = true
+            currentExpandedCell.Index = sender.tag
+            if projects != nil {
+                let currentProject = projects!.projectsList[projectsVersionsMap[sender.tag].ProjIndex]
+                if currentProject.versions.isEmpty { // We don't download versions if they already exist
+                    let URLEnding = "/rest/api/2/project/\(currentProject.id)/versions"
+                    parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
+                    aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                        if !anyErrors("get_versions", controller: self, data: data, response: response, error: error) {
+                            self.currentExpandedCell.NumOfItemsToFit = (self.projects?.setVersionsForProject(data!, projectID: currentProject.id))!
+                            if let versions = self.projects?.getVersionsForProject(currentProject.id) {
+                                var versionsMapToInsert: [(Type: Int, ProjIndex: Int, VerIndex: Int?)] = []
+                                for (index, _) in versions.enumerate() {
+                                    versionsMapToInsert.append((Type: 1, ProjIndex: self.projectsVersionsMap[sender.tag].ProjIndex, VerIndex: index))
+                                    indexPathsToAddForAnimation.append(NSIndexPath(forRow: sender.tag + index + 1, inSection: 0))
+                                }
+                                // Inserting the versions map right after the expanded project
+                                if !versionsMapToInsert.isEmpty {
+                                    self.projectsVersionsMap[sender.tag+1..<sender.tag+1] = versionsMapToInsert[0..<versionsMapToInsert.count]
+                                } else {
+                                    sender.selected = false
+                                    // TODO: Add a toast message that no versions were found in the project
+                                }
+                            }
+                        }
+                        self.parentViewController?.stopActivityIndicator()
+                        self.view_projects_list.insertRowsAtIndexPaths(indexPathsToAddForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
+                        self.view_projects_list.endUpdates()
+                        CATransaction.commit()
+                    }
+                } else {
+                    // we don't need the extra network request, but still need to modify the mapping for table
+                    if let versions = self.projects?.getVersionsForProject(currentProject.id) {
+                        var versionsMapToInsert: [(Type: Int, ProjIndex: Int, VerIndex: Int?)] = []
+                        for (index, _) in versions.enumerate() {
+                            versionsMapToInsert.append((Type: 1, ProjIndex: self.projectsVersionsMap[sender.tag].ProjIndex, VerIndex: index))
+                            indexPathsToAddForAnimation.append(NSIndexPath(forRow: sender.tag + index + 1, inSection: 0))
+                        }
+                        // Inserting the versions map right after the expanded project
+                        self.projectsVersionsMap[sender.tag+1..<sender.tag+1] = versionsMapToInsert[0..<versionsMapToInsert.count]
+                        self.view_projects_list.insertRowsAtIndexPaths(indexPathsToAddForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
+                        self.view_projects_list.endUpdates()
+                        CATransaction.commit()
+                    }
+                }
+            }
         }
     }
 

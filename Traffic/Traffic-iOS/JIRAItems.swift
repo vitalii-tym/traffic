@@ -17,11 +17,11 @@ struct Project {
 
 struct Version {
     var id: String
-    var description: String
+    var description: String?
     var name: String
     var archived: Bool
     var released: Bool
-    var overdue: Bool
+    var overdue: Bool?
     var projectID: Int
 }
 
@@ -149,7 +149,7 @@ class JIRAProjects {
         self.init(projects: formedProjectsList)
     }
     
-    func setVersionsForProject(data: NSData, projectID: String) {
+    func setVersionsForProject(data: NSData, projectID: String) -> Int {
         var versionsToSet = [Version]()
         var jsonObject: Array<AnyObject>?
         
@@ -159,18 +159,18 @@ class JIRAProjects {
         catch { }
         
         guard let jsonObjectRoot = jsonObject else {
-            return
+            return 0
         }
         
         for version in jsonObjectRoot {
             if let theVersionDict = version as? Dictionary<String, AnyObject> {
                 if let versionID = theVersionDict["id"] as? String,
-                    let versionDescription = theVersionDict["description"] as? String,
                     let versionName = theVersionDict["name"] as? String,
                     let versionArchived = theVersionDict["archived"] as? Bool,
                     let versionReleased = theVersionDict["released"] as? Bool,
-                    let versionOverdue = theVersionDict["overdue"] as? Bool,
                     let versionProjID = theVersionDict["projectId"] as? Int {
+                        let versionDescription = theVersionDict["description"] as? String
+                        let versionOverdue = theVersionDict["overdue"] as? Bool
                         versionsToSet.append(Version(id: versionID, description: versionDescription, name: versionName, archived: versionArchived, released: versionReleased, overdue: versionOverdue, projectID: versionProjID))
                 }
             }
@@ -182,6 +182,18 @@ class JIRAProjects {
             }
             }
         }
+        return versionsToSet.count
+    }
+
+    func getVersionsForProject(projectID: String) -> [Version] {
+        var versionsToGet = [Version]()
+        for project in self.projectsList {
+            if project.id == projectID {
+                versionsToGet = project.versions
+                break
+            }
+        }
+        return versionsToGet
     }
 }
 
