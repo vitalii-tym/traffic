@@ -23,7 +23,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     var projects: JIRAProjects? {
         didSet {
             for (index, _) in projects!.projectsList.enumerate() {
-                projectsVersionsMap.append((Type: 0, ProjIndex: index, VerIndex: nil))
+                projectsVersionsMap.append((Type: 0, ProjIndex: index, VerIndex: nil, ButtonSelected: false))
                 // This structure will be used for tables. Once we retreive versions for a project they will be incorporated into this atructure 
                 // so that the structure continues to be flat, while any its item will represent either a project or a version in a project,
                 // then a project can be accessed in projectsList by knowing ProjIndex or version can be accessed by known ProjIndex and VerIndex.
@@ -34,7 +34,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     var aProjectToPass: Project?
     var aVersionToPass: Version?
     var currentExpandedCell: (Index: Int, NumOfItemsToFit: Int) = (-1, 1)
-    var projectsVersionsMap: [(Type: Int, ProjIndex: Int, VerIndex: Int?)] = [] // This is a flattened representation of projects and versions in them
+    var projectsVersionsMap: [(Type: Int, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = [] // This is a flattened representation of projects and versions in them
     
     @IBOutlet weak var view_projects_list: UITableView!
     @IBOutlet weak var button_log_out: UIBarButtonItem!
@@ -54,7 +54,6 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                     self.projects = projlist
                 }
                 self.parentViewController?.stopActivityIndicator()
-
             }
         }
         aProjectToPass = nil
@@ -66,28 +65,36 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return projectsVersionsMap.count
+        return projectsVersionsMap.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let currentMaping = projectsVersionsMap[indexPath.row]
         if currentMaping.Type == 0 {
-            if let projectCell = tableView.dequeueReusableCellWithIdentifier("project_сell", forIndexPath: indexPath) as? aProjectCell {
+            let projectCell = tableView.dequeueReusableCellWithIdentifier("project_сell", forIndexPath: indexPath) as! aProjectCell
+                print("before - Tag: \(projectCell.button_expand.tag). \(projectCell.button_expand.selected). \(projectCell.label_name.text)")
                 projectCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].name
                 projectCell.button_expand.tag = indexPath.row
-                projectCell.button_expand.addTarget(self, action: #selector(button_expand_pressed(_:)), forControlEvents: .TouchUpInside) 
+                projectCell.button_expand.hidden = false
+                if let isSelected = currentMaping.ButtonSelected {
+                    projectCell.button_expand.selected = isSelected
+                }
+                projectCell.button_expand.addTarget(self, action: #selector(button_expand_pressed(_:event:)), forControlEvents: .TouchUpInside)
                 if currentMaping.ProjIndex == 0 { // We don't need the expand button for "All Projects" type of project (which always goes first in the list)
                     projectCell.button_expand.hidden = true
                 }
+
+                print("after - Tag: \(projectCell.button_expand.tag). \(projectCell.button_expand.selected). \(projectCell.label_name.text)")
+                print("------")
                 return projectCell
-            }
         } else {
-            if let versionCell = tableView.dequeueReusableCellWithIdentifier("version_cell", forIndexPath: indexPath) as? aVersionCell  {
+            let versionCell = tableView.dequeueReusableCellWithIdentifier("version_cell", forIndexPath: indexPath) as! aVersionCell
+            print("before - Text: \(versionCell.label_name.text)")
             versionCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].versions[currentMaping.VerIndex!].name
+            print("after - Text: \(versionCell.label_name.text)")
+            print("------")
             return versionCell
-            }
         }
-        return UITableViewCell()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -110,17 +117,33 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         self.performSegueWithIdentifier("tasks_list", sender: nil)
     }
     
-    @IBAction func button_expand_pressed(sender: UIButton) {
-        
+    @IBAction func button_expand_pressed(sender: UIButton, event: UIEvent) {
         CATransaction.begin()
-        CATransaction.setCompletionBlock({() in self.view_projects_list.reloadData() }) // We need to reload table each time we make changes in it in order to reassign tags to the expand/collapse buttons (their tags should be always equal to row index)
+        CATransaction.setCompletionBlock({() in
+           // self.view_projects_list.reloadData()
+            //self.view_projects_list.layoutIfNeeded()
+        }) // We need to reload table each time we make changes in it in order to reassign tags to the expand/collapse buttons (their tags should be always equal to row index)
         self.view_projects_list.beginUpdates()
         
         var indexPathsToDeleteForAnimation: [NSIndexPath] = []
         var indexPathsToAddForAnimation: [NSIndexPath] = []
+      
+        //  let selectedCellIndex = sender.tag
+        
+        let touch = event.allTouches()!.first!
+        let touchPos = touch.locationInView(self.view_projects_list)
+        let selectedCellPath = self.view_projects_list.indexPathForRowAtPoint(touchPos)
+        let selectedCellIndex_unwrapped = selectedCellPath?.row
+        let selectedCellIndex = selectedCellIndex_unwrapped!
+        // WARNING: Forced unwrapping here. Get rid of it ASAP!
+        // add Swift code here: http://stackoverflow.com/questions/22368525/indexpathforrowatpoint-returns-nil-only-for-first-cell-in-a-uitableview
+        
+        
         if sender.selected { // Collapsing the cell here
+            sender.selected = false
+            projectsVersionsMap[selectedCellIndex].ButtonSelected = false
             if projects != nil {
-                let selectedCellIndex = sender.tag
+
                 let currentProject = projects!.projectsList[projectsVersionsMap[selectedCellIndex].ProjIndex]
                 var numOfVersionsToRemove = self.projects?.getVersionsForProject(currentProject.id).count ?? 0
                 if selectedCellIndex + numOfVersionsToRemove < projectsVersionsMap.count {
@@ -132,16 +155,16 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                     self.view_projects_list.deleteRowsAtIndexPaths(indexPathsToDeleteForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
                 }
-
             }
             self.view_projects_list.endUpdates()
+            
             CATransaction.commit()
-            sender.selected = false
         } else { // Expanding the cell here
             sender.selected = true
-            currentExpandedCell.Index = sender.tag
+            projectsVersionsMap[selectedCellIndex].ButtonSelected = true
+            currentExpandedCell.Index = selectedCellIndex
             if projects != nil {
-                let currentProject = projects!.projectsList[projectsVersionsMap[sender.tag].ProjIndex]
+                let currentProject = projects!.projectsList[projectsVersionsMap[selectedCellIndex].ProjIndex]
                 if currentProject.versions.isEmpty { // We don't download versions if they already exist
                     let URLEnding = "/rest/api/2/project/\(currentProject.id)/versions"
                     parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
@@ -149,16 +172,17 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                         if !anyErrors("get_versions", controller: self, data: data, response: response, error: error) {
                             self.currentExpandedCell.NumOfItemsToFit = (self.projects?.setVersionsForProject(data!, projectID: currentProject.id))!
                             if let versions = self.projects?.getVersionsForProject(currentProject.id) {
-                                var versionsMapToInsert: [(Type: Int, ProjIndex: Int, VerIndex: Int?)] = []
+                                var versionsMapToInsert: [(Type: Int, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
                                 for (index, _) in versions.enumerate() {
-                                    versionsMapToInsert.append((Type: 1, ProjIndex: self.projectsVersionsMap[sender.tag].ProjIndex, VerIndex: index))
-                                    indexPathsToAddForAnimation.append(NSIndexPath(forRow: sender.tag + index + 1, inSection: 0))
+                                    versionsMapToInsert.append((Type: 1, ProjIndex: self.projectsVersionsMap[selectedCellIndex].ProjIndex, VerIndex: index, ButtonSelected: nil))
+                                    indexPathsToAddForAnimation.append(NSIndexPath(forRow: selectedCellIndex + index + 1, inSection: 0))
                                 }
                                 // Inserting the versions map right after the expanded project
                                 if !versionsMapToInsert.isEmpty {
-                                    self.projectsVersionsMap[sender.tag+1..<sender.tag+1] = versionsMapToInsert[0..<versionsMapToInsert.count]
+                                    self.projectsVersionsMap[selectedCellIndex+1..<selectedCellIndex+1] = versionsMapToInsert[0..<versionsMapToInsert.count]
                                 } else {
                                     sender.selected = false
+                                    self.projectsVersionsMap[selectedCellIndex].ButtonSelected = false
                                     // TODO: Add a toast message that no versions were found in the project
                                 }
                             }
@@ -171,13 +195,13 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                 } else {
                     // we don't need the extra network request, but still need to modify the mapping for table
                     if let versions = self.projects?.getVersionsForProject(currentProject.id) {
-                        var versionsMapToInsert: [(Type: Int, ProjIndex: Int, VerIndex: Int?)] = []
+                        var versionsMapToInsert: [(Type: Int, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
                         for (index, _) in versions.enumerate() {
-                            versionsMapToInsert.append((Type: 1, ProjIndex: self.projectsVersionsMap[sender.tag].ProjIndex, VerIndex: index))
-                            indexPathsToAddForAnimation.append(NSIndexPath(forRow: sender.tag + index + 1, inSection: 0))
+                            versionsMapToInsert.append((Type: 1, ProjIndex: self.projectsVersionsMap[selectedCellIndex].ProjIndex, VerIndex: index, ButtonSelected: nil))
+                            indexPathsToAddForAnimation.append(NSIndexPath(forRow: selectedCellIndex + index + 1, inSection: 0))
                         }
-                        // Inserting the versions map right after the expanded project
-                        self.projectsVersionsMap[sender.tag+1..<sender.tag+1] = versionsMapToInsert[0..<versionsMapToInsert.count]
+                        // Inserting the versions right after the expanded project into the mapping array
+                        self.projectsVersionsMap[selectedCellIndex+1..<selectedCellIndex+1] = versionsMapToInsert[0..<versionsMapToInsert.count]
                         self.view_projects_list.insertRowsAtIndexPaths(indexPathsToAddForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
                         self.view_projects_list.endUpdates()
                         CATransaction.commit()

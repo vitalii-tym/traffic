@@ -288,14 +288,17 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 let URLEnding = "/rest/api/2/issue"
                 self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
                     if !anyErrors("create_issue", controller: self, data: data, response: response, error: error) {
-                        let alert: UIAlertController = UIAlertController(
-                            title: "Success",
-                            message: "New issue created.",
-                            preferredStyle: UIAlertControllerStyle.Alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
-                            action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
-                        }))
-                        self.presentViewController(alert, animated: true, completion: nil)
+//                        let alert: UIAlertController = UIAlertController(
+//                            title: "Success",
+//                            message: "New issue created.",
+//                            preferredStyle: UIAlertControllerStyle.Alert)
+//                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
+//                            action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
+//                        }))
+//                        self.presentViewController(alert, animated: true, completion: nil)
+                        
+                        self.performSegueWithIdentifier("back_to_tasks", sender: self)
+                        
                     }
                     self.parentViewController!.stopActivityIndicator()
                 }
@@ -305,14 +308,16 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
                     self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
                         if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
-                            let alert: UIAlertController = UIAlertController(
-                                title: "Success",
-                                message: "Status changed to \"\(self.currentTransition!.target_status)\".",
-                                preferredStyle: UIAlertControllerStyle.Alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
-                                action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
-                            }))
-                            self.presentViewController(alert, animated: true, completion: nil)
+//                            let alert: UIAlertController = UIAlertController(
+//                                title: "Success",
+//                                message: "Status changed to \"\(self.currentTransition!.target_status)\".",
+//                                preferredStyle: UIAlertControllerStyle.Alert)
+//                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
+//                                action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
+//                            }))
+//                            self.presentViewController(alert, animated: true, completion: nil)
+                            
+                            self.performSegueWithIdentifier("back_to_tasks", sender: self)
                         }
                         self.parentViewController!.stopActivityIndicator()
                     }
