@@ -288,17 +288,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 let URLEnding = "/rest/api/2/issue"
                 self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
                     if !anyErrors("create_issue", controller: self, data: data, response: response, error: error) {
-//                        let alert: UIAlertController = UIAlertController(
-//                            title: "Success",
-//                            message: "New issue created.",
-//                            preferredStyle: UIAlertControllerStyle.Alert)
-//                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
-//                            action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
-//                        }))
-//                        self.presentViewController(alert, animated: true, completion: nil)
-                        
                         self.performSegueWithIdentifier("back_to_tasks", sender: self)
-                        
                     }
                     self.parentViewController!.stopActivityIndicator()
                 }
@@ -308,15 +298,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
                     self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
                         if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
-//                            let alert: UIAlertController = UIAlertController(
-//                                title: "Success",
-//                                message: "Status changed to \"\(self.currentTransition!.target_status)\".",
-//                                preferredStyle: UIAlertControllerStyle.Alert)
-//                            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: {
-//                                action in self.performSegueWithIdentifier("back_to_tasks", sender: self)
-//                            }))
-//                            self.presentViewController(alert, animated: true, completion: nil)
-                            
                             self.performSegueWithIdentifier("back_to_tasks", sender: self)
                         }
                         self.parentViewController!.stopActivityIndicator()
@@ -416,49 +397,39 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
 
     func layoutView(layoutSource: UIView, layoutTarget: UIView) {
         layoutSource.translatesAutoresizingMaskIntoConstraints = false
-        if #available(iOS 9.0, *) {
-            let centerXconstraint = layoutSource.centerXAnchor.constraintEqualToAnchor(layoutTarget.centerXAnchor)
-            let centerYconstraint = layoutSource.centerYAnchor.constraintEqualToAnchor(layoutTarget.centerYAnchor)
-            let width = layoutSource.widthAnchor.constraintEqualToConstant(300)
-            let height = layoutSource.heightAnchor.constraintEqualToConstant(250)
-            centerYconstraint.constant = -90
-            NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
-        } else {
-            let centerXconstraint = NSLayoutConstraint(item: layoutSource,
-                                                       attribute: NSLayoutAttribute.CenterX,
-                                                       relatedBy: NSLayoutRelation.Equal,
-                                                       toItem: layoutTarget,
-                                                       attribute: NSLayoutAttribute.CenterX,
-                                                       multiplier: 1.0,
-                                                       constant: 0.0)
-            
-            let centerYconstraint = NSLayoutConstraint(item: layoutSource,
-                                                       attribute: NSLayoutAttribute.CenterY,
-                                                       relatedBy: NSLayoutRelation.Equal,
-                                                       toItem: layoutTarget,
-                                                       attribute: NSLayoutAttribute.CenterY,
-                                                       multiplier: 1.0,
-                                                       constant: 0.0)
-            
-            let width = NSLayoutConstraint(item: layoutSource,
-                                           attribute: NSLayoutAttribute.Width,
-                                           relatedBy: NSLayoutRelation.Equal,
-                                           toItem: nil,
-                                           attribute: NSLayoutAttribute.NotAnAttribute,
-                                           multiplier: 1.0,
-                                           constant: 300)
-            
-            let height = NSLayoutConstraint(item: layoutSource,
-                                            attribute: NSLayoutAttribute.Height,
-                                            relatedBy: NSLayoutRelation.Equal,
-                                            toItem: nil,
-                                            attribute: NSLayoutAttribute.NotAnAttribute,
-                                            multiplier: 1.0,
-                                            constant: 250)
-            centerYconstraint.constant = -90
-            NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
-        }
+        let centerXconstraint = NSLayoutConstraint(item: layoutSource,
+                                                   attribute: NSLayoutAttribute.CenterX,
+                                                   relatedBy: NSLayoutRelation.Equal,
+                                                   toItem: layoutTarget,
+                                                   attribute: NSLayoutAttribute.CenterX,
+                                                   multiplier: 1.0,
+                                                   constant: 0.0)
         
+        let centerYconstraint = NSLayoutConstraint(item: layoutSource,
+                                                   attribute: NSLayoutAttribute.CenterY,
+                                                   relatedBy: NSLayoutRelation.Equal,
+                                                   toItem: layoutTarget,
+                                                   attribute: NSLayoutAttribute.CenterY,
+                                                   multiplier: 1.0,
+                                                   constant: 0.0)
+        
+        let width = NSLayoutConstraint(item: layoutSource,
+                                       attribute: NSLayoutAttribute.Width,
+                                       relatedBy: NSLayoutRelation.Equal,
+                                       toItem: nil,
+                                       attribute: NSLayoutAttribute.NotAnAttribute,
+                                       multiplier: 1.0,
+                                       constant: 300)
+        
+        let height = NSLayoutConstraint(item: layoutSource,
+                                        attribute: NSLayoutAttribute.Height,
+                                        relatedBy: NSLayoutRelation.Equal,
+                                        toItem: nil,
+                                        attribute: NSLayoutAttribute.NotAnAttribute,
+                                        multiplier: 1.0,
+                                        constant: 250)
+        centerYconstraint.constant = -90
+        NSLayoutConstraint.activateConstraints([centerXconstraint, centerYconstraint, width, height])
         layoutSource.layoutIfNeeded()
     }
 }

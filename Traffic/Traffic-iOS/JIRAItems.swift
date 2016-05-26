@@ -149,7 +149,7 @@ class JIRAProjects {
         self.init(projects: formedProjectsList)
     }
     
-    func setVersionsForProject(data: NSData, projectID: String) -> Int {
+    func setVersionsForProject(data: NSData, projectID: String) {
         var versionsToSet = [Version]()
         var jsonObject: Array<AnyObject>?
         
@@ -159,7 +159,7 @@ class JIRAProjects {
         catch { }
         
         guard let jsonObjectRoot = jsonObject else {
-            return 0
+            return
         }
         
         for version in jsonObjectRoot {
@@ -182,7 +182,6 @@ class JIRAProjects {
             }
             }
         }
-        return versionsToSet.count
     }
 
     func getVersionsForProject(projectID: String) -> [Version] {
