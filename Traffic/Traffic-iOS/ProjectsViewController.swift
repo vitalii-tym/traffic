@@ -23,7 +23,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     var projects: JIRAProjects? {
         didSet {
             for (index, _) in projects!.projectsList.enumerate() {
-                projectsVersionsMap.append((Type: 0, ProjIndex: index, VerIndex: nil, ButtonSelected: false))
+                projectsVersionsMap.append((Type: "Project", ProjIndex: index, VerIndex: nil, ButtonSelected: false))
                 // This structure will be used for tables. Once we retreive versions for a project they will be incorporated into this atructure 
                 // so that the structure continues to be flat, while any its item will represent either a project or a version in a project,
                 // then a project can be accessed in projectsList by knowing ProjIndex or version can be accessed by known ProjIndex and VerIndex.
@@ -33,7 +33,8 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     var aProjectToPass: Project?
     var aVersionToPass: Version?
-    var projectsVersionsMap: [(Type: Int, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = [] // This is a flattened representation of projects and versions in them
+    var aBoardToPass: Board?
+    var projectsVersionsMap: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = [] // This is a flattened representation of projects and versions in them
     
     @IBOutlet weak var view_projects_list: UITableView!
     @IBOutlet weak var button_log_out: UIBarButtonItem!
@@ -49,7 +50,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                 if !anyErrors("get_projects", controller: self, data: data, response: response, error: error) {
                     let projlist = JIRAProjects(data: data!)
                     // Manually adding the "All Projects" item to the list
-                    projlist?.projectsList.insert(Project(id: "", key: "", projectTypeKey: "", name: "All projects", versions: []), atIndex: 0)
+                    projlist?.projectsList.insert(Project(id: "", key: "", projectTypeKey: "", name: "All projects", versions: [], boards: []), atIndex: 0)
                     self.projects = projlist
                 }
                 self.parentViewController?.stopActivityIndicator()
@@ -69,7 +70,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let currentMaping = projectsVersionsMap[indexPath.row]
-        if currentMaping.Type == 0 {
+        if currentMaping.Type == "Project" {
             let projectCell = tableView.dequeueReusableCellWithIdentifier("project_сell", forIndexPath: indexPath) as! aProjectCell
                 projectCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].name
                 projectCell.button_expand.tag = indexPath.row
@@ -82,10 +83,17 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                     projectCell.button_expand.hidden = true
                 }
                 return projectCell
-        } else {
+        } else if currentMaping.Type == "Version" {
             let versionCell = tableView.dequeueReusableCellWithIdentifier("version_cell", forIndexPath: indexPath) as! aVersionCell
             versionCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].versions[currentMaping.VerIndex!].name
             return versionCell
+        } else if currentMaping.Type == "Board" {
+            let versionCell = tableView.dequeueReusableCellWithIdentifier("version_cell", forIndexPath: indexPath) as! aVersionCell
+            versionCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].boards[currentMaping.VerIndex!].name
+            return versionCell
+        } else {
+            print ("Error in determining mapping type. Check: tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) in ProjectViewController.swift")
+            return UITableViewCell()
         }
     }
     
@@ -96,6 +104,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
             }
             destionationViewController.aProject = self.aProjectToPass
             destionationViewController.aVersion = self.aVersionToPass
+            destionationViewController.aBoard = self.aBoardToPass
             destionationViewController.navigationItem.title = self.aProjectToPass?.name
         }
     }
@@ -104,7 +113,11 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         let currentMaping = projectsVersionsMap[indexPath.row]
         aProjectToPass = projects?.projectsList[currentMaping.ProjIndex]
         if let versionIndex = currentMaping.VerIndex {
-            aVersionToPass = projects?.projectsList[currentMaping.ProjIndex].versions[versionIndex]
+            if currentMaping.Type == "Version" {
+                aVersionToPass = projects?.projectsList[currentMaping.ProjIndex].versions[versionIndex]
+            } else {
+                aBoardToPass = projects?.projectsList[currentMaping.ProjIndex].boards[versionIndex]
+            }
         }
         self.performSegueWithIdentifier("tasks_list", sender: nil)
     }
@@ -113,46 +126,47 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         self.view_projects_list.beginUpdates()
         var indexPathsToDeleteForAnimation: [NSIndexPath] = []
         var indexPathsToAddForAnimation: [NSIndexPath] = []
-
         if let touchPos = event.allTouches()?.first?.locationInView(self.view_projects_list),
             let selectedCellIndex = self.view_projects_list.indexPathForRowAtPoint(touchPos)?.row {
-            if sender.selected { // Collapsing the cell here
+            var insertionPoint = selectedCellIndex
+            if sender.selected { // Collapsing the cell
                 sender.selected = false
                 projectsVersionsMap[selectedCellIndex].ButtonSelected = false
                 if projects != nil {
-
                     let currentProject = projects!.projectsList[projectsVersionsMap[selectedCellIndex].ProjIndex]
-                    var numOfVersionsToRemove = self.projects?.getVersionsForProject(currentProject.id).count ?? 0
-                    if selectedCellIndex + numOfVersionsToRemove < projectsVersionsMap.count {
-                        while numOfVersionsToRemove > 0 {
-                            // Removing all versions of the chosen project from the projectsVerwionsMap
+                    let numOfVersionsToRemove = self.projects?.getVersionsForProject(currentProject.id).count ?? 0
+                    let numOfBoardsToRemove = self.projects?.getBoardsForProject(currentProject.id).count ?? 0
+                    var numOfItemsToRemove = numOfVersionsToRemove + numOfBoardsToRemove
+                    if selectedCellIndex + numOfItemsToRemove < projectsVersionsMap.count {
+                        while numOfItemsToRemove > 0 {  // Removing all versions of the chosen project from the projectsVerwionsMap
                             self.projectsVersionsMap.removeAtIndex(selectedCellIndex + 1)
-                            indexPathsToDeleteForAnimation.append(NSIndexPath(forRow: selectedCellIndex+numOfVersionsToRemove, inSection: 0))
-                            numOfVersionsToRemove -= 1
+                            indexPathsToDeleteForAnimation.append(NSIndexPath(forRow: selectedCellIndex+numOfItemsToRemove, inSection: 0))
+                            numOfItemsToRemove -= 1
                         }
                         self.view_projects_list.deleteRowsAtIndexPaths(indexPathsToDeleteForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
                     }
                 }
                 self.view_projects_list.endUpdates()
-            } else { // Expanding the cell here
+            } else { // Expanding the cell
                 sender.selected = true
                 projectsVersionsMap[selectedCellIndex].ButtonSelected = true
                 if projects != nil {
                     let currentProject = projects!.projectsList[projectsVersionsMap[selectedCellIndex].ProjIndex]
-                    if currentProject.versions.isEmpty { // We don't download versions if they already exist
+                    if currentProject.versions.isEmpty && currentProject.boards.isEmpty { // We don't download versions if they already exist
                         let URLEnding = "/rest/api/2/project/\(currentProject.id)/versions"
                         parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
                         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                            // Beginning of 1st level block
                             if !anyErrors("get_versions", controller: self, data: data, response: response, error: error) {
                                 self.projects?.setVersionsForProject(data!, projectID: currentProject.id)
                                 if let versions = self.projects?.getVersionsForProject(currentProject.id) {
-                                    var versionsMapToInsert: [(Type: Int, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
-                                    for (index, _) in versions.enumerate() {
-                                        versionsMapToInsert.append((Type: 1, ProjIndex: self.projectsVersionsMap[selectedCellIndex].ProjIndex, VerIndex: index, ButtonSelected: nil))
-                                        indexPathsToAddForAnimation.append(NSIndexPath(forRow: selectedCellIndex + index + 1, inSection: 0))
+                                    var versionsMapToInsert: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
+                                    for (vIndex, _) in versions.enumerate() {
+                                        insertionPoint = selectedCellIndex + vIndex + 1
+                                        versionsMapToInsert.append((Type: "Version", ProjIndex: self.projectsVersionsMap[selectedCellIndex].ProjIndex, VerIndex: vIndex, ButtonSelected: nil))
+                                        indexPathsToAddForAnimation.append(NSIndexPath(forRow: insertionPoint, inSection: 0))
                                     }
-                                    // Inserting the versions map right after the expanded project
-                                    if !versionsMapToInsert.isEmpty {
+                                    if !versionsMapToInsert.isEmpty {  // Inserting the versions map right after the expanded project
                                         self.projectsVersionsMap[selectedCellIndex+1..<selectedCellIndex+1] = versionsMapToInsert[0..<versionsMapToInsert.count]
                                     } else {
                                         sender.selected = false
@@ -161,20 +175,47 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                                     }
                                 }
                             }
+                            
                             self.parentViewController?.stopActivityIndicator()
-                            self.view_projects_list.insertRowsAtIndexPaths(indexPathsToAddForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
-                            self.view_projects_list.endUpdates()
-                        }
-                    } else {
-                        // we don't need the extra network request, but still need to modify the mapping for table
-                        if let versions = self.projects?.getVersionsForProject(currentProject.id) {
-                            var versionsMapToInsert: [(Type: Int, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
-                            for (index, _) in versions.enumerate() {
-                                versionsMapToInsert.append((Type: 1, ProjIndex: self.projectsVersionsMap[selectedCellIndex].ProjIndex, VerIndex: index, ButtonSelected: nil))
-                                indexPathsToAddForAnimation.append(NSIndexPath(forRow: selectedCellIndex + index + 1, inSection: 0))
-                            }
-                            // Inserting the versions right after the expanded project into the mapping array
-                            self.projectsVersionsMap[selectedCellIndex+1..<selectedCellIndex+1] = versionsMapToInsert[0..<versionsMapToInsert.count]
+                            self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting boards...")
+                            
+                            let URLEndingAgile = "/rest/agile/1.0/board?projectKeyOrId=\(currentProject.id)"
+                            self.aNetworkRequest.getdata("GET", URLEnding: URLEndingAgile, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                                // Beginning of 2nd level block
+                                if !anyErrors("get_boards", controller: self, data: data, response: response, error: error) {
+                                    self.projects?.setBoardsForProject(data!, projectID: currentProject.id)
+                                    if let boards = self.projects?.getBoardsForProject(currentProject.id) {
+                                        var boardsMapToInsert: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
+                                        for (bIndex, _) in boards.enumerate() {
+                                            boardsMapToInsert.append((Type: "Board", ProjIndex: self.projectsVersionsMap[selectedCellIndex].ProjIndex, VerIndex: bIndex, ButtonSelected: nil))
+                                            indexPathsToAddForAnimation.append(NSIndexPath(forRow: insertionPoint + bIndex + 1, inSection: 0))
+                                        }
+                                        if !boardsMapToInsert.isEmpty{
+                                            self.projectsVersionsMap[insertionPoint+1..<insertionPoint+1] = boardsMapToInsert[0..<boardsMapToInsert.count]
+                                            sender.selected = true
+                                            self.projectsVersionsMap[selectedCellIndex].ButtonSelected = true
+                                        }
+                                    }
+                                    self.parentViewController?.stopActivityIndicator()
+                                    self.view_projects_list.insertRowsAtIndexPaths(indexPathsToAddForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
+                                    self.view_projects_list.endUpdates()
+                                }
+                            } // END of 2nd level block
+                        } // END of 1st level block.
+                    } else {  // we don't need the extra network request, but still need to modify the mapping for table
+                        if let versions = self.projects?.getVersionsForProject(currentProject.id),
+                            let boards = self.projects?.getBoardsForProject(currentProject.id) {
+                            var itemsMapToInsert: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
+                            for (vIndex, _) in versions.enumerate() {
+                                insertionPoint = selectedCellIndex + vIndex + 1
+                                itemsMapToInsert.append((Type: "Version", ProjIndex: self.projectsVersionsMap[selectedCellIndex].ProjIndex, VerIndex: vIndex, ButtonSelected: nil))
+                                indexPathsToAddForAnimation.append(NSIndexPath(forRow: insertionPoint, inSection: 0))
+                            }  // Inserting the versions right after the expanded project into the mapping array
+                            for (bIndex, _) in boards.enumerate() {
+                                itemsMapToInsert.append((Type: "Board", ProjIndex: self.projectsVersionsMap[selectedCellIndex].ProjIndex, VerIndex: bIndex, ButtonSelected: nil))
+                                indexPathsToAddForAnimation.append(NSIndexPath(forRow: insertionPoint + bIndex + 1, inSection: 0))
+                            }  // Inserting the boards right after the versions
+                            self.projectsVersionsMap[selectedCellIndex+1..<selectedCellIndex+1] = itemsMapToInsert[0..<itemsMapToInsert.count]
                             self.view_projects_list.insertRowsAtIndexPaths(indexPathsToAddForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
                             self.view_projects_list.endUpdates()
                         }
@@ -203,12 +244,11 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                 self.performSegueWithIdentifier("back_to_login", sender: self)
                 self.parentViewController?.stopActivityIndicator()
             }
-        } else {
+        } else {    // Don't know what to do. Looks like user happened to be logged in but for some reason his login or domain were not saved in User Data at all.
+                    // We can't log user out because we simply don't know the JIRA URL to do this upon.
+                    // However most probaly he/she will land on the login screen on next app launch because auto-login
+                    // won't work without valid User Data. So... let's just inform him/her suggesting to relaunch the application.
             self.parentViewController?.stopActivityIndicator()
-            // Don't know what to do. Looks like user happened to be logged in but for some reason his login or domain were not saved in User Data at all.
-            // We can't log user out because we simply don't know the JIRA URL to do this upon.
-            // However most probaly he/she will land on the login screen on next app launch because auto-login
-            // won't work without valid User Data. So... let's just inform him/her suggesting to relaunch the application.
             let alert: UIAlertController = UIAlertController(title: "Oops", message: "Something weird happened. We can't log you out. But restarting the applicaiton should get you to the login screen.", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)

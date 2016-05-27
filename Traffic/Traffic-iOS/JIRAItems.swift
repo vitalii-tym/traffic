@@ -13,6 +13,7 @@ struct Project {
     var projectTypeKey: String
     var name: String
     var versions: [Version]
+    var boards: [Board]
 }
 
 struct Version {
@@ -59,6 +60,12 @@ struct IssueType {
     var id: String
     var subtask: Bool
     var requiredfields: [aReqiredField]?
+}
+
+struct Board {
+    var id: Int
+    var name: String
+    var type: String
 }
 
 struct MetadataProject {
@@ -142,7 +149,7 @@ class JIRAProjects {
                     let projectKey = theProjectDict["key"] as? String,
                     let projectTypeKey = theProjectDict["projectTypeKey"] as? String,
                     let projectName = theProjectDict["name"] as? String {
-                    formedProjectsList.append(Project(id: projectID, key: projectKey, projectTypeKey: projectTypeKey, name: projectName, versions: []))
+                    formedProjectsList.append(Project(id: projectID, key: projectKey, projectTypeKey: projectTypeKey, name: projectName, versions: [], boards: []))
                 }
             }
         }
@@ -153,14 +160,10 @@ class JIRAProjects {
         var versionsToSet = [Version]()
         var jsonObject: Array<AnyObject>?
         
-        do {
-            jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(data), options: NSJSONReadingOptions(rawValue: 0)) as? Array<AnyObject>
-        }
+        do { jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(data), options: NSJSONReadingOptions(rawValue: 0)) as? Array<AnyObject>  }
         catch { }
         
-        guard let jsonObjectRoot = jsonObject else {
-            return
-        }
+        guard let jsonObjectRoot = jsonObject else { return }
         
         for version in jsonObjectRoot {
             if let theVersionDict = version as? Dictionary<String, AnyObject> {
@@ -178,7 +181,7 @@ class JIRAProjects {
         for (index, project) in self.projectsList.enumerate() {
             if project.id == projectID {
                 self.projectsList[index].versions = versionsToSet
-                break //We expect that there can be more than one project with the same ID, so no need to continue once we found that one
+                break //We expect that there can't be more than one project with the same ID, so no need to continue once we found that one
             }
             }
         }
@@ -193,6 +196,44 @@ class JIRAProjects {
             }
         }
         return versionsToGet
+    }
+    
+    func setBoardsForProject(data: NSData, projectID: String) {
+        var boardsToSet = [Board]()
+        var jsonObject: Dictionary<String, AnyObject>?
+        
+        do { jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(data), options: NSJSONReadingOptions(rawValue: 0)) as? Dictionary<String, AnyObject> }
+        catch { }
+        
+        guard let jsonObjectRoot = jsonObject else { return }
+        
+        if let boardsArray = jsonObjectRoot["values"] as? Array<AnyObject> {
+            for board in boardsArray {
+                if let boardID = board["id"] as? Int,
+                    let boardName = board["name"] as? String,
+                    let boardType = board["type"] as? String {
+                        boardsToSet.append(Board(id: boardID, name: boardName, type: boardType))
+                }
+            }
+        }
+        
+        for (index, project) in self.projectsList.enumerate() {
+            if project.id == projectID {
+                self.projectsList[index].boards = boardsToSet
+                break //We expect that there can't be more than one project with the same ID, so no need to continue once we found that one
+            }
+        }
+    }
+    
+    func getBoardsForProject(projectID: String) -> [Board] {
+        var boardsToGet = [Board]()
+        for project in self.projectsList {
+            if project.id == projectID {
+                boardsToGet = project.boards
+                break
+            }
+        }
+        return boardsToGet
     }
 }
 

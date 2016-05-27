@@ -18,6 +18,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
 
     var aProject: Project?
     var aVersion: Version?
+    var aBoard: Board?
     var aNetworkRequest = JIRANetworkRequest()
     var tasks: JIRATasks? {
         didSet {
@@ -34,43 +35,18 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
     @IBOutlet weak var button_log_out: UIBarButtonItem!
     @IBOutlet weak var label_no_tasks: UILabel!
+    @IBOutlet weak var label_context: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.refreshControl = UIRefreshControl()
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl.attributedTitle = NSAttributedString(string: "")
         self.refreshControl.addTarget(self, action: #selector(TasksViewViewController.refresh(_:)),   forControlEvents: UIControlEvents.ValueChanged)
         view_collectionView!.addSubview(refreshControl)
     }
     
-    func GenerateURLEndingDependingOnContext() -> String {
-        var URLEnding = ""
-        if aProject?.key != "" {
-            if aVersion == nil {
-                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+status+not+in+(Done)+order+by+rank+asc"
-            } else {
-                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+fixVersion=\(aVersion!.id)+AND+status+not+in+(Done)+order+by+rank+asc"
-            }
-            
-        } else {
-            URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
-        }
-        return URLEnding
-    }
-
-    func refresh(sender:AnyObject) {
-        aNetworkRequest.getdata("GET", URLEnding: GenerateURLEndingDependingOnContext(), JSON: nil, domain: nil) { (data, response, error) -> Void in
-            if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
-                self.tasks = JIRATasks(data: data!)
-                self.refreshControl.endRefreshing()
-            }
-        }
-        aTasktoPass = nil
-    }
-    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
         if self.tasks == nil {
             self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
         }
@@ -85,7 +61,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
         // Retreiving metadata for issue creation and enabling the "+" button as soon as metadata loading succesful
         let URLEnding = "/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields"
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
@@ -101,6 +76,36 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 }
             }
         }
+    }
+    
+    func GenerateURLEndingDependingOnContext() -> String {
+        var URLEnding = ""
+        if aProject?.key != "" {
+            if aVersion != nil {
+                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+fixVersion=\(aVersion!.id)+AND+status+not+in+(Done)+order+by+rank+asc"
+                label_context.text = "[\(aVersion!.name)]"
+            } else if aBoard != nil {
+                URLEnding = "/rest/agile/1.0/board/\(aBoard!.id)/issue?jql=status+not+in+(Done)"
+                label_context.text = "[\(aBoard!.name)]"
+            } else {
+                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+status+not+in+(Done)+order+by+rank+asc"
+                label_context.text = "[All issues for project]"
+            }
+        } else {
+            URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
+            label_context.text = "[All issues for all projects]"
+        }
+        return URLEnding
+    }
+    
+    func refresh(sender:AnyObject) {
+        aNetworkRequest.getdata("GET", URLEnding: GenerateURLEndingDependingOnContext(), JSON: nil, domain: nil) { (data, response, error) -> Void in
+            if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
+                self.tasks = JIRATasks(data: data!)
+                self.refreshControl.endRefreshing()
+            }
+        }
+        aTasktoPass = nil
     }
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -130,6 +135,13 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             case "Lowest":  cell.label_priority.textColor = UIColor.grayColor()
             default:        cell.label_priority.textColor = UIColor.blackColor()
         }
+        
+        switch cell.label_status.text! {
+            case "In Progress": cell.label_status.backgroundColor = UIColor.yellowColor()
+            default:        cell.label_status.backgroundColor = UIColor.clearColor()
+        }
+    
+        
         return cell
     }
     

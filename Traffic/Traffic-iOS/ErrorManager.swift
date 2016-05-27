@@ -74,7 +74,18 @@ let actionTypes: [String:
         // 200 - application/jsonReturned if the project exists and the user has permission to view its versions. Contains a full representation of the project's versions in JSON format.
         // 404 - Returned if the project is not found, or the calling user does not have permission to view it.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getTransitions
-        
+
+    "get_boards": ("Oops",
+            [200],
+            [400: "Incorrect request.",
+            401: "You are not logged in.",
+            403: "You don't have valid license for Agile.",
+                0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
+        // 200 - application/jsonReturns the requested boards, at the specified page of the results.
+        // 400 - Returned if the request is invalid.
+        // 401 - Returned if the user is not logged in.
+        // 403 - Returned if the user does not have valid license.
+    
     "do_transition": ("Oops",
                         [204],
                             [400: "There was a problem with transition.",

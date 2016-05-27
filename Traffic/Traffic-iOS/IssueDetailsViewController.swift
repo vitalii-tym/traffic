@@ -84,7 +84,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
         if aTask == nil {
             // If after entering the screen we have no task, consider user intends to create new one
             action_create_new_task()
