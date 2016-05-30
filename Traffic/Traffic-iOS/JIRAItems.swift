@@ -28,10 +28,12 @@ struct Version {
 
 struct Task {
     var task_key: String
+    var task_type: String
     var task_summary: String
     var task_priority: String
     var task_description: String? //optional, because some tasks might have no description (JIRA returns "null")
     var task_status: String
+    var task_assignee: String? // The issue might be Unassigned
 }
 
 struct Error {
@@ -316,15 +318,21 @@ class JIRATasks {
                        issue_fields_Dict = itemDict["fields"] as? Dictionary<String,AnyObject> {
                     if let issue_priority_Dict = issue_fields_Dict["priority"] as? Dictionary<String,AnyObject>,
                            issue_status_Dict = issue_fields_Dict["status"] as? Dictionary<String,AnyObject>,
-                           issue_summary = issue_fields_Dict["summary"] as? String {
+                           issue_summary = issue_fields_Dict["summary"] as? String,
+                            issue_typeDict = issue_fields_Dict["issuetype"] as? Dictionary<String,AnyObject> {
+                                let issue_assigneeDict = issue_fields_Dict["assignee"] as? Dictionary<String,AnyObject> // Assignee will be absent if the issue is Unsassigned
                                 let issue_description = issue_fields_Dict["description"] as? String // issue_description can acutally be empty
                                 if let issue_priority = issue_priority_Dict["name"] as? String,
+                                    issue_type = issue_typeDict["name"] as? String,
                                     issue_status = issue_status_Dict["name"] as? String {
+                                        let issue_assignee = issue_assigneeDict?["displayName"] as? String
                                         newTasks.append(Task(task_key: issue_key ?? "(no title)",
-                                                        task_summary: issue_summary,
-                                                        task_priority: issue_priority,
-                                                        task_description: issue_description,
-                                                        task_status: issue_status))
+                                            task_type: issue_type,
+                                            task_summary: issue_summary,
+                                            task_priority: issue_priority,
+                                            task_description: issue_description,
+                                            task_status: issue_status,
+                                            task_assignee: issue_assignee))
                         }
                     }
                 }

@@ -9,9 +9,12 @@ import UIKit
 
 class aTask: UICollectionViewCell {
     @IBOutlet weak var label_name: UILabel!
-    @IBOutlet weak var label_description: UILabel!
+    @IBOutlet weak var label_summary: UILabel!
     @IBOutlet weak var label_priority: UILabel!
     @IBOutlet weak var label_status: UILabel!
+    @IBOutlet weak var label_assignee: UILabel!
+    @IBOutlet weak var label_type: UILabel!
+    @IBOutlet weak var label_description: UILabel!
 }
 
 class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
@@ -123,7 +126,10 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TaskCell", forIndexPath: indexPath) as! aTask
         
         cell.label_name.text = tasks?.taskslist[indexPath.row].task_key
-        cell.label_description.text = tasks?.taskslist[indexPath.row].task_summary
+        cell.label_summary.text = tasks?.taskslist[indexPath.row].task_summary
+        cell.label_assignee.text = tasks?.taskslist[indexPath.row].task_assignee
+        cell.label_type.text = tasks?.taskslist[indexPath.row].task_type
+        cell.label_description.text = tasks?.taskslist[indexPath.row].task_description
         cell.label_priority.text = tasks?.taskslist[indexPath.row].task_priority
         cell.label_status.text = tasks?.taskslist[indexPath.row].task_status
         switch cell.label_priority.text! {
