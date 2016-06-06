@@ -44,26 +44,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textedit_input_text.delegate = self
 
-        if let theTask = aTask {
-            textview_IssueSummary.text = theTask.task_summary
-            if theTask.task_description != nil
-                { textview_IssueDetails.text = theTask.task_description }
-            else {
-                textview_IssueDetails.text = "(no description)"
-                textview_IssueDetails.font = UIFont.italicSystemFontOfSize(12.0)
-                }
-            label_priority.text = theTask.task_priority
-            label_status.text = theTask.task_status
-
-        } else {
-            textview_IssueSummary.text = ""
-            textview_IssueDetails.text = ""
-            label_priority.text = ""
-            label_status.text = ""
-        }
-        button_change_status.enabled = false
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -80,6 +61,29 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 }
             }
         }
+        
+        textedit_input_text.delegate = self
+        
+        if let theTask = aTask {
+            textview_IssueSummary.text = theTask.task_summary
+            if theTask.task_description != nil
+            { textview_IssueDetails.text = theTask.task_description }
+            else {
+                textview_IssueDetails.text = "(no description)"
+                textview_IssueDetails.font = UIFont.italicSystemFontOfSize(12.0)
+            }
+            label_priority.text = theTask.task_priority
+            label_status.text = theTask.task_status
+            
+        } else {
+            textview_IssueSummary.text = ""
+            textview_IssueDetails.text = ""
+            label_priority.text = ""
+            label_status.text = ""
+        }
+        button_change_status.enabled = false
+        
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -130,6 +134,9 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             fieldsQueue.append(aReqiredField(allowedValues: nil,operations: [],name: "",fieldName: "",type: "there_are_still_issue_types_to_choose"))
 
             GatherUserDataIfNeeded()
+        } else {
+            print("There is neither a task in context, no creation metadata provided. Returning back to list, because there is nothing to show and to do for IssueDetailsViewController")
+            self.performSegueWithIdentifier("back_to_tasks", sender: self)
         }
     }
         
@@ -392,6 +399,22 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    override func encodeRestorableStateWithCoder(coder: NSCoder) {
+        if let aTaskToEncode = aTask {
+            Task.encodeForCoder(aTaskToEncode, coder: coder)
+        }
+        if let aCurrenUserToEncode = currentUser {
+            coder.encodeObject(aCurrenUserToEncode, forKey: "currentUser")
+        }
+        super.encodeRestorableStateWithCoder(coder)
+    }
+    
+    override func decodeRestorableStateWithCoder(coder: NSCoder) {
+        aTask = Task.decode(coder)
+        currentUser = coder.decodeObjectForKey("currentUser") as? JIRAcurrentUser
+        super.decodeRestorableStateWithCoder(coder)
     }
 
     func layoutView(layoutSource: UIView, layoutTarget: UIView) {

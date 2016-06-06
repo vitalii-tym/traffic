@@ -259,4 +259,19 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewWillDisappear(animated)
         aNetworkRequest.cancel()
     }
+    
+//    override func encodeRestorableStateWithCoder(coder: NSCoder) {
+//        if let projectsListToEncode = projects {
+//            coder.encodeObject(projectsListToEncode, forKey: "projectsList")
+//        }
+//        if let projectsVersionsMapToEncode = projectsVersionsMap as? AnyObject {
+//            coder.encodeObject(projectsVersionsMapToEncode, forKey: "projectsVersionsMap")
+//        }
+//        print("projects list saved for restoring")
+//        super.encodeRestorableStateWithCoder(coder)
+//    }
+//    
+//    override func decodeRestorableStateWithCoder(coder: NSCoder) {
+//        projects = coder.decodeObjectForKey("projectsVersionsMap") as? JIRAProjects
+//    }
 }
