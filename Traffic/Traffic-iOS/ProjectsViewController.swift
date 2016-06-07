@@ -29,11 +29,13 @@ class projectsVersionsMap: NSObject, NSCoding {
         var aMapItem: (Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)? = nil
         var index = 0
         while true {
-            aMapItem = aDecoder.decodeObjectForKey("mapobject"+String(index)) as? (Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)
-            // WARNINGL: Decoding a Tuple won't work, need to decode each element separately and then form a new Tuple
-            if aMapItem != nil {
-                decodedMapping.append(aMapItem!)
-                index += 1
+            if let type = aDecoder.decodeObjectForKey("mapobject"+String(index)+"type") as? String,
+                let projIndex = aDecoder.decodeObjectForKey("mapobject"+String(index)+"ProjIndex") as? Int {
+                    let verIndex = aDecoder.decodeObjectForKey("mapobject"+String(index)+"VerIndex") as? Int
+                    let buttonSelected = aDecoder.decodeObjectForKey("mapobject"+String(index)+"ButtonSelected") as? Bool
+                    aMapItem = (type, projIndex, verIndex, buttonSelected)
+                    decodedMapping.append(aMapItem!)
+                    index += 1
             } else {
                 break
             }
@@ -44,8 +46,10 @@ class projectsVersionsMap: NSObject, NSCoding {
     
     func encodeWithCoder(aCoder: NSCoder) {
         for (index, object) in theMap.enumerate() {
-            aCoder.encodeObject(object as? AnyObject, forKey: "mapobject"+String(index))
-            // WARNING: The code above doesn't work. Need to manually encode each element from the tuple
+            aCoder.encodeObject(object.0, forKey: "mapobject"+String(index)+"type")
+            aCoder.encodeObject(object.1, forKey: "mapobject"+String(index)+"ProjIndex")
+            aCoder.encodeObject(object.2, forKey: "mapobject"+String(index)+"VerIndex")
+            aCoder.encodeObject(object.3, forKey: "mapobject"+String(index)+"ButtonSelected")
         }
     }
 }
@@ -297,13 +301,15 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         if let projectsListToEncode = projects {
             coder.encodeObject(projectsListToEncode, forKey: "projectsList")
         }
-//        coder.encodeObject(PVMap, forKey: "projectsVersionsMap")
+        coder.encodeObject(PVMap, forKey: "projectsVersionsMap")
         print("projects list saved for restoring")
         super.encodeRestorableStateWithCoder(coder)
     }
     
     override func decodeRestorableStateWithCoder(coder: NSCoder) {
         projects = coder.decodeObjectForKey("projectsList") as? JIRAProjects
-//        guard (coder.decodeObjectForKey("projectsVersionsMap") as? projectsVersionsMap) != nil else { print("aaa"); return }
+        if let maybeMap = coder.decodeObjectForKey("projectsVersionsMap") as? projectsVersionsMap {
+            PVMap = maybeMap
+        }
     }
 }
