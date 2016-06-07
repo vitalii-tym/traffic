@@ -29,7 +29,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             }
         }
     var aTasktoPass: Task?
-    var errors: JIRAerrors?
     var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     var currentUser: JIRAcurrentUser?
 
@@ -188,5 +187,33 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-}
+    
+    override func encodeRestorableStateWithCoder(coder: NSCoder) {
+        if let tasksToEncode = tasks {
+            coder.encodeObject(tasksToEncode, forKey: "tasks")
+        }
+        if let projectToEncode = aProject {
+            Project.encodeForCoder(projectToEncode, coder: coder, index: 1)
+        }
+        if let versionToEncode = aVersion {
+            coder.encodeObject(versionToEncode, forKey: "version")
+        }
+        if let boardToEncode = aBoard {
+            coder.encodeObject(boardToEncode, forKey: "board")
+        }
+        if let aCurrenUserToEncode = currentUser {
+            coder.encodeObject(aCurrenUserToEncode, forKey: "currentUser")
+        }
+        super.encodeRestorableStateWithCoder(coder)
+    }
+    
+    override func decodeRestorableStateWithCoder(coder: NSCoder) {
+        aVersion = coder.decodeObjectForKey("version") as? Version
+        aBoard = coder.decodeObjectForKey("board") as? Board
+        aProject = Project.decode(coder, index: 1)
+        tasks = coder.decodeObjectForKey("tasks") as? JIRATasks
+        currentUser = coder.decodeObjectForKey("currentUser") as? JIRAcurrentUser
+        super.decodeRestorableStateWithCoder(coder)
+    }
 
+}

@@ -403,7 +403,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     
     override func encodeRestorableStateWithCoder(coder: NSCoder) {
         if let aTaskToEncode = aTask {
-            Task.encodeForCoder(aTaskToEncode, coder: coder)
+            Task.encodeForCoder(aTaskToEncode, coder: coder, index: 1)
         }
         if let aCurrenUserToEncode = currentUser {
             coder.encodeObject(aCurrenUserToEncode, forKey: "currentUser")
@@ -412,7 +412,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     override func decodeRestorableStateWithCoder(coder: NSCoder) {
-        aTask = Task.decode(coder)
+        aTask = Task.decode(coder, index: 1)
         currentUser = coder.decodeObjectForKey("currentUser") as? JIRAcurrentUser
         super.decodeRestorableStateWithCoder(coder)
     }

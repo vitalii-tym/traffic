@@ -14,37 +14,91 @@ struct Project {
     var name: String
     var versions: [Version]
     var boards: [Board]
+    
+    static func encodeForCoder(project: Project, coder: NSCoder, index: Int) {
+        let projectClassObject = ProjectToCode(project: project)
+        coder.encodeObject(projectClassObject, forKey: "aProject"+String(index))
+    }
+    
+    static func decode(coder: NSCoder, index: Int) -> Project? {
+        let projectClassObject = coder.decodeObjectForKey("aProject"+String(index)) as? ProjectToCode
+        return projectClassObject?.project
+    }
+
 }
 
+extension Project {
+    class ProjectToCode: NSObject, NSCoding {
+        var project: Project?
+        init(project: Project) {
+            self.project = project
+            super.init()
+        }
+        
+        required init?(coder aDecoder: NSCoder){
+            guard let id = aDecoder.decodeObjectForKey("id") as? String else { project = nil; super.init(); return nil }
+            guard let key = aDecoder.decodeObjectForKey("key") as? String else { project = nil; super.init(); return nil }
+            guard let projectTypeKey = aDecoder.decodeObjectForKey("projectTypeKey") as? String else { project = nil; super.init(); return nil }
+            guard let name = aDecoder.decodeObjectForKey("name") as? String else { project = nil; super.init(); return nil }
+  //          guard let versions = aDecoder.decodeObjectForKey("versions") as? [Version] else { project = nil; super.init(); return nil }
+  //          guard let boards = aDecoder.decodeObjectForKey("boards") as? [Board] else { project = nil; super.init(); return nil }
+            
+            project = Project(id: id, key: key, projectTypeKey: projectTypeKey, name: name, versions: [], boards: [])
+            super.init()
+        }
+        
+        func encodeWithCoder(aCoder: NSCoder) {
+            aCoder.encodeObject(project!.id, forKey: "id")
+            aCoder.encodeObject(project!.key, forKey: "key")
+            aCoder.encodeObject(project!.projectTypeKey, forKey: "projectTypeKey")
+            aCoder.encodeObject(project!.name, forKey: "name")
+  //          aCoder.encodeObject(project!.versions, forKey: "versions")
+  //          aCoder.encodeObject(project!.boards, forKey: "boards")
+        }
+    }
+}
 
-//    
-//    required init(coder aDecoder: NSCoder){
-//        id = aDecoder.decodeObjectForKey("id") as? String ?? ""
-//        key = aDecoder.decodeObjectForKey("key") as? String ?? ""
-//        projectTypeKey = aDecoder.decodeObjectForKey("projectTypeKey") as? String ?? ""
-//        name = aDecoder.decodeObjectForKey("name") as? String ?? ""
-//        versions = aDecoder.decodeObjectForKey("versions") as? String ?? []
-//        boards = aDecoder.decodeObjectForKey("boards") as? String ?? []
-//    }
-//
-//    func encodeWithCoder(aCoder: NSCoder) {
-//        aCoder.encodeObject(id, forKey: "id")
-//        aCoder.encodeObject(key, forKey: "key")
-//        aCoder.encodeObject(projectTypeKey, forKey: "projectTypeKey")
-//        aCoder.encodeObject(name, forKey: "name")
-//        aCoder.encodeObject(versions, forKey: "versions")
-//        aCoder.encodeObject(boards, forKey: "boards")
-//    }
-//}
-
-struct Version {
+class Version: NSObject, NSCoding {
     var id: String
-    var description: String?
+    var versionDescription: String?
     var name: String
     var archived: Bool
     var released: Bool
     var overdue: Bool?
     var projectID: Int
+    
+    init(id: String, description: String?, name: String, archived: Bool, released: Bool, overdue: Bool?, projectID: Int) {
+        self.id = id
+        self.versionDescription = description
+        self.name = name
+        self.archived = archived
+        self.released = released
+        self.overdue = overdue
+        self.projectID = projectID
+    }
+    
+    convenience required init?(coder aDecoder: NSCoder) {
+        let id = aDecoder.decodeObjectForKey("id") as? String ?? ""
+        let description = aDecoder.decodeObjectForKey("description") as? String ?? ""
+        let name = aDecoder.decodeObjectForKey("name") as? String ?? ""
+        let archived = aDecoder.decodeBoolForKey("archived")
+        let released = aDecoder.decodeBoolForKey("released")
+        let overdue = aDecoder.decodeBoolForKey("overdue")
+        let projectID = aDecoder.decodeObjectForKey("projectID") as? Int ?? 0
+        self.init(id: id, description: description, name: name, archived: archived, released: released, overdue: overdue, projectID: projectID)
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(id, forKey: "id")
+        aCoder.encodeObject(versionDescription, forKey: "description")
+        aCoder.encodeObject(name, forKey: "name")
+        aCoder.encodeBool(archived, forKey: "archived")
+        aCoder.encodeBool(released, forKey: "released")
+        if overdue != nil {
+            aCoder.encodeBool(overdue!, forKey: "overdue")
+        }
+        aCoder.encodeObject(projectID, forKey: "projectID")
+    }
 }
 
 struct Task {
@@ -56,13 +110,13 @@ struct Task {
     var task_status: String
     var task_assignee: String? // The issue might be Unassigned
     
-    static func encodeForCoder(task: Task, coder: NSCoder) {
+    static func encodeForCoder(task: Task, coder: NSCoder, index: Int) {
         let taskClassObject = TaskToCode(task: task)
-        coder.encodeObject(taskClassObject, forKey: "aTask")
+        coder.encodeObject(taskClassObject, forKey: "aTask"+String(index))
     }
     
-    static func decode(coder: NSCoder) -> Task? {
-        let taskClassObject = coder.decodeObjectForKey("aTask") as? TaskToCode
+    static func decode(coder: NSCoder, index: Int) -> Task? {
+        let taskClassObject = coder.decodeObjectForKey("aTask"+String(index)) as? TaskToCode
         return taskClassObject?.task
     }
 }
@@ -129,10 +183,29 @@ struct IssueType {
     var requiredfields: [aReqiredField]?
 }
 
-struct Board {
+class Board: NSObject, NSCoding {
     var id: Int
     var name: String
     var type: String
+    
+    init(id: Int, name: String, type: String) {
+        self.id = id
+        self.name = name
+        self.type = type
+    }
+    
+    convenience required init?(coder aDecoder: NSCoder) {
+        let id = aDecoder.decodeObjectForKey("id") as? Int ?? 0
+        let name = aDecoder.decodeObjectForKey("name") as? String ?? ""
+        let type = aDecoder.decodeObjectForKey("type") as? String ?? ""
+        self.init(id: id, name: name, type: type)
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(id, forKey: "id")
+        aCoder.encodeObject(name, forKey: "name")
+        aCoder.encodeObject(type, forKey: "type")
+    }
 }
 
 struct MetadataProject {
@@ -207,12 +280,26 @@ class JIRAProjects: NSObject, NSCoding {
     }
     
     required init(coder aDecoder: NSCoder){
-        self.projectsList = (aDecoder.decodeObjectForKey("projectsList") as! [Project])
+        var decodedProjectsList = [Project]()
+        var someProject: Project? = nil
+        var index = 0
+        while true {
+            someProject = Project.decode(aDecoder, index: index)
+            if someProject != nil {
+                decodedProjectsList.append(someProject!)
+                index += 1
+            } else {
+                break
+            }
+        }
+        self.projectsList = decodedProjectsList
+        super.init()
     }
     
     func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(projectsList as? AnyObject, forKey: "projectsList")
-        print("just tried to encode an Array")
+        for (index, aProjectToEncode) in projectsList.enumerate() {
+            Project.encodeForCoder(aProjectToEncode, coder: aCoder, index: index)
+        }
     }
     
     convenience init? (data: NSData) {
@@ -297,7 +384,7 @@ class JIRAProjects: NSObject, NSCoding {
                 if let boardID = board["id"] as? Int,
                     let boardName = board["name"] as? String,
                     let boardType = board["type"] as? String {
-                        boardsToSet.append(Board(id: boardID, name: boardName, type: boardType))
+                    boardsToSet.append(Board.init(id: boardID, name: boardName, type: boardType))
                 }
             }
         }
@@ -375,7 +462,7 @@ class JIRAMetadataToCreateIssue {
     }
 }
 
-class JIRATasks {
+class JIRATasks: NSObject, NSCoding {
     var taskslist: [Task]
     
     init (tasks newTasks: [Task]) {
@@ -422,6 +509,29 @@ class JIRATasks {
             }
         }
         self.init(tasks: newTasks)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        var decodedTasksList = [Task]()
+        var someTask: Task? = nil
+        var index = 0
+        while true {
+            someTask = Task.decode(aDecoder, index: index)
+            if someTask != nil {
+                decodedTasksList.append(someTask!)
+                index += 1
+            } else {
+                break
+            }
+        }
+        self.taskslist = decodedTasksList
+        super.init()
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        for (index, aTaskToEncode) in self.taskslist.enumerate() {
+            Task.encodeForCoder(aTaskToEncode, coder: aCoder, index: index)
+        }
     }
 }
 
