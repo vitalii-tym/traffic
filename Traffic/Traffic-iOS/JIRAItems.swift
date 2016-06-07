@@ -40,10 +40,10 @@ extension Project {
             guard let key = aDecoder.decodeObjectForKey("key") as? String else { project = nil; super.init(); return nil }
             guard let projectTypeKey = aDecoder.decodeObjectForKey("projectTypeKey") as? String else { project = nil; super.init(); return nil }
             guard let name = aDecoder.decodeObjectForKey("name") as? String else { project = nil; super.init(); return nil }
-  //          guard let versions = aDecoder.decodeObjectForKey("versions") as? [Version] else { project = nil; super.init(); return nil }
-  //          guard let boards = aDecoder.decodeObjectForKey("boards") as? [Board] else { project = nil; super.init(); return nil }
+            guard let versions = aDecoder.decodeObjectForKey("versions") as? [Version] else { project = nil; super.init(); return nil }
+            guard let boards = aDecoder.decodeObjectForKey("boards") as? [Board] else { project = nil; super.init(); return nil }
             
-            project = Project(id: id, key: key, projectTypeKey: projectTypeKey, name: name, versions: [], boards: [])
+            project = Project(id: id, key: key, projectTypeKey: projectTypeKey, name: name, versions: versions, boards: boards)
             super.init()
         }
         
@@ -52,8 +52,8 @@ extension Project {
             aCoder.encodeObject(project!.key, forKey: "key")
             aCoder.encodeObject(project!.projectTypeKey, forKey: "projectTypeKey")
             aCoder.encodeObject(project!.name, forKey: "name")
-  //          aCoder.encodeObject(project!.versions, forKey: "versions")
-  //          aCoder.encodeObject(project!.boards, forKey: "boards")
+            aCoder.encodeObject(project!.versions, forKey: "versions")
+            aCoder.encodeObject(project!.boards, forKey: "boards")
         }
     }
 }
