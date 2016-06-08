@@ -10,7 +10,7 @@
 //
 //  let dataTask: NSURLSessionDataTask = self.urlSession.dataTaskWithRequest(request) { (data, response, error) -> Void in
 //      NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-//          if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
+//          if !anyErrors("do_transition", controller: self, data: data, response: response, error: error, quiteMode: false) {
 //                  // Do work need to do when there were no errors
 //              } else {
 //                  // If there's something else to do after user has dismissed the error
@@ -127,7 +127,7 @@ let actionTypes: [String:
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-createIssue
     ]
 
-func anyErrors(actionType: String, controller: UIViewController, data: NSData?, response: NSURLResponse?, error: NSError?) -> Bool {
+func anyErrors(actionType: String, controller: UIViewController, data: NSData?, response: NSURLResponse?, error: NSError?, quiteMode: Bool) -> Bool {
     var is_there_error: Bool = true
     
     if error == nil && data != nil {
@@ -191,9 +191,9 @@ func anyErrors(actionType: String, controller: UIViewController, data: NSData?, 
         if error?.code != -999 {
             // code -999 means the request query was cancelled by the app itself
             // It is usually done in a viewWillDisappear by self.urlSession.invalidateAndCancel() and can be ignored.
-            let alert: UIAlertController = UIAlertController(title: actionTypes["network"]!.0, message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-            controller.presentViewController(alert, animated: true, completion: nil)
+     //       let alert: UIAlertController = UIAlertController(title: actionTypes["network"]!.0, message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)
+     //       alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+     //       controller.presentViewController(alert, animated: true, completion: nil)
         }
     }
     return is_there_error

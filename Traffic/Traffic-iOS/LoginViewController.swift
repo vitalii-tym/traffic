@@ -23,17 +23,16 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         button_login.enabled = false
-
-        // Cheking whether there are saved login and pass in User Data and if exists we try to get pass from keychain and automatically login
         let domain = NSUserDefaults.standardUserDefaults().objectForKey("JIRAdomain") as? String
         let userLogin = NSUserDefaults.standardUserDefaults().objectForKey("login") as? String
         
         if let hasDomain = domain, hasLogin = userLogin {
-        
+            
             self.textfield_domain.text = hasDomain.substringFromIndex(hasDomain.startIndex.advancedBy(8))
             self.textfield_login.text = hasLogin
-
+            
             let keychainQuery: [NSString: NSObject] = [
                 kSecClass: kSecClassGenericPassword,
                 kSecAttrService: hasDomain, // we use JIRA URL as service string for Keychain
@@ -43,16 +42,28 @@ class LoginViewController: UIViewController {
             var rawResult: AnyObject?
             let keychain_get_status: OSStatus = SecItemCopyMatching(keychainQuery, &rawResult)
             print("Keychain getting code is: \(keychain_get_status)")
-
+            
             if (keychain_get_status == errSecSuccess) {
-                let retrievedData = rawResult as? NSData
-                let str = NSString(data: retrievedData!, encoding: NSUTF8StringEncoding)
-                let loginParameters: String = "{ \"username\": \"\(hasLogin)\", \"password\": \"\(str!)\" }"
-            login(with: loginParameters, and: hasDomain, save_to_keychain: false)
-        } else {
-            print("No login data found in Keychain.")  // We don't autologin in this case and simply leave user on login screen
+                  let retrievedData = rawResult as? NSData
+                  let str = NSString(data: retrievedData!, encoding: NSUTF8StringEncoding)
+                  let loginParameters: String = "{ \"username\": \"\(hasLogin)\", \"password\": \"\(str!)\" }"
+                  login(with: loginParameters, and: hasDomain, save_to_keychain: false)
+             //   self.performSegueWithIdentifier("afterLogin", sender: nil)
+            } else {
+                print("No login data found in Keychain.")  // We don't autologin in this case and simply leave user on login screen
             }
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+
+        textfield_login.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
+        textfield_password.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     func checkFields(sender: UITextField) {
@@ -86,7 +97,7 @@ class LoginViewController: UIViewController {
         let JSON = logincredentials
         self.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Logging in...")
         aNetworkRequest.getdata("POST", URLEnding: loginURLsuffix, JSON: JSON, domain: domain) { (data, response, error) -> Void in
-            if !anyErrors("do_login", controller: self, data: data, response: response, error: error) {
+            if !anyErrors("do_login", controller: self, data: data, response: response, error: error, quiteMode: false) {
                 // Authorization succesfull. Great! Saving login and password into Keychain if the user choose to save it and if it is not saved to Keychain yet
                 if self.switch_remember_me.on == true && save_to_keychain == true {
                     let userAccount = self.textfield_login.text!
@@ -106,21 +117,12 @@ class LoginViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        textfield_login.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
-        textfield_password.addTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
-    }
-    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
         aNetworkRequest.cancel()
-        
         textfield_login.removeTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
         textfield_password.removeTarget(self, action: #selector(LoginViewController.checkFields(_:)), forControlEvents: .AllEvents)
-        
     }
     
     override func didReceiveMemoryWarning() {

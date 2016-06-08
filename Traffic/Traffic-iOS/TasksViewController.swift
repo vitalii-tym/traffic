@@ -52,11 +52,19 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         if self.tasks == nil {
             self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
         }
-        aNetworkRequest.getdata("GET", URLEnding: GenerateURLEndingDependingOnContext(), JSON: nil, domain: nil) { (data, response, error) -> Void in
-            if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
-                        self.tasks = JIRATasks(data: data!)
-                    }
+
+        let URLEnding: String = GenerateURLEndingDependingOnContext()
+        if let maybeTasksList = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRATasks.path(URLEnding)) as? JIRATasks {
+            self.tasks = maybeTasksList
             self.parentViewController?.stopActivityIndicator()
+        } else {
+            aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                            self.tasks = JIRATasks(data: data!)
+                            NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
+                }
+                self.parentViewController?.stopActivityIndicator()
+            }
         }
         aTasktoPass = nil
     }
@@ -66,12 +74,12 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         // Retreiving metadata for issue creation and enabling the "+" button as soon as metadata loading succesful
         let URLEnding = "/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields"
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-            if !anyErrors("get_create_meta", controller: self, data: data, response: response, error: error) {
+            if !anyErrors("get_create_meta", controller: self, data: data, response: response, error: error, quiteMode: false) {
                 self.IssueCreationMetadata = JIRAMetadataToCreateIssue(data: data!)
                 // We have got metadata, but to be able to create tasks we still need to know current user, so that we can fill in the "creator" field
                 let URLEnding = "/rest/auth/1/session"
                 self.aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-                    if !anyErrors("current_user", controller: self, data: data, response: response, error: error) {
+                    if !anyErrors("current_user", controller: self, data: data, response: response, error: error, quiteMode: false) {
                         self.currentUser = JIRAcurrentUser(data: data!)
                         self.button_NewTask.enabled = true
                     }
@@ -102,7 +110,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     func refresh(sender:AnyObject) {
         aNetworkRequest.getdata("GET", URLEnding: GenerateURLEndingDependingOnContext(), JSON: nil, domain: nil) { (data, response, error) -> Void in
-            if !anyErrors("do_search", controller: self, data: data, response: response, error: error) {
+            if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
                 self.tasks = JIRATasks(data: data!)
                 self.refreshControl.endRefreshing()
             }

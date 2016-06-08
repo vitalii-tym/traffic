@@ -296,6 +296,12 @@ class JIRAProjects: NSObject, NSCoding {
         super.init()
     }
     
+    class func path() -> String {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).first
+        let path = documentsPath?.stringByAppendingString("/Projects")
+        return path!
+    }
+    
     func encodeWithCoder(aCoder: NSCoder) {
         for (index, aProjectToEncode) in projectsList.enumerate() {
             Project.encodeForCoder(aProjectToEncode, coder: aCoder, index: index)
@@ -532,6 +538,12 @@ class JIRATasks: NSObject, NSCoding {
         for (index, aTaskToEncode) in self.taskslist.enumerate() {
             Task.encodeForCoder(aTaskToEncode, coder: aCoder, index: index)
         }
+    }
+    
+    class func path(URLEnding: String) -> String {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).first
+        let path = documentsPath?.stringByAppendingString("/"+URLEnding.stripSpecialCharacters())
+        return path!
     }
 }
 

@@ -52,20 +52,28 @@ class projectsVersionsMap: NSObject, NSCoding {
             aCoder.encodeObject(object.3, forKey: "mapobject"+String(index)+"ButtonSelected")
         }
     }
+    
+    class func path() -> String {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).first
+        let path = documentsPath?.stringByAppendingString("/PVMap")
+        return path!
+    }
 }
 
 class ProjectsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
- 
+
     var PVMap = projectsVersionsMap()
     var aNetworkRequest = JIRANetworkRequest()
     var projects: JIRAProjects? {
         didSet {
-            for (index, _) in projects!.projectsList.enumerate() {
-                PVMap.theMap.append((Type: "Project", ProjIndex: index, VerIndex: nil, ButtonSelected: false))
-                // This structure will be used for tables. Once we retreive versions for a project they will be incorporated into this atructure 
-                // so that the structure continues to be flat, while any its item will represent either a project or a version in a project,
-                // then a project can be accessed in projectsList by knowing ProjIndex or version can be accessed by known ProjIndex and VerIndex.
-            self.view_projects_list.reloadData()
+            if PVMap.theMap.isEmpty {
+                for (index, _) in projects!.projectsList.enumerate() {
+                    PVMap.theMap.append((Type: "Project", ProjIndex: index, VerIndex: nil, ButtonSelected: false))
+                    // This structure will be used for tables. Once we retreive versions for a project they will be incorporated into this atructure 
+                    // so that the structure continues to be flat, while any its item will represent either a project or a version in a project,
+                    // then a project can be accessed in projectsList by knowing ProjIndex or version can be accessed by known ProjIndex and VerIndex.
+                self.view_projects_list.reloadData()
+                }
             }
         }
     }
@@ -77,24 +85,50 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var button_log_out: UIBarButtonItem!
     @IBOutlet var view_versions_list: UIView!
     
+    override func viewDidLoad() {
+        // Retrieving saved list of projects, if any.
+        if let archivedCopyOfProjects = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRAProjects.path()) as? JIRAProjects {
+            projects = archivedCopyOfProjects
+        }
+        if let archivedCopyOfPVMap = NSKeyedUnarchiver.unarchiveObjectWithFile(projectsVersionsMap.path()) as? projectsVersionsMap {
+            PVMap = archivedCopyOfPVMap
+        }
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
         let URLEnding = "/rest/api/2/project"
-        if projects == nil {
+        if projects == nil { // "projects" will be absent if this is the first time login or if unarchiving projects was unsuccesful. So user will have to wait a while
             parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting projects...")
             aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-                if !anyErrors("get_projects", controller: self, data: data, response: response, error: error) {
+                if !anyErrors("get_projects", controller: self, data: data, response: response, error: error, quiteMode: false) {
                     let projlist = JIRAProjects(data: data!)
                     // Manually adding the "All Projects" item to the list
                     projlist?.projectsList.insert(Project(id: "", key: "", projectTypeKey: "", name: "All projects", versions: [], boards: []), atIndex: 0)
                     self.projects = projlist
+                    NSKeyedArchiver.archiveRootObject(self.projects!, toFile: JIRAProjects.path())
                 }
                 self.parentViewController?.stopActivityIndicator()
             }
         }
         aProjectToPass = nil
         aVersionToPass = nil
+        aBoardToPass = nil
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        // Renewing projects list in background
+//        let URLEnding = "/rest/api/2/project"
+//        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+//            if !anyErrors("get_projects", controller: self, data: data, response: response, error: error, quiteMode: true) {
+//                let projlist = JIRAProjects(data: data!)
+//                // Manually adding the "All Projects" item to the list
+//                projlist?.projectsList.insert(Project(id: "", key: "", projectTypeKey: "", name: "All projects", versions: [], boards: []), atIndex: 0)
+//                self.projects = projlist
+//                NSKeyedArchiver.archiveRootObject(self.projects!, toFile: JIRAProjects.path())
+//            }
+//        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -194,7 +228,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                         parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
                         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
                             // Beginning of 1st level block
-                            if !anyErrors("get_versions", controller: self, data: data, response: response, error: error) {
+                            if !anyErrors("get_versions", controller: self, data: data, response: response, error: error, quiteMode: false) {
                                 self.projects?.setVersionsForProject(data!, projectID: currentProject.id)
                                 if let versions = self.projects?.getVersionsForProject(currentProject.id) {
                                     var versionsMapToInsert: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
@@ -219,7 +253,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                             let URLEndingAgile = "/rest/agile/1.0/board?projectKeyOrId=\(currentProject.id)"
                             self.aNetworkRequest.getdata("GET", URLEnding: URLEndingAgile, JSON: nil, domain: nil) { (data, response, error) -> Void in
                                 // Beginning of 2nd level block
-                                if !anyErrors("get_boards", controller: self, data: data, response: response, error: error) {
+                                if !anyErrors("get_boards", controller: self, data: data, response: response, error: error, quiteMode: false) {
                                     self.projects?.setBoardsForProject(data!, projectID: currentProject.id)
                                     if let boards = self.projects?.getBoardsForProject(currentProject.id) {
                                         var boardsMapToInsert: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
@@ -236,6 +270,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                                     self.parentViewController?.stopActivityIndicator()
                                     self.view_projects_list.insertRowsAtIndexPaths(indexPathsToAddForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
                                     self.view_projects_list.endUpdates()
+                                    NSKeyedArchiver.archiveRootObject(self.projects!, toFile: JIRAProjects.path())
                                 }
                             } // END of 2nd level block
                         } // END of 1st level block.
@@ -298,18 +333,20 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func encodeRestorableStateWithCoder(coder: NSCoder) {
-        if let projectsListToEncode = projects {
-            coder.encodeObject(projectsListToEncode, forKey: "projectsList")
-        }
-        coder.encodeObject(PVMap, forKey: "projectsVersionsMap")
-        print("projects list saved for restoring")
+//        if let projectsListToEncode = projects {
+//            coder.encodeObject(projectsListToEncode, forKey: "projectsList")
+//        }
+//        coder.encodeObject(PVMap, forKey: "projectsVersionsMap")
+        NSKeyedArchiver.archiveRootObject(PVMap, toFile: projectsVersionsMap.path())
         super.encodeRestorableStateWithCoder(coder)
     }
     
-    override func decodeRestorableStateWithCoder(coder: NSCoder) {
-        projects = coder.decodeObjectForKey("projectsList") as? JIRAProjects
-        if let maybeMap = coder.decodeObjectForKey("projectsVersionsMap") as? projectsVersionsMap {
-            PVMap = maybeMap
-        }
-    }
+//    override func decodeRestorableStateWithCoder(coder: NSCoder) {
+//        projects = coder.decodeObjectForKey("projectsList") as? JIRAProjects
+//        if let maybeMap = coder.decodeObjectForKey("projectsVersionsMap") as? projectsVersionsMap {
+//            PVMap = maybeMap
+//        }
+//        print("projects decoded")
+//    }
+    
 }

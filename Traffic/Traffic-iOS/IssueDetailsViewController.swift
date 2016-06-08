@@ -55,7 +55,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
         if let theTask = aTask {
             let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions?expand=transitions.fields"
             aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-                if !anyErrors("get_transitions", controller: self, data: data, response: response, error: error) {
+                if !anyErrors("get_transitions", controller: self, data: data, response: response, error: error, quiteMode: false) {
                     self.availableTransitions = JIRATransitions(data: data!)
                     self.button_change_status.enabled = true
                 }
@@ -293,7 +293,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 self.parentViewController!.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Creating issue...")
                 let URLEnding = "/rest/api/2/issue"
                 self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
-                    if !anyErrors("create_issue", controller: self, data: data, response: response, error: error) {
+                    if !anyErrors("create_issue", controller: self, data: data, response: response, error: error, quiteMode: false) {
                         self.performSegueWithIdentifier("back_to_tasks", sender: self)
                     }
                     self.parentViewController!.stopActivityIndicator()
@@ -303,7 +303,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     self.parentViewController!.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Changing status...")
                     let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
                     self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
-                        if !anyErrors("do_transition", controller: self, data: data, response: response, error: error) {
+                        if !anyErrors("do_transition", controller: self, data: data, response: response, error: error, quiteMode: false) {
                             self.performSegueWithIdentifier("back_to_tasks", sender: self)
                         }
                         self.parentViewController!.stopActivityIndicator()
