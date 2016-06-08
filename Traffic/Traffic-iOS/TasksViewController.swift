@@ -38,7 +38,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         super.viewDidLoad()
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "")
-        self.refreshControl.addTarget(self, action: #selector(TasksViewViewController.refresh(_:)),   forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl.addTarget(self, action: #selector(TasksViewViewController.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
         view_collectionView!.addSubview(refreshControl)
     }
     
@@ -81,6 +81,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 }
             }
         }
+        refresh(nil)
+        _ = NSTimer.scheduledTimerWithTimeInterval(420, target: self, selector: #selector(TasksViewViewController.refresh(_:)), userInfo: nil, repeats: true)
     }
     
     func GenerateURLEndingDependingOnContext() -> String {
@@ -103,10 +105,15 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         return URLEnding
     }
     
-    func refresh(sender:AnyObject) {
-        aNetworkRequest.getdata("GET", URLEnding: GenerateURLEndingDependingOnContext(), JSON: nil, domain: nil) { (data, response, error) -> Void in
+    func refresh(sender: AnyObject?) {
+        let URLEnding: String = GenerateURLEndingDependingOnContext()
+        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
                 self.tasks = JIRATasks(data: data!)
+                NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
+                self.refreshControl.endRefreshing()
+                self.showMessage("refresh succesful", mood: "Good")
+            } else {
                 self.refreshControl.endRefreshing()
             }
         }

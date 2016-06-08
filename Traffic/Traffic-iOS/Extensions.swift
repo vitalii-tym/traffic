@@ -56,6 +56,44 @@ extension UIViewController {
     }
 }
 
+extension UIViewController {
+    func showMessage(text: String, mood: String) {
+        let messengerView = UIView.init(frame: CGRect(x: 20, y: -25, width: 280, height: 25))
+        messengerView.layer.cornerRadius = 5
+        switch mood {
+        case "Good":
+            messengerView.backgroundColor = UIColor.greenColor()
+        case "Bad":
+            messengerView.backgroundColor = UIColor.redColor()
+        default:
+            messengerView.backgroundColor = UIColor.greenColor()
+        }
+        messengerView.alpha = 0.9
+        let label: UILabel = UILabel()
+        label.frame = CGRectMake(0, 0, 280, 25)
+        label.textAlignment = NSTextAlignment.Center
+        label.text = text
+        label.textAlignment = .Center
+        label.font = UIFont.systemFontOfSize(12.0)
+        label.adjustsFontSizeToFitWidth = true
+        label.hidden = false
+        messengerView.addSubview(label)
+        self.view.addSubview(messengerView)
+        UIView.animateWithDuration(1.0,
+                                   delay: 0,
+                                   usingSpringWithDamping: 0.5,
+                                   initialSpringVelocity: 10.0,
+                                   options: UIViewAnimationOptions.CurveLinear,
+                                   animations: { messengerView.frame = CGRect(x: 20, y: 60, width: 280, height: 25) },
+                                   completion: nil)
+        UIView.animateWithDuration(0.5,
+                                   delay: 3.0,
+                                   options: [],
+                                   animations: { messengerView.frame = CGRect(x: 20, y: -25, width: 280, height: 25) },
+                                   completion: { finished in messengerView.removeFromSuperview()})
+    }
+}
+
 extension String {
     func stripSpecialCharacters() -> String {
         let okayChars : Set<Character> = Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890+-*=(),.:!_".characters)
