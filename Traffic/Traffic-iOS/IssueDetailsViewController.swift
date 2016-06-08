@@ -61,9 +61,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 }
             }
         }
-        
         textedit_input_text.delegate = self
-        
         if let theTask = aTask {
             textview_IssueSummary.text = theTask.task_summary
             if theTask.task_description != nil
@@ -82,14 +80,11 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             label_status.text = ""
         }
         button_change_status.enabled = false
-        
-        
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        if aTask == nil {
-            // If after entering the screen we have no task, consider user intends to create new one
+        if aTask == nil { // If after entering the screen we have no task, consider user intends to create new one
             action_create_new_task()
         }
     }
@@ -213,7 +208,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 case "parent":
                     // TODO: We need to indicate the parent issue key here.
                     // This is when user has chosen to create a sub-task
-                    
                     GatherUserDataIfNeeded()
                 
                 case "there_are_still_issue_types_to_choose":
@@ -241,13 +235,10 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                             }
                         }
                     }
-
                     if (aRequiredFieldOfTypeIssueType != nil) {
                             fieldsQueue.append(aRequiredFieldOfTypeIssueType!)
                     }
-            
                     fieldsQueue.append(aReqiredField(allowedValues: nil,operations: [],name: "",fieldName: "",type: "there_will_be_more_fields_to_be_added"))
-                    
                     GatherUserDataIfNeeded()
                 
                 case "there_will_be_more_fields_to_be_added":
@@ -276,7 +267,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                             break
                         }
                     }
-                    
                     GatherUserDataIfNeeded()
                 
                 default:
@@ -356,7 +346,6 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
             dataArray.append(["id" : "\(chosenValue!["id"]!)"])
             self.JSONfieldstoSend["issuetype"] = dataArray
         }
-        
         GatherUserDataIfNeeded()
     }
 
@@ -365,19 +354,14 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @IBAction func action_done_editing(sender: UIButton) {
-        
         // TODO: need to correctly determine different types of fields + validate text input depending on its type
         var dataArray = [textedit_input_text.text]
-
         dataArray[0] = dataArray[0].stringByReplacingOccurrencesOfString("\\", withString:"\\\\")
         dataArray[0] = dataArray[0].stringByReplacingOccurrencesOfString("\"", withString:"\\\"")
-    
         JSONfieldstoSend["\(currentRequiredFieldForTransition!.fieldName)"] = dataArray
-        
         textedit_input_text.text = ""
         view_text_input.removeFromSuperview()
         GatherUserDataIfNeeded()
-    
     }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
@@ -402,12 +386,8 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     override func encodeRestorableStateWithCoder(coder: NSCoder) {
-        if let aTaskToEncode = aTask {
-            Task.encodeForCoder(aTaskToEncode, coder: coder, index: 1)
-        }
-        if let aCurrenUserToEncode = currentUser {
-            coder.encodeObject(aCurrenUserToEncode, forKey: "currentUser")
-        }
+        if let aTaskToEncode = aTask { Task.encodeForCoder(aTaskToEncode, coder: coder, index: 1) }
+        if let aCurrenUserToEncode = currentUser { coder.encodeObject(aCurrenUserToEncode, forKey: "currentUser") }
         super.encodeRestorableStateWithCoder(coder)
     }
     

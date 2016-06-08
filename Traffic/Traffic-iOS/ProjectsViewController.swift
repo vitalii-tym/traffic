@@ -18,6 +18,10 @@ class aVersionCell: UITableViewCell {
 }
 
 class projectsVersionsMap: NSObject, NSCoding {
+    // This structure will be used for tables. Once we retreive versions for a project they will be incorporated into this atructure
+    // so that the structure continues to be flat, while any its item will represent either a project or a version in a project,
+    // then a project can be accessed in projectsList by knowing ProjIndex or version can be accessed by known ProjIndex and VerIndex.
+    
     var theMap: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = [] // This is a flattened representation of projects and versions in them
     
     override init() {
@@ -61,7 +65,6 @@ class projectsVersionsMap: NSObject, NSCoding {
 }
 
 class ProjectsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
     var PVMap = projectsVersionsMap()
     var aNetworkRequest = JIRANetworkRequest()
     var projects: JIRAProjects? {
@@ -69,9 +72,6 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
             if PVMap.theMap.isEmpty {
                 for (index, _) in projects!.projectsList.enumerate() {
                     PVMap.theMap.append((Type: "Project", ProjIndex: index, VerIndex: nil, ButtonSelected: false))
-                    // This structure will be used for tables. Once we retreive versions for a project they will be incorporated into this atructure 
-                    // so that the structure continues to be flat, while any its item will represent either a project or a version in a project,
-                    // then a project can be accessed in projectsList by knowing ProjIndex or version can be accessed by known ProjIndex and VerIndex.
                 self.view_projects_list.reloadData()
                 }
             }
@@ -98,7 +98,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         let URLEnding = "/rest/api/2/project"
-        if projects == nil { // "projects" will be absent if this is the first time login or if unarchiving projects was unsuccesful. So user will have to wait a while
+        if projects == nil { // "projects" will be absent if this is the first time login or if unarchiving projects was unsuccesful. So user will have to wait a while.
             parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting projects...")
             aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
                 if !anyErrors("get_projects", controller: self, data: data, response: response, error: error, quiteMode: false) {
@@ -115,22 +115,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         aVersionToPass = nil
         aBoardToPass = nil
     }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        // Renewing projects list in background
-//        let URLEnding = "/rest/api/2/project"
-//        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-//            if !anyErrors("get_projects", controller: self, data: data, response: response, error: error, quiteMode: true) {
-//                let projlist = JIRAProjects(data: data!)
-//                // Manually adding the "All Projects" item to the list
-//                projlist?.projectsList.insert(Project(id: "", key: "", projectTypeKey: "", name: "All projects", versions: [], boards: []), atIndex: 0)
-//                self.projects = projlist
-//                NSKeyedArchiver.archiveRootObject(self.projects!, toFile: JIRAProjects.path())
-//            }
-//        }
-    }
-    
+
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -333,20 +318,14 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func encodeRestorableStateWithCoder(coder: NSCoder) {
-//        if let projectsListToEncode = projects {
-//            coder.encodeObject(projectsListToEncode, forKey: "projectsList")
-//        }
-//        coder.encodeObject(PVMap, forKey: "projectsVersionsMap")
         NSKeyedArchiver.archiveRootObject(PVMap, toFile: projectsVersionsMap.path())
+        // We don't archive projects here, because they are always archived as soon as they are succesfully fetched from network
         super.encodeRestorableStateWithCoder(coder)
     }
     
-//    override func decodeRestorableStateWithCoder(coder: NSCoder) {
-//        projects = coder.decodeObjectForKey("projectsList") as? JIRAProjects
-//        if let maybeMap = coder.decodeObjectForKey("projectsVersionsMap") as? projectsVersionsMap {
-//            PVMap = maybeMap
-//        }
-//        print("projects decoded")
-//    }
+    override func decodeRestorableStateWithCoder(coder: NSCoder) {
+        // We do decoding in the ViewDidLoad. Since the latter always executes on restoration, we don't have to anything here.
+        super.decodeRestorableStateWithCoder(coder)
+    }
     
 }

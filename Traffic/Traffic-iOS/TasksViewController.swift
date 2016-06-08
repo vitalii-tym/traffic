@@ -23,11 +23,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var aVersion: Version?
     var aBoard: Board?
     var aNetworkRequest = JIRANetworkRequest()
-    var tasks: JIRATasks? {
-        didSet {
-            self.view_collectionView.reloadData()
-            }
-        }
+    var tasks: JIRATasks? { didSet { self.view_collectionView.reloadData() } }
     var aTasktoPass: Task?
     var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     var currentUser: JIRAcurrentUser?
@@ -35,7 +31,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var refreshControl: UIRefreshControl!
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
-    @IBOutlet weak var button_log_out: UIBarButtonItem!
     @IBOutlet weak var label_no_tasks: UILabel!
     @IBOutlet weak var label_context: UILabel!
 
@@ -131,7 +126,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TaskCell", forIndexPath: indexPath) as! aTask
-        
         cell.label_name.text = tasks?.taskslist[indexPath.row].task_key
         cell.label_summary.text = tasks?.taskslist[indexPath.row].task_summary
         cell.label_assignee.text = tasks?.taskslist[indexPath.row].task_assignee
@@ -148,13 +142,10 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             case "Lowest":  cell.label_priority.textColor = UIColor.grayColor()
             default:        cell.label_priority.textColor = UIColor.blackColor()
         }
-        
         switch cell.label_status.text! {
             case "In Progress": cell.label_status.backgroundColor = UIColor.yellowColor()
             default:        cell.label_status.backgroundColor = UIColor.clearColor()
         }
-    
-        
         return cell
     }
     
@@ -180,12 +171,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         self.performSegueWithIdentifier("issueDetails", sender: nil)
     }
     
-    @IBAction func button_pressed_log_out(sender: UIButton) {
-    }
-    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        
         aNetworkRequest.cancel()
     }
     
@@ -197,31 +184,18 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     override func encodeRestorableStateWithCoder(coder: NSCoder) {
-        if let tasksToEncode = tasks {
-            coder.encodeObject(tasksToEncode, forKey: "tasks")
-        }
-        if let projectToEncode = aProject {
-            Project.encodeForCoder(projectToEncode, coder: coder, index: 1)
-        }
-        if let versionToEncode = aVersion {
-            coder.encodeObject(versionToEncode, forKey: "version")
-        }
-        if let boardToEncode = aBoard {
-            coder.encodeObject(boardToEncode, forKey: "board")
-        }
-        if let aCurrenUserToEncode = currentUser {
-            coder.encodeObject(aCurrenUserToEncode, forKey: "currentUser")
-        }
+        if let projectToEncode = aProject { Project.encodeForCoder(projectToEncode, coder: coder, index: 1) }
+        if let versionToEncode = aVersion { coder.encodeObject(versionToEncode, forKey: "version") }
+        if let boardToEncode = aBoard { coder.encodeObject(boardToEncode, forKey: "board") }
+        if let aCurrenUserToEncode = currentUser { coder.encodeObject(aCurrenUserToEncode, forKey: "currentUser") }
         super.encodeRestorableStateWithCoder(coder)
     }
     
     override func decodeRestorableStateWithCoder(coder: NSCoder) {
+        aProject = Project.decode(coder, index: 1)
         aVersion = coder.decodeObjectForKey("version") as? Version
         aBoard = coder.decodeObjectForKey("board") as? Board
-        aProject = Project.decode(coder, index: 1)
-        tasks = coder.decodeObjectForKey("tasks") as? JIRATasks
         currentUser = coder.decodeObjectForKey("currentUser") as? JIRAcurrentUser
         super.decodeRestorableStateWithCoder(coder)
     }
-
 }
