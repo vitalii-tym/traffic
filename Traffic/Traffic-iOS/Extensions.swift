@@ -60,21 +60,25 @@ extension UIViewController {
     func showMessage(text: String, mood: String) {
         let messengerView = UIView.init(frame: CGRect(x: 20, y: -25, width: 280, height: 25))
         messengerView.layer.cornerRadius = 5
-        switch mood {
-        case "Good":
-            messengerView.backgroundColor = UIColor.greenColor()
-        case "Bad":
-            messengerView.backgroundColor = UIColor.redColor()
-        default:
-            messengerView.backgroundColor = UIColor.greenColor()
-        }
         messengerView.alpha = 0.9
         let label: UILabel = UILabel()
+        let effect = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
+        effect.frame = messengerView.bounds
+        messengerView.backgroundColor = UIColor.clearColor()
+        messengerView.addSubview(effect)
         label.frame = CGRectMake(0, 0, 280, 25)
         label.textAlignment = NSTextAlignment.Center
         label.text = text
         label.textAlignment = .Center
         label.font = UIFont.systemFontOfSize(12.0)
+        switch mood {
+        case "Good":
+            label.textColor = UIColor(colorLiteralRed: 0, green: 0.4, blue: 0, alpha: 1)
+        case "Bad":
+            label.textColor = UIColor(colorLiteralRed: 0.4, green: 0, blue: 0, alpha: 1)
+        default:
+            label.textColor = UIColor(colorLiteralRed: 0, green: 0.4, blue: 0, alpha: 1)
+        }
         label.adjustsFontSizeToFitWidth = true
         label.hidden = false
         messengerView.addSubview(label)

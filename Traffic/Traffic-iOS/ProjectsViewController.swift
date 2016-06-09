@@ -21,7 +21,6 @@ class projectsVersionsMap: NSObject, NSCoding {
     // This structure will be used for tables. Once we retreive versions for a project they will be incorporated into this atructure
     // so that the structure continues to be flat, while any its item will represent either a project or a version in a project,
     // then a project can be accessed in projectsList by knowing ProjIndex or version can be accessed by known ProjIndex and VerIndex.
-    
     var theMap: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = [] // This is a flattened representation of projects and versions in them
     
     override init() {
@@ -65,6 +64,7 @@ class projectsVersionsMap: NSObject, NSCoding {
 }
 
 class ProjectsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
     var PVMap = projectsVersionsMap()
     var aNetworkRequest = JIRANetworkRequest()
     var projects: JIRAProjects? {
@@ -80,12 +80,16 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
     var aProjectToPass: Project?
     var aVersionToPass: Version?
     var aBoardToPass: Board?
-    
+
+    var refreshControl: UIRefreshControl!
     @IBOutlet weak var view_projects_list: UITableView!
     @IBOutlet weak var button_log_out: UIBarButtonItem!
-    @IBOutlet var view_versions_list: UIView!
     
     override func viewDidLoad() {
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.attributedTitle = NSAttributedString(string: "")
+        self.refreshControl.addTarget(self, action: #selector(ProjectsViewController.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        view_projects_list!.addSubview(refreshControl)
         // Retrieving saved list of projects, if any.
         if let archivedCopyOfProjects = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRAProjects.path()) as? JIRAProjects {
             projects = archivedCopyOfProjects
@@ -141,11 +145,19 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                 return projectCell
         } else if currentMaping.Type == "Version" {
             let versionCell = tableView.dequeueReusableCellWithIdentifier("version_cell", forIndexPath: indexPath) as! aVersionCell
-            versionCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].versions[currentMaping.VerIndex!].name
+            if projects?.projectsList[currentMaping.ProjIndex].versions.count > 0 {
+                versionCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].versions[currentMaping.VerIndex!].name
+            } else {
+                print("Couldn't get version name. Looks like PVM not in sync with projects list.")
+            }
             return versionCell
         } else if currentMaping.Type == "Board" {
             let versionCell = tableView.dequeueReusableCellWithIdentifier("version_cell", forIndexPath: indexPath) as! aVersionCell
-            versionCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].boards[currentMaping.VerIndex!].name
+            if projects?.projectsList[currentMaping.ProjIndex].boards.count > 0 {
+                versionCell.label_name.text = projects?.projectsList[currentMaping.ProjIndex].boards[currentMaping.VerIndex!].name
+            } else {
+                print("Couldn't get board name. Looks like PVM not in sync with projects list.")
+            }
             return versionCell
         } else {
             print ("Error in determining mapping type. Check: tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) in ProjectViewController.swift")
@@ -185,7 +197,8 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         if let touchPos = event.allTouches()?.first?.locationInView(self.view_projects_list),
             let selectedCellIndex = self.view_projects_list.indexPathForRowAtPoint(touchPos)?.row {
             var insertionPoint = selectedCellIndex
-            if sender.selected { // Collapsing the cell
+            if sender.selected {
+                // Collapsing the cell
                 sender.selected = false
                 PVMap.theMap[selectedCellIndex].ButtonSelected = false
                 if projects != nil {
@@ -203,7 +216,8 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                 }
                 self.view_projects_list.endUpdates()
-            } else { // Expanding the cell
+            } else {
+                // Expanding the cell with getting data from network
                 sender.selected = true
                 PVMap.theMap[selectedCellIndex].ButtonSelected = true
                 if projects != nil {
@@ -224,42 +238,50 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
                                     }
                                     if !versionsMapToInsert.isEmpty {  // Inserting the versions map right after the expanded project
                                         self.PVMap.theMap[selectedCellIndex+1..<selectedCellIndex+1] = versionsMapToInsert[0..<versionsMapToInsert.count]
+                                        NSKeyedArchiver.archiveRootObject(self.projects!, toFile: JIRAProjects.path())
                                     } else {
+                                        self.showMessage("no versions found", mood: "Bad")
                                         sender.selected = false
                                         self.PVMap.theMap[selectedCellIndex].ButtonSelected = false
-                                        // TODO: Add a toast message that no versions were found in the project
                                     }
                                 }
-                            }
-                            
-                            self.parentViewController?.stopActivityIndicator()
-                            self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting boards...")
-                            
-                            let URLEndingAgile = "/rest/agile/1.0/board?projectKeyOrId=\(currentProject.id)"
-                            self.aNetworkRequest.getdata("GET", URLEnding: URLEndingAgile, JSON: nil, domain: nil) { (data, response, error) -> Void in
-                                // Beginning of 2nd level block
-                                if !anyErrors("get_boards", controller: self, data: data, response: response, error: error, quiteMode: false) {
-                                    self.projects?.setBoardsForProject(data!, projectID: currentProject.id)
-                                    if let boards = self.projects?.getBoardsForProject(currentProject.id) {
-                                        var boardsMapToInsert: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
-                                        for (bIndex, _) in boards.enumerate() {
-                                            boardsMapToInsert.append((Type: "Board", ProjIndex: self.PVMap.theMap[selectedCellIndex].ProjIndex, VerIndex: bIndex, ButtonSelected: nil))
-                                            indexPathsToAddForAnimation.append(NSIndexPath(forRow: insertionPoint + bIndex + 1, inSection: 0))
+                                self.parentViewController?.stopActivityIndicator()
+                                self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting boards...")
+                                let URLEndingAgile = "/rest/agile/1.0/board?projectKeyOrId=\(currentProject.id)"
+                                self.aNetworkRequest.getdata("GET", URLEnding: URLEndingAgile, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                                    // Beginning of 2nd level block
+                                    if !anyErrors("get_boards", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                                        self.projects?.setBoardsForProject(data!, projectID: currentProject.id)
+                                        if let boards = self.projects?.getBoardsForProject(currentProject.id) {
+                                            var boardsMapToInsert: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
+                                            for (bIndex, _) in boards.enumerate() {
+                                                boardsMapToInsert.append((Type: "Board", ProjIndex: self.PVMap.theMap[selectedCellIndex].ProjIndex, VerIndex: bIndex, ButtonSelected: nil))
+                                                indexPathsToAddForAnimation.append(NSIndexPath(forRow: insertionPoint + bIndex + 1, inSection: 0))
+                                            }
+                                            if !boardsMapToInsert.isEmpty{
+                                                self.PVMap.theMap[insertionPoint+1..<insertionPoint+1] = boardsMapToInsert[0..<boardsMapToInsert.count]
+                                                NSKeyedArchiver.archiveRootObject(self.projects!, toFile: JIRAProjects.path())
+                                                sender.selected = true
+                                                self.PVMap.theMap[selectedCellIndex].ButtonSelected = true
+                                            } else {
+                                                self.showMessage("no boards found", mood: "Bad")
+                                            }
                                         }
-                                        if !boardsMapToInsert.isEmpty{
-                                            self.PVMap.theMap[insertionPoint+1..<insertionPoint+1] = boardsMapToInsert[0..<boardsMapToInsert.count]
-                                            sender.selected = true
-                                            self.PVMap.theMap[selectedCellIndex].ButtonSelected = true
-                                        }
+                                        self.view_projects_list.insertRowsAtIndexPaths(indexPathsToAddForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
+                                        self.view_projects_list.endUpdates()
                                     }
                                     self.parentViewController?.stopActivityIndicator()
-                                    self.view_projects_list.insertRowsAtIndexPaths(indexPathsToAddForAnimation, withRowAnimation: UITableViewRowAnimation.Right)
                                     self.view_projects_list.endUpdates()
-                                    NSKeyedArchiver.archiveRootObject(self.projects!, toFile: JIRAProjects.path())
-                                }
-                            } // END of 2nd level block
+                                } // END of 2nd level block
+                            } else {
+                                self.parentViewController?.stopActivityIndicator()
+                                self.view_projects_list.endUpdates()
+                                sender.selected = false
+                                self.PVMap.theMap[selectedCellIndex].ButtonSelected = false
+                            }
                         } // END of 1st level block.
-                    } else {  // we don't need the extra network request, but still need to modify the mapping for table
+                    } else {
+                        // Expanding the cell without getting data from network (we already have it in the brojects object)
                         if let versions = self.projects?.getVersionsForProject(currentProject.id),
                             let boards = self.projects?.getBoardsForProject(currentProject.id) {
                             var itemsMapToInsert: [(Type: String, ProjIndex: Int, VerIndex: Int?, ButtonSelected: Bool?)] = []
@@ -309,6 +331,28 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
             let alert: UIAlertController = UIAlertController(title: "Oops", message: "Something weird happened. We can't log you out. But restarting the applicaiton should get you to the login screen.", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func refresh(sender: AnyObject?) {
+        let URLEnding = "/rest/api/2/project"
+        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+            if !anyErrors("get_projects", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                let projlist = JIRAProjects(data: data!)
+                // Manually adding the "All Projects" item to the list
+                projlist?.projectsList.insert(Project(id: "", key: "", projectTypeKey: "", name: "All projects", versions: [], boards: []), atIndex: 0)
+                self.projects = projlist
+                NSKeyedArchiver.archiveRootObject(self.projects!, toFile: JIRAProjects.path())
+                self.PVMap.theMap.removeAll()
+                for (index, _) in self.projects!.projectsList.enumerate() {
+                    self.PVMap.theMap.append((Type: "Project", ProjIndex: index, VerIndex: nil, ButtonSelected: false))
+                    self.view_projects_list.reloadData()
+                }
+                self.refreshControl.endRefreshing()
+                self.showMessage("projects up to date", mood: "Good")
+            } else {
+                self.refreshControl.endRefreshing()
+            }
         }
     }
     
