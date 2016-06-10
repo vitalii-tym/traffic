@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Traffic.xcodeproj">
+      location = "self:/Users/vitaliy/Documents/Projects/Traffic/Traffic/Easy Jira.xcodeproj">
    </FileRef>
 </Workspace>

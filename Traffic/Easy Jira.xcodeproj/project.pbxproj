@@ -80,7 +80,7 @@
 		FE1011151CBE8AE100DE04CE /* IssueDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssueDetailsViewController.swift; sourceTree = "<group>"; };
 		FE1E3E601CEF1F7000CD8C48 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		FE1E3E681CF32BD000CD8C48 /* ProjectsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsViewController.swift; sourceTree = "<group>"; };
-		FE3DE4841CBBBCA300D35BF8 /* Traffic-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Traffic-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE3DE4841CBBBCA300D35BF8 /* EasyJira-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EasyJira-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FE3DE4881CBBBCA300D35BF8 /* TasksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksViewController.swift; sourceTree = "<group>"; };
 		FE3DE48B1CBBBCA300D35BF8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -166,7 +166,7 @@
 				BBEFDC051C80767B00C395B7 /* Traffic.app */,
 				BBEFDC161C80767B00C395B7 /* TrafficTests.xctest */,
 				BBEFDC211C80767B00C395B7 /* TrafficUITests.xctest */,
-				FE3DE4841CBBBCA300D35BF8 /* Traffic-iOS.app */,
+				FE3DE4841CBBBCA300D35BF8 /* EasyJira-iOS.app */,
 				FE3DE49A1CBBBCA300D35BF8 /* Traffic-iOSTests.xctest */,
 				FE3DE4A51CBBBCA300D35BF8 /* Traffic-iOSUITests.xctest */,
 			);
@@ -306,9 +306,9 @@
 			productReference = BBEFDC211C80767B00C395B7 /* TrafficUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		FE3DE4831CBBBCA300D35BF8 /* Traffic-iOS */ = {
+		FE3DE4831CBBBCA300D35BF8 /* EasyJira-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FE3DE4B21CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "Traffic-iOS" */;
+			buildConfigurationList = FE3DE4B21CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "EasyJira-iOS" */;
 			buildPhases = (
 				FE3DE4801CBBBCA300D35BF8 /* Sources */,
 				FE3DE4811CBBBCA300D35BF8 /* Frameworks */,
@@ -319,9 +319,9 @@
 			);
 			dependencies = (
 			);
-			name = "Traffic-iOS";
+			name = "EasyJira-iOS";
 			productName = "Traffic-iOS";
-			productReference = FE3DE4841CBBBCA300D35BF8 /* Traffic-iOS.app */;
+			productReference = FE3DE4841CBBBCA300D35BF8 /* EasyJira-iOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		FE3DE4991CBBBCA300D35BF8 /* Traffic-iOSTests */ = {
@@ -383,7 +383,7 @@
 					};
 					FE3DE4831CBBBCA300D35BF8 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = 7JG9JLN56D;
+						DevelopmentTeam = ZLXN9939CZ;
 					};
 					FE3DE4991CBBBCA300D35BF8 = {
 						CreatedOnToolsVersion = 7.3;
@@ -395,7 +395,7 @@
 					};
 				};
 			};
-			buildConfigurationList = BBEFDC001C80767B00C395B7 /* Build configuration list for PBXProject "Traffic" */;
+			buildConfigurationList = BBEFDC001C80767B00C395B7 /* Build configuration list for PBXProject "Easy Jira" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -411,7 +411,7 @@
 				BBEFDC041C80767B00C395B7 /* Traffic */,
 				BBEFDC151C80767B00C395B7 /* TrafficTests */,
 				BBEFDC201C80767B00C395B7 /* TrafficUITests */,
-				FE3DE4831CBBBCA300D35BF8 /* Traffic-iOS */,
+				FE3DE4831CBBBCA300D35BF8 /* EasyJira-iOS */,
 				FE3DE4991CBBBCA300D35BF8 /* Traffic-iOSTests */,
 				FE3DE4A41CBBBCA300D35BF8 /* Traffic-iOSUITests */,
 			);
@@ -558,12 +558,12 @@
 		};
 		FE3DE49C1CBBBCA300D35BF8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FE3DE4831CBBBCA300D35BF8 /* Traffic-iOS */;
+			target = FE3DE4831CBBBCA300D35BF8 /* EasyJira-iOS */;
 			targetProxy = FE3DE49B1CBBBCA300D35BF8 /* PBXContainerItemProxy */;
 		};
 		FE3DE4A71CBBBCA300D35BF8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FE3DE4831CBBBCA300D35BF8 /* Traffic-iOS */;
+			target = FE3DE4831CBBBCA300D35BF8 /* EasyJira-iOS */;
 			targetProxy = FE3DE4A61CBBBCA300D35BF8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -613,7 +613,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -759,16 +759,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				CLANG_ANALYZER_NONNULL = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Vitalii Tymoshenko (XFA7UF4C2S)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Vitalii Tymoshenko (XFA7UF4C2S)";
 				INFOPLIST_FILE = "Traffic-iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vitaliy.easyjira;
+				PRODUCT_BUNDLE_IDENTIFIER = ua.in.easyjira.iosapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "24d8cbb1-1f4d-404d-b237-289db328c287";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -778,15 +778,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Vitalii Tymoshenko (ZLXN9939CZ)";
 				INFOPLIST_FILE = "Traffic-iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vitaliy.easyjira;
+				PRODUCT_BUNDLE_IDENTIFIER = ua.in.easyjira.iosapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "2e8de5d5-6713-4e0d-927c-0a4d74b7071e";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -858,7 +858,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BBEFDC001C80767B00C395B7 /* Build configuration list for PBXProject "Traffic" */ = {
+		BBEFDC001C80767B00C395B7 /* Build configuration list for PBXProject "Easy Jira" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BBEFDC281C80767B00C395B7 /* Debug */,
@@ -894,7 +894,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FE3DE4B21CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "Traffic-iOS" */ = {
+		FE3DE4B21CBBBCA300D35BF8 /* Build configuration list for PBXNativeTarget "EasyJira-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FE3DE4AC1CBBBCA300D35BF8 /* Debug */,
