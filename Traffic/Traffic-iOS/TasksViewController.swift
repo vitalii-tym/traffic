@@ -17,7 +17,7 @@ class aTask: UICollectionViewCell {
     @IBOutlet weak var label_description: UILabel!
 }
 
-class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverPresentationControllerDelegate {
 
     var aProject: Project?
     var aVersion: Version?
@@ -27,7 +27,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var aTasktoPass: Task?
     var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     var currentUser: JIRAcurrentUser?
-
+    var statusFilter: JIRAStatuses?
     var refreshControl: UIRefreshControl!
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
@@ -51,12 +51,14 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         let URLEnding: String = GenerateURLEndingDependingOnContext()
         if let maybeTasksList = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRATasks.path(URLEnding)) as? JIRATasks {
             self.tasks = maybeTasksList
-            self.parentViewController?.stopActivityIndicator()
+            parentViewController?.stopActivityIndicator()
+            regenerateFilter()
         } else {
             aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
                 if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
                             self.tasks = JIRATasks(data: data!)
                             NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
+                            self.regenerateFilter()
                 }
                 self.parentViewController?.stopActivityIndicator()
             }
@@ -85,6 +87,17 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         _ = NSTimer.scheduledTimerWithTimeInterval(420, target: self, selector: #selector(TasksViewViewController.refresh(_:)), userInfo: nil, repeats: true)
     }
     
+    func regenerateFilter() {
+        if aProject != nil {
+            let URLEnding = "/rest/api/2/project/\(aProject!.key)/statuses"
+            aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                    self.statusFilter = JIRAStatuses(data: data!)
+                }
+            }
+        }
+    }
+    
     func GenerateURLEndingDependingOnContext() -> String {
         var URLEnding = ""
         if aProject?.key != "" {
@@ -111,6 +124,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
                 self.tasks = JIRATasks(data: data!)
                 NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
+                self.regenerateFilter()
                 self.refreshControl.endRefreshing()
                 self.showMessage("refresh succesful", mood: "Good")
             } else {
@@ -172,6 +186,24 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             destionationViewController.currentUser = self.currentUser
             destionationViewController.aProject = self.aProject
         }
+        
+        if segue.identifier == "showFilters" {
+            guard let destinationViewController = segue.destinationViewController as? FilterViewController else {
+                return
+            }
+            if let unwrappedStatusesList = statusFilter?.statusesList {
+                destinationViewController.statusFilter = unwrappedStatusesList
+            }
+            let popover = destinationViewController.popoverPresentationController
+            if popover != nil {
+                popover?.delegate = self
+                destinationViewController.preferredContentSize = CGSizeMake(200,200)
+            }
+        }
+    }
+    
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .None
     }
     
     @IBAction func button_pressed_NewTask(sender: AnyObject) {
@@ -184,6 +216,10 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     @IBAction func unwindToTasksList(segue: UIStoryboardSegue) {
+    }
+    
+    @IBAction func action_open_filters(sender: AnyObject) {
+        self.performSegueWithIdentifier("showFilters", sender: self)
     }
     
     override func didReceiveMemoryWarning() {

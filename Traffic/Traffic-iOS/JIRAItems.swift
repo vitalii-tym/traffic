@@ -215,6 +215,27 @@ struct MetadataProject {
     var issueTypes: [IssueType]
 }
 
+class JIRAStatuses {
+    var statusesList: [(String, Bool)] = []
+    init? (data: NSData) {
+        var jsonObject: Array<AnyObject>?
+        do {
+            jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(data), options: NSJSONReadingOptions(rawValue: 0)) as? Array<AnyObject>
+        }
+        catch { }
+        guard let jsonObjectRoot = jsonObject else {
+            return nil
+        }
+        for issueType in jsonObjectRoot {
+            if let theIssueTypeDict = issueType as? Dictionary<String, AnyObject> {
+                if let statusName = theIssueTypeDict["name"] as? String {
+                    statusesList.append((statusName,true))
+                }
+            }
+        }
+    }
+}
+
 class JIRAcurrentUser: NSObject, NSCoding {
     var name: String = ""
 

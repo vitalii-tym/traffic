@@ -129,6 +129,80 @@
             </objects>
             <point key="canvasLocation" x="409" y="503"/>
         </scene>
+        <!--Filter-->
+        <scene sceneID="4Jc-97-w5u">
+            <objects>
+                <viewController id="0nm-sz-jlj" userLabel="Filter" customClass="FilterViewController" customModule="EasyJira_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Uvg-ZH-9bK"/>
+                        <viewControllerLayoutGuide type="bottom" id="S0j-Gg-jMU"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Gev-b8-3KU">
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Issues only" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vxj-Ru-ejn">
+                                <rect key="frame" x="16" y="20" width="113" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gby-BE-6I9">
+                                <rect key="frame" x="135" y="15" width="51" height="31"/>
+                            </switch>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dF1-VX-mbj">
+                                <rect key="frame" x="10" y="61" width="180" height="119"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="FilterCell" id="hMl-gu-pnT" customClass="aStatusFilterCell" customModule="EasyJira_iOS" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="180" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hMl-gu-pnT" id="6pc-P0-7hc">
+                                            <rect key="frame" x="0.0" y="0.0" width="141" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aan-vr-P8B">
+                                                    <rect key="frame" x="8" y="12" width="50" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Aan-vr-P8B" firstAttribute="centerY" secondItem="6pc-P0-7hc" secondAttribute="centerY" id="ChN-as-0FY"/>
+                                                <constraint firstItem="Aan-vr-P8B" firstAttribute="leading" secondItem="6pc-P0-7hc" secondAttribute="leadingMargin" id="aVg-Kb-Xi7"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="label_status_filter" destination="Aan-vr-P8B" id="l8N-ee-HCy"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="0nm-sz-jlj" id="ZRI-pf-0qj"/>
+                                    <outlet property="delegate" destination="0nm-sz-jlj" id="eAV-U5-eR6"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Vxj-Ru-ejn" firstAttribute="top" secondItem="Uvg-ZH-9bK" secondAttribute="bottom" constant="20" id="Bo4-H0-XEc"/>
+                            <constraint firstItem="Vxj-Ru-ejn" firstAttribute="leading" secondItem="Gev-b8-3KU" secondAttribute="leadingMargin" id="EnG-rR-2zZ"/>
+                            <constraint firstItem="gby-BE-6I9" firstAttribute="trailing" secondItem="Gev-b8-3KU" secondAttribute="trailingMargin" id="IXt-qa-BKS"/>
+                            <constraint firstItem="S0j-Gg-jMU" firstAttribute="top" secondItem="dF1-VX-mbj" secondAttribute="bottom" constant="20" id="J9v-zd-35T"/>
+                            <constraint firstItem="dF1-VX-mbj" firstAttribute="leading" secondItem="Gev-b8-3KU" secondAttribute="leading" constant="10" id="dEv-wD-eJv"/>
+                            <constraint firstItem="dF1-VX-mbj" firstAttribute="trailing" secondItem="Gev-b8-3KU" secondAttribute="trailing" constant="-10" id="l4E-dm-DCc"/>
+                            <constraint firstItem="gby-BE-6I9" firstAttribute="centerY" secondItem="Vxj-Ru-ejn" secondAttribute="centerY" id="t96-ff-UGq"/>
+                            <constraint firstItem="dF1-VX-mbj" firstAttribute="top" secondItem="Vxj-Ru-ejn" secondAttribute="bottom" constant="20" id="zWS-FN-5yl"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q75-9J-OPO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="mAA-aa-HVT" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2928" y="42"/>
+        </scene>
         <!--Tasks-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -298,7 +372,11 @@ The Scrum methodology drops traditional software requirement statements in favou
                     </view>
                     <navigationItem key="navigationItem" title="Tasks" id="6PO-bB-dUa">
                         <barButtonItem key="backBarButtonItem" title="Tasks" id="OpN-Nl-Wgv"/>
-                        <barButtonItem key="rightBarButtonItem" enabled="NO" systemItem="organize" id="SKp-Hq-Qc0"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="organize" id="SKp-Hq-Qc0">
+                            <connections>
+                                <action selector="action_open_filters:" destination="BYZ-38-t0r" id="dER-d1-NCP"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="button_NewTask" destination="dkP-7V-GQR" id="JN3-Vv-5Rc"/>
@@ -306,6 +384,10 @@ The Scrum methodology drops traditional software requirement statements in favou
                         <outlet property="label_no_tasks" destination="RDy-9f-H8Y" id="iIY-Vg-sI4"/>
                         <outlet property="view_collectionView" destination="zJh-zy-Kuh" id="b5D-cL-x7G"/>
                         <segue destination="sz5-hb-Gft" kind="show" identifier="issueDetails" id="u8H-kH-fNc"/>
+                        <segue destination="0nm-sz-jlj" kind="popoverPresentation" identifier="showFilters" popoverAnchorBarButtonItem="SKp-Hq-Qc0" id="AWn-QM-nvS">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
+                        <segue destination="mAA-aa-HVT" kind="unwind" unwindAction="unwindToTasksList:" id="dqQ-w4-rJt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -542,7 +624,7 @@ The Scrum methodology drops traditional software requirement statements in favou
                 </view>
                 <exit id="exa-Nm-uB6" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3083" y="503"/>
+            <point key="canvasLocation" x="3197" y="503"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="6OW-w3-6au">

@@ -111,6 +111,7 @@ let actionTypes: [String:
         // 200 - application/jsonReturns the meta data for creating issues.
         // 403 - Returned if the user does not have permission to view any of the requested projects.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/issue-getCreateIssueMeta
+
     "current_user": ("Oops",
             [200],
             [401: "Looks like you are not logged in. You can not create isses, sorry.",
@@ -118,6 +119,15 @@ let actionTypes: [String:
         // 200 - everything is fine
         // 401 - Returned if the caller is not authenticated.
         // Documentation: https://docs.atlassian.com/jira/REST/latest/#auth/1/session-currentUser
+
+    "get_statuses": ("Oops",
+            [200],
+            [400: "Could not get statuses for current project. This might be problem with permissions or the project is absent.",
+                0: "Don't know what exactly went wrong. Try again and contact me if you the problem persists."]),
+        // 200 - application/jsonReturned if the project exists and the user has permission to view its components. Contains a full representation of issue types with status values which are valid for each issue type.
+        // 400 - Returned if the project is not found, or the calling user does not have permission to view it.
+        // Documentation: https://docs.atlassian.com/jira/REST/latest/#api/2/project-getAllStatuses
+        
     "create_issue": ("Oops",
             [201],
             [400: "Issue was not created.",

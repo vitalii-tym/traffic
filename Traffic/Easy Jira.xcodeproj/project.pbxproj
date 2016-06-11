@@ -28,6 +28,7 @@
 		FE3DE4AA1CBBBCA300D35BF8 /* Traffic_iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4A91CBBBCA300D35BF8 /* Traffic_iOSUITests.swift */; };
 		FE3DE4B81CBBCBA100D35BF8 /* JIRAItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4B71CBBCBA100D35BF8 /* JIRAItems.swift */; };
 		FE49FE891CBD56C9009255EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE49FE881CBD56C9009255EE /* LoginViewController.swift */; };
+		FEC015FB1D0B12EA007DC79C /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC015F91D0B10FD007DC79C /* FilterViewController.swift */; };
 		FEC7BAB91CC62AEE001A2181 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC7BAB81CC62AEE001A2181 /* Security.framework */; };
 /* End PBXBuildFile section */
 
@@ -96,6 +97,7 @@
 		FE3DE4AB1CBBBCA300D35BF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FE3DE4B71CBBCBA100D35BF8 /* JIRAItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIRAItems.swift; sourceTree = "<group>"; };
 		FE49FE881CBD56C9009255EE /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		FEC015F91D0B10FD007DC79C /* FilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		FEC7BAB81CC62AEE001A2181 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
@@ -211,6 +213,7 @@
 				FE49FE881CBD56C9009255EE /* LoginViewController.swift */,
 				FE1E3E681CF32BD000CD8C48 /* ProjectsViewController.swift */,
 				FE3DE4881CBBBCA300D35BF8 /* TasksViewController.swift */,
+				FEC015F91D0B10FD007DC79C /* FilterViewController.swift */,
 				FE1011151CBE8AE100DE04CE /* IssueDetailsViewController.swift */,
 				FE0BC63C1CD101E90069196C /* ErrorManager.swift */,
 				FE3DE4B71CBBCBA100D35BF8 /* JIRAItems.swift */,
@@ -519,6 +522,7 @@
 				FE1E3E691CF32BD000CD8C48 /* ProjectsViewController.swift in Sources */,
 				FE0D5E5C1CD360BA001D836E /* JIRANetworking.swift in Sources */,
 				FE0BC63D1CD101E90069196C /* ErrorManager.swift in Sources */,
+				FEC015FB1D0B12EA007DC79C /* FilterViewController.swift in Sources */,
 				FE1E3E611CEF1F7000CD8C48 /* Extensions.swift in Sources */,
 				FE3DE4891CBBBCA300D35BF8 /* TasksViewController.swift in Sources */,
 				FE1011161CBE8AE100DE04CE /* IssueDetailsViewController.swift in Sources */,
