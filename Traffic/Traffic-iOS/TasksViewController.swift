@@ -24,6 +24,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var aBoard: Board?
     var aNetworkRequest = JIRANetworkRequest()
     var tasks: JIRATasks? { didSet { self.view_collectionView.reloadData() } }
+    var filteredtasks: JIRATasks? { didSet { self.view_collectionView.reloadData() } }
     var aTasktoPass: Task?
     var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     var currentUser: JIRAcurrentUser?
@@ -33,6 +34,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
     @IBOutlet weak var label_no_tasks: UILabel!
     @IBOutlet weak var label_context: UILabel!
+    @IBOutlet weak var button_open_filter: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +46,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        button_open_filter.enabled = false
         if self.tasks == nil {
             self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
         }
@@ -57,6 +60,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
                 if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
                             self.tasks = JIRATasks(data: data!)
+                            self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
                             NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
                             self.regenerateFilter()
                 }
@@ -93,9 +97,26 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
                 if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
                     self.statusFilter = JIRAStatuses(data: data!)
+                    self.button_open_filter.enabled = true
                 }
             }
         }
+    }
+    
+    func applyFilter() {
+        var itemsToShow: [String] = []
+        for status in (statusFilter?.statusesList)! {
+            if !itemsToShow.contains(status.0) && status.1 {
+                itemsToShow.append(status.0)
+            }
+        }            
+        filteredtasks?.taskslist.removeAll()
+        for aTask in (tasks?.taskslist)! {
+            if itemsToShow.contains(aTask.task_status) {
+                filteredtasks?.taskslist.append(aTask)
+            }
+        }
+        print("filter applied")
     }
     
     func GenerateURLEndingDependingOnContext() -> String {
@@ -123,6 +144,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
                 self.tasks = JIRATasks(data: data!)
+                self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
                 NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
                 self.regenerateFilter()
                 self.refreshControl.endRefreshing()
@@ -139,21 +161,22 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if self.tasks != nil {
+        if self.filteredtasks != nil {
             label_no_tasks.hidden = !(self.tasks?.taskslist.isEmpty)!
         }
-        return self.tasks?.taskslist.count ?? 0
+        return self.filteredtasks?.taskslist.count ?? 0
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TaskCell", forIndexPath: indexPath) as! aTask
-        cell.label_name.text = tasks?.taskslist[indexPath.row].task_key
-        cell.label_summary.text = tasks?.taskslist[indexPath.row].task_summary
-        cell.label_assignee.text = tasks?.taskslist[indexPath.row].task_assignee
-        cell.label_type.text = tasks?.taskslist[indexPath.row].task_type
-        cell.label_description.text = tasks?.taskslist[indexPath.row].task_description
-        cell.label_priority.text = tasks?.taskslist[indexPath.row].task_priority
-        cell.label_status.text = tasks?.taskslist[indexPath.row].task_status
+        cell.label_name.text = filteredtasks?.taskslist[indexPath.row].task_key
+        cell.label_summary.text = filteredtasks?.taskslist[indexPath.row].task_summary
+        cell.label_assignee.text = filteredtasks?.taskslist[indexPath.row].task_assignee
+        cell.label_type.text = filteredtasks?.taskslist[indexPath.row].task_type
+        cell.label_description.text = filteredtasks?.taskslist[indexPath.row].task_description
+        cell.label_priority.text = filteredtasks?.taskslist[indexPath.row].task_priority
+        cell.label_status.text = filteredtasks?.taskslist[indexPath.row].task_status
+
         switch cell.label_priority.text! {
             case "Highest": cell.label_priority.textColor = UIColor.redColor()
                             cell.label_priority.font = UIFont.boldSystemFontOfSize(12.0)
@@ -163,15 +186,18 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             case "Lowest":  cell.label_priority.textColor = UIColor.grayColor()
             default:        cell.label_priority.textColor = UIColor.blackColor()
         }
+
         switch cell.label_status.text! {
             case "In Progress": cell.label_status.backgroundColor = UIColor.yellowColor()
             default:        cell.label_status.backgroundColor = UIColor.clearColor()
         }
+        
         return cell
+
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        aTasktoPass = (tasks?.taskslist[indexPath.row])!
+        aTasktoPass = (filteredtasks?.taskslist[indexPath.row])!
         refreshControl.endRefreshing()
         self.performSegueWithIdentifier("issueDetails", sender: nil)
     }
@@ -191,9 +217,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             guard let destinationViewController = segue.destinationViewController as? FilterViewController else {
                 return
             }
-            if let unwrappedStatusesList = statusFilter?.statusesList {
-                destinationViewController.statusFilter = unwrappedStatusesList
-            }
+            destinationViewController.caller = self
             let popover = destinationViewController.popoverPresentationController
             if popover != nil {
                 popover?.delegate = self

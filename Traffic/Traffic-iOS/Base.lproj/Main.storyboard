@@ -380,6 +380,7 @@ The Scrum methodology drops traditional software requirement statements in favou
                     </navigationItem>
                     <connections>
                         <outlet property="button_NewTask" destination="dkP-7V-GQR" id="JN3-Vv-5Rc"/>
+                        <outlet property="button_open_filter" destination="SKp-Hq-Qc0" id="mIf-Qw-eei"/>
                         <outlet property="label_context" destination="fPo-7w-piG" id="Qvj-iz-I70"/>
                         <outlet property="label_no_tasks" destination="RDy-9f-H8Y" id="iIY-Vg-sI4"/>
                         <outlet property="view_collectionView" destination="zJh-zy-Kuh" id="b5D-cL-x7G"/>

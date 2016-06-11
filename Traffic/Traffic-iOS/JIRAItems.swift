@@ -219,6 +219,7 @@ class JIRAStatuses {
     var statusesList: [(String, Bool)] = []
     init? (data: NSData) {
         var jsonObject: Array<AnyObject>?
+        var tempStatusesList: [String] = []
         do {
             jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(data), options: NSJSONReadingOptions(rawValue: 0)) as? Array<AnyObject>
         }
@@ -226,11 +227,26 @@ class JIRAStatuses {
         guard let jsonObjectRoot = jsonObject else {
             return nil
         }
-        for issueType in jsonObjectRoot {
-            if let theIssueTypeDict = issueType as? Dictionary<String, AnyObject> {
-                if let statusName = theIssueTypeDict["name"] as? String {
-                    statusesList.append((statusName,true))
+        for taskType in jsonObjectRoot {
+            if let theIssueTypeDict = taskType as? Dictionary<String, AnyObject> {
+                if let maybeStatusesArray = theIssueTypeDict["statuses"] as? Array<AnyObject>? {
+                    guard let statusesArray = maybeStatusesArray else {
+                        return nil
+                    }
+                    for aStatus in statusesArray {
+                        if let statusName = aStatus["name"] as? String {
+                            tempStatusesList.append(statusName)
+                        }
+                    }
                 }
+            }
+        }
+        tempStatusesList = Array(Set(tempStatusesList))
+        for aStatus in tempStatusesList {
+            if aStatus == "Done" {
+                statusesList.append((aStatus, false))
+            } else {
+                statusesList.append((aStatus, true))
             }
         }
     }

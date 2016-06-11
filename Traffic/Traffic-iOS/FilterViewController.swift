@@ -13,20 +13,20 @@ class aStatusFilterCell: UITableViewCell {
 }
 
 class FilterViewController: UIViewController, UIPopoverPresentationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
-    var statusFilter: [(String, Bool)] = []
+    var caller: TasksViewViewController?
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return statusFilter.count
+        return caller?.statusFilter?.statusesList.count ?? 0
     }
         
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("FilterCell", forIndexPath: indexPath) as! aStatusFilterCell
-        cell.label_status_filter.text = statusFilter[indexPath.row].0
-        if statusFilter[indexPath.row].1 == true {
+        cell.label_status_filter.text = caller?.statusFilter?.statusesList[indexPath.row].0
+        if caller?.statusFilter?.statusesList[indexPath.row].1 == true {
             cell.accessoryType = .Checkmark
         } else {
             cell.accessoryType = .None
@@ -35,7 +35,11 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        statusFilter[indexPath.row].1 = !statusFilter[indexPath.row].1
+        if let currentCheckmark = caller?.statusFilter?.statusesList[indexPath.row].1 {
+            caller?.statusFilter?.statusesList[indexPath.row].1 = !currentCheckmark
+        }
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+        caller?.applyFilter()
+        caller?.view_collectionView.reloadData()
     }
 }
