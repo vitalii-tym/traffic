@@ -54,8 +54,10 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         let URLEnding: String = GenerateURLEndingDependingOnContext()
         if let maybeTasksList = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRATasks.path(URLEnding)) as? JIRATasks {
             self.tasks = maybeTasksList
+            self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
             parentViewController?.stopActivityIndicator()
             regenerateFilter()
+            applyFilter()
         } else {
             aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
                 if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
@@ -63,6 +65,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                             self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
                             NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
                             self.regenerateFilter()
+                            self.applyFilter()
                 }
                 self.parentViewController?.stopActivityIndicator()
             }
@@ -93,11 +96,16 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     func regenerateFilter() {
         if aProject != nil {
-            let URLEnding = "/rest/api/2/project/\(aProject!.key)/statuses"
-            aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-                if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
-                    self.statusFilter = JIRAStatuses(data: data!)
-                    self.button_open_filter.enabled = true
+            if let maybeUnachivedFilter = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRAStatuses.path(aProject!.id)) as? JIRAStatuses {
+                statusFilter = maybeUnachivedFilter
+                button_open_filter.enabled = true
+            } else {
+                let URLEnding = "/rest/api/2/project/\(aProject!.key)/statuses"
+                aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                    if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                        self.statusFilter = JIRAStatuses(data: data!)
+                        self.button_open_filter.enabled = true
+                    }
                 }
             }
         }
@@ -105,35 +113,40 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     func applyFilter() {
         var itemsToShow: [String] = []
-        for status in (statusFilter?.statusesList)! {
-            if !itemsToShow.contains(status.0) && status.1 {
-                itemsToShow.append(status.0)
+        if statusFilter != nil && !statusFilter!.statusesList.isEmpty {
+            for status in (statusFilter?.statusesList)! {
+                if !itemsToShow.contains(status.0) && status.1 {
+                    itemsToShow.append(status.0)
+                }
             }
-        }            
-        filteredtasks?.taskslist.removeAll()
-        for aTask in (tasks?.taskslist)! {
-            if itemsToShow.contains(aTask.task_status) {
-                filteredtasks?.taskslist.append(aTask)
+            filteredtasks?.taskslist.removeAll()
+            for aTask in (tasks?.taskslist)! {
+                if itemsToShow.contains(aTask.task_status) {
+                    filteredtasks?.taskslist.append(aTask)
+                }
             }
+            print("filter applied")
+            view_collectionView.reloadData()
+        } else {
+            print("couldn't apply filter as it doesn't exist")
         }
-        print("filter applied")
     }
     
     func GenerateURLEndingDependingOnContext() -> String {
         var URLEnding = ""
         if aProject?.key != "" {
             if aVersion != nil {
-                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+fixVersion=\(aVersion!.id)+AND+status+not+in+(Done)+order+by+rank+asc"
+                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+fixVersion=\(aVersion!.id)+order+by+rank+asc"
                 label_context.text = "[\(aVersion!.name)]"
             } else if aBoard != nil {
-                URLEnding = "/rest/agile/1.0/board/\(aBoard!.id)/issue?jql=status+not+in+(Done)"
+                URLEnding = "/rest/agile/1.0/board/\(aBoard!.id)/issue"
                 label_context.text = "[\(aBoard!.name)]"
             } else {
-                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+status+not+in+(Done)+order+by+rank+asc"
+                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+order+by+rank+asc"
                 label_context.text = "[All issues for project]"
             }
         } else {
-            URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc"
+            URLEnding = "/rest/api/2/search?jql=order+by+rank+asc"
             label_context.text = "[All issues for all projects]"
         }
         return URLEnding
@@ -147,6 +160,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
                 NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
                 self.regenerateFilter()
+                self.applyFilter()
                 self.refreshControl.endRefreshing()
                 self.showMessage("refresh succesful", mood: "Good")
             } else {
@@ -164,36 +178,55 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         if self.filteredtasks != nil {
             label_no_tasks.hidden = !(self.tasks?.taskslist.isEmpty)!
         }
-        return self.filteredtasks?.taskslist.count ?? 0
+        var numOfRows = self.filteredtasks?.taskslist.count ?? 0
+        
+        if statusFilter != nil && statusFilter!.isActive() {
+            numOfRows += 1
+        }
+        return numOfRows
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TaskCell", forIndexPath: indexPath) as! aTask
-        cell.label_name.text = filteredtasks?.taskslist[indexPath.row].task_key
-        cell.label_summary.text = filteredtasks?.taskslist[indexPath.row].task_summary
-        cell.label_assignee.text = filteredtasks?.taskslist[indexPath.row].task_assignee
-        cell.label_type.text = filteredtasks?.taskslist[indexPath.row].task_type
-        cell.label_description.text = filteredtasks?.taskslist[indexPath.row].task_description
-        cell.label_priority.text = filteredtasks?.taskslist[indexPath.row].task_priority
-        cell.label_status.text = filteredtasks?.taskslist[indexPath.row].task_status
-
-        switch cell.label_priority.text! {
-            case "Highest": cell.label_priority.textColor = UIColor.redColor()
-                            cell.label_priority.font = UIFont.boldSystemFontOfSize(12.0)
-            case "High":    cell.label_priority.textColor = UIColor.redColor()
-            case "Medium":  cell.label_priority.textColor = UIColor.blackColor()
-            case "Low":     cell.label_priority.textColor = UIColor.greenColor()
-            case "Lowest":  cell.label_priority.textColor = UIColor.grayColor()
-            default:        cell.label_priority.textColor = UIColor.blackColor()
-        }
-
-        switch cell.label_status.text! {
-            case "In Progress": cell.label_status.backgroundColor = UIColor.yellowColor()
-            default:        cell.label_status.backgroundColor = UIColor.clearColor()
-        }
+        if indexPath.row < filteredtasks?.taskslist.count {
         
-        return cell
+            cell.backgroundColor = UIColor.lightGrayColor()
+            cell.label_name.text = filteredtasks?.taskslist[indexPath.row].task_key
+            cell.label_summary.text = filteredtasks?.taskslist[indexPath.row].task_summary
+            cell.label_summary.textColor = UIColor.blackColor()
+            cell.label_assignee.text = filteredtasks?.taskslist[indexPath.row].task_assignee
+            cell.label_type.text = filteredtasks?.taskslist[indexPath.row].task_type
+            cell.label_description.text = filteredtasks?.taskslist[indexPath.row].task_description
+            cell.label_priority.text = filteredtasks?.taskslist[indexPath.row].task_priority
+            cell.label_status.text = filteredtasks?.taskslist[indexPath.row].task_status
 
+            switch cell.label_priority.text! {
+                case "Highest": cell.label_priority.textColor = UIColor.redColor()
+                                cell.label_priority.font = UIFont.boldSystemFontOfSize(12.0)
+                case "High":    cell.label_priority.textColor = UIColor.redColor()
+                case "Medium":  cell.label_priority.textColor = UIColor.blackColor()
+                case "Low":     cell.label_priority.textColor = UIColor.greenColor()
+                case "Lowest":  cell.label_priority.textColor = UIColor.grayColor()
+                default:        cell.label_priority.textColor = UIColor.blackColor()
+            }
+
+            switch cell.label_status.text! {
+                case "In Progress": cell.label_status.backgroundColor = UIColor.yellowColor()
+                default:        cell.label_status.backgroundColor = UIColor.clearColor()
+            }
+            
+        } else {
+            cell.backgroundColor = UIColor.clearColor()
+            cell.label_summary.text = "Please check filter, as there might be more items hidden."
+            cell.label_summary.textColor = UIColor.lightGrayColor()
+            cell.label_name.text = ""
+            cell.label_assignee.text = ""
+            cell.label_type.text = ""
+            cell.label_description.text = ""
+            cell.label_priority.text = ""
+            cell.label_status.text = ""
+        }
+        return cell
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
@@ -219,9 +252,10 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             }
             destinationViewController.caller = self
             let popover = destinationViewController.popoverPresentationController
-            if popover != nil {
+            if popover != nil && statusFilter != nil {
                 popover?.delegate = self
-                destinationViewController.preferredContentSize = CGSizeMake(200,200)
+                let popoverWidth: CGFloat = min(CGFloat(statusFilter!.statusesList.count * 44 + 75), view_collectionView.frame.height) // WARNING: Hardcoded popover height here
+                destinationViewController.preferredContentSize = CGSizeMake(280,popoverWidth)
             }
         }
     }

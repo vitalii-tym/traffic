@@ -215,7 +215,7 @@ struct MetadataProject {
     var issueTypes: [IssueType]
 }
 
-class JIRAStatuses {
+class JIRAStatuses: NSObject, NSCoding {
     var statusesList: [(String, Bool)] = []
     init? (data: NSData) {
         var jsonObject: Array<AnyObject>?
@@ -241,7 +241,7 @@ class JIRAStatuses {
                 }
             }
         }
-        tempStatusesList = Array(Set(tempStatusesList))
+        tempStatusesList = tempStatusesList.removeDuplicates()
         for aStatus in tempStatusesList {
             if aStatus == "Done" {
                 statusesList.append((aStatus, false))
@@ -249,6 +249,47 @@ class JIRAStatuses {
                 statusesList.append((aStatus, true))
             }
         }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        var decodedStatusesList: [(String, Bool)] = []
+        var index = 0
+        var aStatus: (String, Bool)?
+        while true {
+            if let statusName = aDecoder.decodeObjectForKey("status\(index)") as? String,
+                let statusSelection = aDecoder.decodeObjectForKey("isSelected\(index)") as? Bool {
+                aStatus = (statusName, statusSelection)
+                index += 1
+                decodedStatusesList.append(aStatus!)
+            } else {
+                break
+            }
+        }
+        self.statusesList = decodedStatusesList
+        super.init()
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        for (index, aStatus) in statusesList.enumerate() {
+            aCoder.encodeObject(aStatus.0, forKey: "status\(index)")
+            aCoder.encodeObject(aStatus.1, forKey: "isSelected\(index)")
+        }
+    }
+    
+    class func path(projectID: String) -> String {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).first
+        let path = documentsPath?.stringByAppendingString("/filterForProject"+projectID)
+        return path!
+    }
+    
+    func isActive() -> Bool { // Returns true if there is at least anything hidden by filter
+        var isActive = false
+        for status in statusesList {
+            if status.1 == false {
+                isActive = true
+            }
+        }
+        return isActive
     }
 }
 

@@ -15,6 +15,16 @@ class aStatusFilterCell: UITableViewCell {
 class FilterViewController: UIViewController, UIPopoverPresentationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     var caller: TasksViewViewController?
     
+    @IBOutlet weak var table_statuses: UITableView!
+    
+    override func viewDidLoad() {
+        if self.preferredContentSize.height == caller?.view_collectionView.frame.height {
+            table_statuses.scrollEnabled = true
+        } else {
+            table_statuses.scrollEnabled = false
+        }
+    }
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -41,5 +51,9 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         caller?.applyFilter()
         caller?.view_collectionView.reloadData()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        NSKeyedArchiver.archiveRootObject(caller!.statusFilter!, toFile: JIRAStatuses.path(caller!.aProject!.id))
     }
 }
