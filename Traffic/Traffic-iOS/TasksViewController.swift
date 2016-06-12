@@ -23,8 +23,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var aVersion: Version?
     var aBoard: Board?
     var aNetworkRequest = JIRANetworkRequest()
-    var tasks: JIRATasks? { didSet { self.view_collectionView.reloadData() } }
-    var filteredtasks: JIRATasks? { didSet { self.view_collectionView.reloadData() } }
+    var tasks: JIRATasks? //{ didSet { self.view_collectionView.reloadData() } }
+    var filteredtasks: JIRATasks? //{ didSet { self.view_collectionView.reloadData() } }
     var aTasktoPass: Task?
     var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     var currentUser: JIRAcurrentUser?
@@ -55,17 +55,14 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         if let maybeTasksList = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRATasks.path(URLEnding)) as? JIRATasks {
             self.tasks = maybeTasksList
             self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
-            parentViewController?.stopActivityIndicator()
-            regenerateFilter()
-            applyFilter()
+            regenerateAndApplyFilter()
         } else {
             aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
                 if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
                             self.tasks = JIRATasks(data: data!)
                             self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
                             NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
-                            self.regenerateFilter()
-                            self.applyFilter()
+                            self.regenerateAndApplyFilter()
                 }
                 self.parentViewController?.stopActivityIndicator()
             }
@@ -94,17 +91,21 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         _ = NSTimer.scheduledTimerWithTimeInterval(420, target: self, selector: #selector(TasksViewViewController.refresh(_:)), userInfo: nil, repeats: true)
     }
     
-    func regenerateFilter() {
+    func regenerateAndApplyFilter() {
         if aProject != nil {
             if let maybeUnachivedFilter = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRAStatuses.path(aProject!.id)) as? JIRAStatuses {
                 statusFilter = maybeUnachivedFilter
                 button_open_filter.enabled = true
+                self.applyFilter()
+                self.parentViewController?.stopActivityIndicator()
             } else {
                 let URLEnding = "/rest/api/2/project/\(aProject!.key)/statuses"
                 aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
                     if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
                         self.statusFilter = JIRAStatuses(data: data!)
+                        self.applyFilter()
                         self.button_open_filter.enabled = true
+                        self.parentViewController?.stopActivityIndicator()
                     }
                 }
             }
@@ -136,17 +137,17 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         var URLEnding = ""
         if aProject?.key != "" {
             if aVersion != nil {
-                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+AND+fixVersion=\(aVersion!.id)+order+by+rank+asc"
+                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.id)+AND+fixVersion=\(aVersion!.id)+order+by+rank+asc&maxResults=200"
                 label_context.text = "[\(aVersion!.name)]"
             } else if aBoard != nil {
                 URLEnding = "/rest/agile/1.0/board/\(aBoard!.id)/issue"
                 label_context.text = "[\(aBoard!.name)]"
             } else {
-                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.key)+order+by+rank+asc"
+                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.id)+order+by+rank+asc&maxResults=200"
                 label_context.text = "[All issues for project]"
             }
         } else {
-            URLEnding = "/rest/api/2/search?jql=order+by+rank+asc"
+            URLEnding = "/rest/api/2/search?jql=order+by+rank+asc&maxResults=200"
             label_context.text = "[All issues for all projects]"
         }
         return URLEnding
@@ -159,8 +160,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 self.tasks = JIRATasks(data: data!)
                 self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
                 NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
-                self.regenerateFilter()
-                self.applyFilter()
+                self.regenerateAndApplyFilter()
                 self.refreshControl.endRefreshing()
                 self.showMessage("refresh succesful", mood: "Good")
             } else {
