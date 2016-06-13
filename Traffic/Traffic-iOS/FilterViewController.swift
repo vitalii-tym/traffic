@@ -16,6 +16,7 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
     var caller: TasksViewViewController?
     
     @IBOutlet weak var table_statuses: UITableView!
+    @IBOutlet weak var switch_my_issues_only: UISwitch!
     
     override func viewDidLoad() {
         if self.preferredContentSize.height == caller?.view_collectionView.frame.height {
@@ -23,6 +24,7 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
         } else {
             table_statuses.scrollEnabled = false
         }
+        switch_my_issues_only.on = (caller?.statusFilter?.onlyMyIssues)!
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -41,6 +43,17 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
         } else {
             cell.accessoryType = .None
         }
+        
+        if cell.label_status_filter.text == "Done" {
+            if caller?.aBoard != nil || caller?.aVersion != nil { // Temporarilty disabling possibility to show "Done" issues if this is not a board or version.
+                cell.userInteractionEnabled = true
+                cell.label_status_filter.textColor = UIColor.blackColor()
+            } else {
+                cell.userInteractionEnabled = false
+                cell.label_status_filter.textColor = UIColor.lightGrayColor()
+            }
+        }
+
         return cell
     }
     
@@ -49,6 +62,12 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
             caller?.statusFilter?.statusesList[indexPath.row].1 = !currentCheckmark
         }
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+        caller?.applyFilter()
+        caller?.view_collectionView.reloadData()
+    }
+    
+    @IBAction func switch_changed_my_issues_only(sender: UISwitch) {
+        caller?.statusFilter?.onlyMyIssues = switch_my_issues_only.on
         caller?.applyFilter()
         caller?.view_collectionView.reloadData()
     }

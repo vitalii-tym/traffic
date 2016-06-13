@@ -149,6 +149,9 @@
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gby-BE-6I9">
                                 <rect key="frame" x="135" y="15" width="51" height="31"/>
+                                <connections>
+                                    <action selector="switch_changed_my_issues_only:" destination="0nm-sz-jlj" eventType="valueChanged" id="6M5-AK-ZbJ"/>
+                                </connections>
                             </switch>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dF1-VX-mbj">
                                 <rect key="frame" x="10" y="61" width="180" height="119"/>
@@ -198,6 +201,7 @@
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="switch_my_issues_only" destination="gby-BE-6I9" id="zPo-lG-3xd"/>
                         <outlet property="table_statuses" destination="dF1-VX-mbj" id="smK-GP-Pci"/>
                     </connections>
                 </viewController>

@@ -108,7 +108,8 @@ struct Task {
     var task_priority: String
     var task_description: String? //optional, because some tasks might have no description (JIRA returns "null")
     var task_status: String
-    var task_assignee: String? // The issue might be Unassigned
+    var task_assigneeDisplayName: String? // The issue might be Unassigned
+    var task_assigneeInternalName: String? // The issue might be Unassigned
     
     static func encodeForCoder(task: Task, coder: NSCoder, index: Int) {
         let taskClassObject = TaskToCode(task: task)
@@ -136,9 +137,10 @@ extension Task {
             guard let task_priority = aDecoder.decodeObjectForKey("task_priority") as? String else { task = nil; super.init(); return nil }
             guard let task_status = aDecoder.decodeObjectForKey("task_status") as? String else { task = nil; super.init(); return nil}
             let task_description = aDecoder.decodeObjectForKey("task_description") as? String
-            let task_assignee = aDecoder.decodeObjectForKey("task_assignee") as? String
+            let task_assigneeDisplayName = aDecoder.decodeObjectForKey("task_assigneeDisplayName") as? String
+            let task_assigneeInternalName = aDecoder.decodeObjectForKey("task_assigneeInternalName") as? String
         
-            task = Task(task_key: task_key, task_type: task_type, task_summary: task_summary, task_priority: task_priority, task_description: task_description, task_status: task_status, task_assignee: task_assignee)
+            task = Task(task_key: task_key, task_type: task_type, task_summary: task_summary, task_priority: task_priority, task_description: task_description, task_status: task_status, task_assigneeDisplayName: task_assigneeDisplayName, task_assigneeInternalName: task_assigneeInternalName)
             super.init()
         }
     
@@ -149,7 +151,8 @@ extension Task {
             aCoder.encodeObject(task!.task_priority, forKey: "task_priority")
             aCoder.encodeObject(task!.task_status, forKey: "task_status")
             aCoder.encodeObject(task!.task_description, forKey: "task_description")
-            aCoder.encodeObject(task!.task_assignee, forKey: "task_assignee")
+            aCoder.encodeObject(task!.task_assigneeDisplayName, forKey: "task_assigneeDisplayName")
+            aCoder.encodeObject(task!.task_assigneeInternalName, forKey: "task_assigneeInternalName")
         }
     }
 }
@@ -217,6 +220,7 @@ struct MetadataProject {
 
 class JIRAStatuses: NSObject, NSCoding {
     var statusesList: [(String, Bool)] = []
+    var onlyMyIssues: Bool
     init? (data: NSData) {
         var jsonObject: Array<AnyObject>?
         var tempStatusesList: [String] = []
@@ -249,6 +253,7 @@ class JIRAStatuses: NSObject, NSCoding {
                 statusesList.append((aStatus, true))
             }
         }
+        onlyMyIssues = false
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -266,6 +271,7 @@ class JIRAStatuses: NSObject, NSCoding {
             }
         }
         self.statusesList = decodedStatusesList
+        self.onlyMyIssues = aDecoder.decodeBoolForKey("myIssues")
         super.init()
     }
     
@@ -274,6 +280,7 @@ class JIRAStatuses: NSObject, NSCoding {
             aCoder.encodeObject(aStatus.0, forKey: "status\(index)")
             aCoder.encodeObject(aStatus.1, forKey: "isSelected\(index)")
         }
+        aCoder.encodeBool(onlyMyIssues, forKey: "myIssues")
     }
     
     class func path(projectID: String) -> String {
@@ -283,6 +290,10 @@ class JIRAStatuses: NSObject, NSCoding {
     }
     
     func isActive() -> Bool { // Returns true if there is at least anything hidden by filter
+        if onlyMyIssues {
+            return onlyMyIssues
+        }
+        
         var isActive = false
         for status in statusesList {
             if status.1 == false {
@@ -579,14 +590,16 @@ class JIRATasks: NSObject, NSCoding {
                                 if let issue_priority = issue_priority_Dict["name"] as? String,
                                     issue_type = issue_typeDict["name"] as? String,
                                     issue_status = issue_status_Dict["name"] as? String {
-                                        let issue_assignee = issue_assigneeDict?["displayName"] as? String
+                                        let issue_assigneeDisplayName = issue_assigneeDict?["displayName"] as? String
+                                        let issue_assigneeInternalName = issue_assigneeDict?["name"] as? String
                                         newTasks.append(Task(task_key: issue_key ?? "(no title)",
                                             task_type: issue_type,
                                             task_summary: issue_summary,
                                             task_priority: issue_priority,
                                             task_description: issue_description,
                                             task_status: issue_status,
-                                            task_assignee: issue_assignee))
+                                            task_assigneeDisplayName: issue_assigneeDisplayName,
+                                            task_assigneeInternalName: issue_assigneeInternalName))
                         }
                     }
                 }

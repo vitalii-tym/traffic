@@ -113,7 +113,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func applyFilter() {
-        var itemsToShow: [String] = []
+        var itemsToShow: [String] = [] // Here we'll hold a list of allowed statuses
         if statusFilter != nil && !statusFilter!.statusesList.isEmpty {
             for status in (statusFilter?.statusesList)! {
                 if !itemsToShow.contains(status.0) && status.1 {
@@ -122,8 +122,14 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             }
             filteredtasks?.taskslist.removeAll()
             for aTask in (tasks?.taskslist)! {
-                if itemsToShow.contains(aTask.task_status) {
-                    filteredtasks?.taskslist.append(aTask)
+                if itemsToShow.contains(aTask.task_status) { // Filtering by status
+                    if ((statusFilter?.onlyMyIssues) == true) { // Filtering tasks that assigned only to current user
+                        if aTask.task_assigneeInternalName == currentUser?.name {
+                            filteredtasks?.taskslist.append(aTask)
+                        }
+                    } else {
+                        filteredtasks?.taskslist.append(aTask)
+                    }
                 }
             }
             print("filter applied")
@@ -143,11 +149,11 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 URLEnding = "/rest/agile/1.0/board/\(aBoard!.id)/issue"
                 label_context.text = "[\(aBoard!.name)]"
             } else {
-                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.id)+order+by+rank+asc&maxResults=200"
+                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.id)+AND+status+not+in+(Done)+order+by+rank+asc&maxResults=200"
                 label_context.text = "[All issues for project]"
             }
         } else {
-            URLEnding = "/rest/api/2/search?jql=order+by+rank+asc&maxResults=200"
+            URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc&maxResults=200"
             label_context.text = "[All issues for all projects]"
         }
         return URLEnding
@@ -175,12 +181,12 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if self.filteredtasks != nil {
+        if self.filteredtasks != nil { // Showing or hiding the label that says that there are not tasks to show.
             label_no_tasks.hidden = !(self.tasks?.taskslist.isEmpty)!
         }
         var numOfRows = self.filteredtasks?.taskslist.count ?? 0
         
-        if statusFilter != nil && statusFilter!.isActive() {
+        if statusFilter != nil && statusFilter!.isActive() { // When filter is active, we add additional cell, which will hold notice to user mentioning that there are filtered items.
             numOfRows += 1
         }
         return numOfRows
@@ -194,7 +200,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             cell.label_name.text = filteredtasks?.taskslist[indexPath.row].task_key
             cell.label_summary.text = filteredtasks?.taskslist[indexPath.row].task_summary
             cell.label_summary.textColor = UIColor.blackColor()
-            cell.label_assignee.text = filteredtasks?.taskslist[indexPath.row].task_assignee
+            cell.label_assignee.text = filteredtasks?.taskslist[indexPath.row].task_assigneeDisplayName
             cell.label_type.text = filteredtasks?.taskslist[indexPath.row].task_type
             cell.label_description.text = filteredtasks?.taskslist[indexPath.row].task_description
             cell.label_priority.text = filteredtasks?.taskslist[indexPath.row].task_priority
