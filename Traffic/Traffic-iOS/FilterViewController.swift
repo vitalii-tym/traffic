@@ -160,5 +160,6 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
     @IBAction func unwindToFilter(segue: UIStoryboardSegue) {
         label_version_name.text = caller?.aVersion?.name
         label_version_name.font = UIFont.systemFontOfSize(15)
+        table_statuses.reloadData()
     }
 }

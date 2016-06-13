@@ -228,7 +228,7 @@
                     <connections>
                         <outlet property="label_version_name" destination="mfb-VU-Q8Z" id="rr7-US-0Q1"/>
                         <outlet property="switch_my_issues_only" destination="gby-BE-6I9" id="zPo-lG-3xd"/>
-                        <outlet property="table_statuses" destination="dF1-VX-mbj" id="smK-GP-Pci"/>
+                        <outlet property="table_statuses" destination="dF1-VX-mbj" id="b6C-rJ-jW3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q75-9J-OPO" userLabel="First Responder" sceneMemberID="firstResponder"/>
