@@ -174,6 +174,7 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
             destionationViewController.aVersion = self.aVersionToPass
             destionationViewController.aBoard = self.aBoardToPass
             destionationViewController.navigationItem.title = self.aProjectToPass?.name
+            destionationViewController.caller = self
         }
     }
     

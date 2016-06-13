@@ -19,8 +19,10 @@ class aTask: UICollectionViewCell {
 
 class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverPresentationControllerDelegate {
 
+    var caller: ProjectsViewController?
     var aProject: Project?
     var aVersion: Version?
+    var versions: [Version] = []
     var aBoard: Board?
     var aNetworkRequest = JIRANetworkRequest()
     var tasks: JIRATasks? //{ didSet { self.view_collectionView.reloadData() } }
@@ -65,6 +67,22 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                             self.regenerateAndApplyFilter()
                 }
                 self.parentViewController?.stopActivityIndicator()
+            }
+        }
+        
+        if aProject != nil {
+            let URLEndingForVersions = "/rest/api/2/project/\(aProject!.id)/versions"
+            parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
+            aNetworkRequest.getdata("GET", URLEnding: URLEndingForVersions, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                // Beginning of 1st level block
+                if !anyErrors("get_versions", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                    if self.caller != nil {
+                        self.caller!.projects?.setVersionsForProject(data!, projectID: self.aProject!.id)
+                        self.versions = self.caller!.projects!.getVersionsForProject(self.aProject!.id)
+                    }
+                    self.parentViewController?.stopActivityIndicator()
+                }
+            self.parentViewController?.stopActivityIndicator()
             }
         }
         aTasktoPass = nil
@@ -260,8 +278,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             let popover = destinationViewController.popoverPresentationController
             if popover != nil && statusFilter != nil {
                 popover?.delegate = self
-                let popoverWidth: CGFloat = min(CGFloat(statusFilter!.statusesList.count * 44 + 75), view_collectionView.frame.height) // WARNING: Hardcoded popover height here
-                destinationViewController.preferredContentSize = CGSizeMake(280,popoverWidth)
+                let popoverHeight: CGFloat = min(CGFloat(statusFilter!.statusesList.count * 44 + 95), view_collectionView.frame.height) // WARNING: Hardcoded popover height here
+                destinationViewController.preferredContentSize = CGSizeMake(280,popoverHeight)
             }
         }
     }
