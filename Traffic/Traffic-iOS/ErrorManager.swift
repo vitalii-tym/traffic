@@ -199,7 +199,9 @@ func anyErrors(actionType: String, controller: UIViewController, data: NSData?, 
         }
         
         if error?.code != -999 {
-            controller.showMessage(networkError, mood: "Bad")
+            if !quiteMode {
+                controller.showMessage(networkError, mood: "Bad")
+            }
             // code -999 means the request query was cancelled by the app itself
             // It is usually done in a viewWillDisappear by self.urlSession.invalidateAndCancel() and can be ignored.
      //       let alert: UIAlertController = UIAlertController(title: actionTypes["network"]!.0, message: "\(networkError)", preferredStyle: UIAlertControllerStyle.Alert)

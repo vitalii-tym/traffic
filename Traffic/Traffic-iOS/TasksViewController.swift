@@ -18,15 +18,14 @@ class aTask: UICollectionViewCell {
 }
 
 class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverPresentationControllerDelegate {
-
     var caller: ProjectsViewController?
     var aProject: Project?
     var aVersion: Version?
     var versions: [Version] = []
     var aBoard: Board?
     var aNetworkRequest = JIRANetworkRequest()
-    var tasks: JIRATasks? //{ didSet { self.view_collectionView.reloadData() } }
-    var filteredtasks: JIRATasks? //{ didSet { self.view_collectionView.reloadData() } }
+    var tasks: JIRATasks?
+    var filteredtasks: JIRATasks? { didSet { self.view_collectionView.reloadData() } }
     var aTasktoPass: Task?
     var IssueCreationMetadata: JIRAMetadataToCreateIssue?
     var currentUser: JIRAcurrentUser?
@@ -42,116 +41,153 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         super.viewDidLoad()
         self.refreshControl = UIRefreshControl()
         self.refreshControl.attributedTitle = NSAttributedString(string: "")
-        self.refreshControl.addTarget(self, action: #selector(TasksViewViewController.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl.addTarget(self, action: #selector(TasksViewViewController.tryFetchDataFromNetwork(_:)), forControlEvents: UIControlEvents.ValueChanged)
         view_collectionView!.addSubview(refreshControl)
+        button_open_filter.enabled = false
+        let isFetchFromCacheSuccesfull = tryFetchDataFromCache()
+        if !isFetchFromCacheSuccesfull {
+            // If we fail to load at least anything from cache user will have to wait.
+            self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
+        }
+        tryFetchDataFromNetwork(isFetchFromCacheSuccesfull)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        button_open_filter.enabled = false
-        if self.tasks == nil {
-            self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
-        }
-
-        let URLEnding: String = GenerateURLEndingDependingOnContext()
-        if let maybeTasksList = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRATasks.path(URLEnding)) as? JIRATasks {
-            self.tasks = maybeTasksList
-            self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
-            regenerateAndApplyFilter()
-        } else {
-            aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-                if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
-                            self.tasks = JIRATasks(data: data!)
-                            self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
-                            NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
-                            self.regenerateAndApplyFilter()
-                }
-                self.parentViewController?.stopActivityIndicator()
-            }
-        }
-        
-        if aProject != nil {
-            let URLEndingForVersions = "/rest/api/2/project/\(aProject!.id)/versions"
-            parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
-            aNetworkRequest.getdata("GET", URLEnding: URLEndingForVersions, JSON: nil, domain: nil) { (data, response, error) -> Void in
-                // Beginning of 1st level block
-                if !anyErrors("get_versions", controller: self, data: data, response: response, error: error, quiteMode: false) {
-                    if self.caller != nil {
-                        self.caller!.projects?.setVersionsForProject(data!, projectID: self.aProject!.id)
-                        self.versions = self.caller!.projects!.getVersionsForProject(self.aProject!.id)
-                    }
-                    self.parentViewController?.stopActivityIndicator()
-                }
-            self.parentViewController?.stopActivityIndicator()
-            }
-        }
         aTasktoPass = nil
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        // Retreiving metadata for issue creation and enabling the "+" button as soon as metadata loading succesful
+        // Silently retreiving metadata for issue creation and enabling the "+" button as soon as metadata loading succesful
         let URLEnding = "/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields"
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-            if !anyErrors("get_create_meta", controller: self, data: data, response: response, error: error, quiteMode: false) {
+            if !anyErrors("get_create_meta", controller: self, data: data, response: response, error: error, quiteMode: true) {
                 self.IssueCreationMetadata = JIRAMetadataToCreateIssue(data: data!)
                 // We have got metadata, but to be able to create tasks we still need to know current user, so that we can fill in the "creator" field
                 let URLEnding = "/rest/auth/1/session"
                 self.aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-                    if !anyErrors("current_user", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                    if !anyErrors("current_user", controller: self, data: data, response: response, error: error, quiteMode: true) {
                         self.currentUser = JIRAcurrentUser(data: data!)
                         self.button_NewTask.enabled = true
                     }
                 }
             }
         }
-        refresh(nil)
-        _ = NSTimer.scheduledTimerWithTimeInterval(420, target: self, selector: #selector(TasksViewViewController.refresh(_:)), userInfo: nil, repeats: true)
+        _ = NSTimer.scheduledTimerWithTimeInterval(420, target: self, selector: #selector(TasksViewViewController.tryFetchDataFromNetwork(_:)), userInfo: nil, repeats: true)
     }
     
-    func regenerateAndApplyFilter() {
-        if aProject != nil {
-            if let maybeUnachivedFilter = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRAStatuses.path(aProject!.id)) as? JIRAStatuses {
-                statusFilter = maybeUnachivedFilter
-                button_open_filter.enabled = true
-                self.applyFilter()
-                self.parentViewController?.stopActivityIndicator()
+    func tryFetchDataFromCache() -> Bool {
+        var isResultSuccesful: Bool = false
+        if let currentProject = aProject {
+            // Trying to load tasks from cache
+            let URLEnding: String = GenerateURLEndingDependingOnContext()
+            if let maybeTasksList = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRATasks.path(URLEnding)) as? JIRATasks {
+                tasks = maybeTasksList
+                // If succesfull with tasks trying to load version from cache
+                if let maybeVersions = self.caller?.projects?.getVersionsForProject(currentProject.id) {
+                    versions = maybeVersions
+                    // If we are succesfull with versions we try to load statuses from cache
+                    if let maybeStatusesFilter = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRAStatuses.path(currentProject.id)) as? JIRAStatuses {
+                        statusFilter = maybeStatusesFilter
+                        button_open_filter.enabled = true
+                        // If we have everything loaded from cache we apply filters
+                        applyFilter()
+                        isResultSuccesful = true
+                    }
+                }
+            }
+        } else { print("No project in context. Something very bad might have happened.") }
+        return isResultSuccesful
+    }
+    
+    func tryFetchDataFromNetwork(sender: AnyObject?) {
+        // Trying to fetch and update tasks
+        let URLEnding: String = GenerateURLEndingDependingOnContext()
+        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+            if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                self.tasks = JIRATasks(data: data!)
+                NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
             } else {
-                let URLEnding = "/rest/api/2/project/\(aProject!.key)/statuses"
-                aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-                    if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
-                        self.statusFilter = JIRAStatuses(data: data!)
-                        self.applyFilter()
-                        self.button_open_filter.enabled = true
+              //  self.showMessage("Failed to load tasks", mood: "Bad")
+                self.refreshControl.endRefreshing()
+                if sender != nil && sender as? Bool == false {
+                    // In case we previously failed to load tasks from cache "sender" will be false
+                    // If the network fetch didn't work either it is better to clear the tasks list
+                    self.filteredtasks?.taskslist.removeAll()
+                    self.view_collectionView.reloadData()
+                    self.showMessage("No internet to get tasks and no tasks cached. Sorry.", mood: "Bad")
+                    // TODO: Change this little message to some big message telling we can't show the tasks because of Internet absence and we don't have them in cache.
+                }
+            }
+            // As soon as we finished fetching tasks, we try to get and update versions
+            if let currentProject = self.aProject {
+                let URLEndingForVersions = "/rest/api/2/project/\(currentProject.id)/versions"
+                if let parentVC = self.parentViewController where parentVC.isActivityIndicatorActive() == true {
+                    // If activity indicator is not running, this means we are doing work in backgrounf and don't need to show furher indicators
+                    self.parentViewController?.stopActivityIndicator()
+                    self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
+                }
+                self.aNetworkRequest.getdata("GET", URLEnding: URLEndingForVersions, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                    if !anyErrors("get_versions", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                        if self.caller != nil {
+                            self.caller!.projects?.setVersionsForProject(data!, projectID: currentProject.id)
+                            self.caller!.archiveProjects()
+                            self.versions = self.caller!.projects!.getVersionsForProject(currentProject.id)
+                        }
+                    } else {
+                      //  self.showMessage("Failed to load versions", mood: "Bad")
+                        self.refreshControl.endRefreshing()
+                    }
+                    // As soon as versions finished we try to get and update statuses
+                    let URLEndingForStatuses = "/rest/api/2/project/\(currentProject.id)/statuses"
+                    if let parentVC = self.parentViewController where parentVC.isActivityIndicatorActive() == true {
                         self.parentViewController?.stopActivityIndicator()
+                        self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting statuses...")
+                    }
+                    self.aNetworkRequest.getdata("GET", URLEnding: URLEndingForStatuses, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                        if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                            self.statusFilter = JIRAStatuses(data: data!)
+                            self.button_open_filter.enabled = true
+                            // As soon as we have got new data from JIRA we redraw everything
+                            self.applyFilter()
+                            self.parentViewController?.stopActivityIndicator()
+                            self.refreshControl.endRefreshing()
+                            self.showMessage("Tasks list updated", mood: "Good")
+                            NSKeyedArchiver.archiveRootObject(self.statusFilter!, toFile: JIRAStatuses.path(currentProject.id))
+                        } else {
+                            self.parentViewController?.stopActivityIndicator()
+                            self.refreshControl.endRefreshing()
+                         //   self.showMessage("Failed to load statuses", mood: "Bad")
+                        }
                     }
                 }
             }
         }
     }
-    
+
     func applyFilter() {
         var itemsToShow: [String] = [] // Here we'll hold a list of allowed statuses
+        let tasksSelectedAsFiltered = JIRATasks.init(tasks: [])
+        
         if statusFilter != nil && !statusFilter!.statusesList.isEmpty {
             for status in (statusFilter?.statusesList)! {
                 if !itemsToShow.contains(status.0) && status.1 {
                     itemsToShow.append(status.0)
                 }
             }
-            filteredtasks?.taskslist.removeAll()
             for aTask in (tasks?.taskslist)! {
                 if itemsToShow.contains(aTask.task_status) { // Filtering by status
                     if ((statusFilter?.onlyMyIssues) == true) { // Filtering tasks that assigned only to current user
                         if aTask.task_assigneeInternalName == currentUser?.name {
-                            filteredtasks?.taskslist.append(aTask)
+                            tasksSelectedAsFiltered.taskslist.append(aTask)
                         }
                     } else {
-                        filteredtasks?.taskslist.append(aTask)
+                        tasksSelectedAsFiltered.taskslist.append(aTask)
                     }
                 }
             }
-            print("filter applied")
-            view_collectionView.reloadData()
+            filteredtasks = tasksSelectedAsFiltered
         } else {
             print("couldn't apply filter as it doesn't exist")
         }
@@ -177,23 +213,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         return URLEnding
     }
     
-    func refresh(sender: AnyObject?) {
-        let URLEnding: String = GenerateURLEndingDependingOnContext()
-        aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
-            if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
-                self.tasks = JIRATasks(data: data!)
-                self.filteredtasks = JIRATasks.init(tasks: self.tasks!.taskslist)
-                NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
-                self.regenerateAndApplyFilter()
-                self.refreshControl.endRefreshing()
-                self.showMessage("refresh succesful", mood: "Good")
-            } else {
-                self.refreshControl.endRefreshing()
-            }
-        }
-        aTasktoPass = nil
-    }
-
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -203,7 +222,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             label_no_tasks.hidden = !(self.tasks?.taskslist.isEmpty)!
         }
         var numOfRows = self.filteredtasks?.taskslist.count ?? 0
-        
         if statusFilter != nil && statusFilter!.isActive() { // When filter is active, we add additional cell, which will hold notice to user mentioning that there are filtered items.
             numOfRows += 1
         }
@@ -213,7 +231,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("TaskCell", forIndexPath: indexPath) as! aTask
         if indexPath.row < filteredtasks?.taskslist.count {
-        
             cell.backgroundColor = UIColor.lightGrayColor()
             cell.label_name.text = filteredtasks?.taskslist[indexPath.row].task_key
             cell.label_summary.text = filteredtasks?.taskslist[indexPath.row].task_summary
@@ -223,7 +240,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             cell.label_description.text = filteredtasks?.taskslist[indexPath.row].task_description
             cell.label_priority.text = filteredtasks?.taskslist[indexPath.row].task_priority
             cell.label_status.text = filteredtasks?.taskslist[indexPath.row].task_status
-
             switch cell.label_priority.text! {
                 case "Highest": cell.label_priority.textColor = UIColor.redColor()
                                 cell.label_priority.font = UIFont.boldSystemFontOfSize(12.0)
@@ -233,12 +249,10 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 case "Lowest":  cell.label_priority.textColor = UIColor.grayColor()
                 default:        cell.label_priority.textColor = UIColor.blackColor()
             }
-
             switch cell.label_status.text! {
                 case "In Progress": cell.label_status.backgroundColor = UIColor.yellowColor()
                 default:        cell.label_status.backgroundColor = UIColor.clearColor()
             }
-            
         } else {
             cell.backgroundColor = UIColor.clearColor()
             cell.label_summary.text = "Please check filter, as there might be more items hidden."

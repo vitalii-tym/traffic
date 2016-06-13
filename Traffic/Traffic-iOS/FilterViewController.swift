@@ -57,14 +57,17 @@ class ChooseVersionViewController: UIViewController, UITableViewDelegate, UITabl
         } else {
             caller?.aVersion = caller?.versions[indexPath.row - 1]
         }
-        
         if lastSelectedVersionIndexPath != nil {
             tableView.reloadRowsAtIndexPaths([lastSelectedVersionIndexPath!, indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         } else {
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         }
-        
-        caller?.refresh(nil)
+        if let isFetchFromCacheSuccesfull = caller?.tryFetchDataFromCache() {
+            if !isFetchFromCacheSuccesfull {
+                caller?.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
+                caller?.tryFetchDataFromNetwork(isFetchFromCacheSuccesfull)
+            }
+        }
         performSegueWithIdentifier("backToFilter", sender: self)
     }
 }
@@ -115,7 +118,6 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
         } else {
             cell.accessoryType = .None
         }
-        
         if cell.label_status_filter.text == "Done" {
             if caller?.aBoard != nil || caller?.aVersion != nil { // Temporarilty disabling possibility to show "Done" issues if this is not a board or version.
                 cell.userInteractionEnabled = true
@@ -125,7 +127,6 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
                 cell.label_status_filter.textColor = UIColor.lightGrayColor()
             }
         }
-
         return cell
     }
     

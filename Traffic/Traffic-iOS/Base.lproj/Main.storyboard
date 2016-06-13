@@ -141,20 +141,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="200" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Issues only" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vxj-Ru-ejn">
-                                <rect key="frame" x="16" y="20" width="113" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gby-BE-6I9">
-                                <rect key="frame" x="135" y="15" width="51" height="31"/>
+                                <rect key="frame" x="135" y="48" width="51" height="31"/>
                                 <connections>
                                     <action selector="switch_changed_my_issues_only:" destination="0nm-sz-jlj" eventType="valueChanged" id="6M5-AK-ZbJ"/>
                                 </connections>
                             </switch>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cqn-JB-g18">
-                                <rect key="frame" x="16" y="51" width="56" height="30"/>
+                                <rect key="frame" x="16" y="10" width="62" height="33"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Version:">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 </state>
@@ -162,15 +157,21 @@
                                     <segue destination="ccK-eb-uFD" kind="show" identifier="openChooseVersions" id="D0s-pw-zY1"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Issues only" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vxj-Ru-ejn">
+                                <rect key="frame" x="16" y="53" width="113" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dF1-VX-mbj">
-                                <rect key="frame" x="10" y="91" width="180" height="189"/>
+                                <rect key="frame" x="10" y="84" width="180" height="196"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="FilterCell" id="hMl-gu-pnT" customClass="aStatusFilterCell" customModule="EasyJira_iOS" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="180" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hMl-gu-pnT" id="6pc-P0-7hc">
-                                            <rect key="frame" x="0.0" y="0.0" width="141" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="141" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aan-vr-P8B">
@@ -196,7 +197,7 @@
                                 </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mfb-VU-Q8Z">
-                                <rect key="frame" x="79" y="55" width="42" height="21"/>
+                                <rect key="frame" x="85" y="16" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -204,25 +205,19 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="mfb-VU-Q8Z" firstAttribute="centerX" secondItem="dF1-VX-mbj" secondAttribute="centerX" id="7p0-vf-FBa"/>
-                            <constraint firstItem="Vxj-Ru-ejn" firstAttribute="top" secondItem="Uvg-ZH-9bK" secondAttribute="bottom" constant="20" id="Bo4-H0-XEc"/>
+                            <constraint firstItem="Vxj-Ru-ejn" firstAttribute="top" secondItem="Cqn-JB-g18" secondAttribute="bottom" constant="10" id="Ab2-Vm-B9P"/>
                             <constraint firstItem="Vxj-Ru-ejn" firstAttribute="leading" secondItem="Gev-b8-3KU" secondAttribute="leadingMargin" id="EnG-rR-2zZ"/>
                             <constraint firstItem="gby-BE-6I9" firstAttribute="trailing" secondItem="Gev-b8-3KU" secondAttribute="trailingMargin" id="IXt-qa-BKS"/>
                             <constraint firstItem="S0j-Gg-jMU" firstAttribute="top" secondItem="dF1-VX-mbj" secondAttribute="bottom" constant="20" id="J9v-zd-35T"/>
-                            <constraint firstItem="Cqn-JB-g18" firstAttribute="top" secondItem="Vxj-Ru-ejn" secondAttribute="bottom" constant="10" id="Tug-2v-svD"/>
+                            <constraint firstItem="Cqn-JB-g18" firstAttribute="top" secondItem="Uvg-ZH-9bK" secondAttribute="bottom" constant="10" id="d60-ff-Pc6"/>
                             <constraint firstItem="dF1-VX-mbj" firstAttribute="leading" secondItem="Gev-b8-3KU" secondAttribute="leading" constant="10" id="dEv-wD-eJv"/>
-                            <constraint firstItem="dF1-VX-mbj" firstAttribute="top" secondItem="Cqn-JB-g18" secondAttribute="bottom" constant="10" id="gKP-ST-aQY"/>
+                            <constraint firstItem="dF1-VX-mbj" firstAttribute="top" secondItem="Vxj-Ru-ejn" secondAttribute="bottom" constant="10" id="dZP-E3-kgL"/>
                             <constraint firstItem="mfb-VU-Q8Z" firstAttribute="leading" secondItem="Cqn-JB-g18" secondAttribute="trailing" constant="7" id="hMf-qf-UbP"/>
                             <constraint firstAttribute="leadingMargin" secondItem="Cqn-JB-g18" secondAttribute="leading" id="kzD-SY-2dk"/>
                             <constraint firstItem="dF1-VX-mbj" firstAttribute="trailing" secondItem="Gev-b8-3KU" secondAttribute="trailing" constant="-10" id="l4E-dm-DCc"/>
                             <constraint firstItem="gby-BE-6I9" firstAttribute="centerY" secondItem="Vxj-Ru-ejn" secondAttribute="centerY" id="t96-ff-UGq"/>
                             <constraint firstItem="mfb-VU-Q8Z" firstAttribute="baseline" secondItem="Cqn-JB-g18" secondAttribute="baseline" id="ugV-SL-Fyx"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="7p0-vf-FBa"/>
-                            </mask>
-                        </variation>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
@@ -239,7 +234,7 @@
         <!--Choose Version View Controller-->
         <scene sceneID="Uz9-IL-iu3">
             <objects>
-                <viewController modalTransitionStyle="flipHorizontal" modalPresentationStyle="currentContext" id="ccK-eb-uFD" customClass="ChooseVersionViewController" customModule="EasyJira_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="currentContext" id="ccK-eb-uFD" customClass="ChooseVersionViewController" customModule="EasyJira_iOS" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="NPD-cA-b6z"/>
                         <viewControllerLayoutGuide type="bottom" id="1u6-Ph-zP0"/>
@@ -301,7 +296,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UJl-XK-1CP" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Y89-Yz-XZe" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3197" y="-53"/>
+            <point key="canvasLocation" x="3444" y="-82"/>
         </scene>
         <!--Tasks-->
         <scene sceneID="tne-QT-ifu">

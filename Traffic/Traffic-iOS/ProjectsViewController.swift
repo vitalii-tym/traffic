@@ -357,6 +357,10 @@ class ProjectsViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    func archiveProjects() {
+        NSKeyedArchiver.archiveRootObject(self.projects!, toFile: JIRAProjects.path())
+    }
+    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         aNetworkRequest.cancel()

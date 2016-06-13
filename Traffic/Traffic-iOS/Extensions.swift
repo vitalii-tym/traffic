@@ -37,10 +37,19 @@ extension UIViewController {
             loadingLabel.lineBreakMode = .ByWordWrapping
             loadingLabel.sizeToFit()
             loadingLabel.center = CGPoint(x: loc.x, y: loc.y + 50)
-            
             activityIndicator.startAnimating()
             self.view.addSubview(activityIndicator)
         })
+    }
+}
+
+extension UIViewController {
+    func isActivityIndicatorActive() -> Bool {
+        if self.view.viewWithTag(self.activityIndicatorTag) != nil {
+            return true
+        } else {
+            return false
+        }
     }
 }
 

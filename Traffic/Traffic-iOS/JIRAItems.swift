@@ -293,7 +293,6 @@ class JIRAStatuses: NSObject, NSCoding {
         if onlyMyIssues {
             return onlyMyIssues
         }
-        
         var isActive = false
         for status in statusesList {
             if status.1 == false {
