@@ -304,6 +304,33 @@ class JIRAStatuses: NSObject, NSCoding {
         }
         return isActive
     }
+    
+    func mergeNewStatuses(data: NSData) {
+        let newStatuses = JIRAStatuses.init(data: data)
+        if let newList = newStatuses?.statusesList {
+            let oldList = self.statusesList
+            var uniqueOldSelectedStatuses: [String] = []
+            var uniqueOldDeselectedStatuses: [String] = []
+            for status in oldList {
+                if !uniqueOldSelectedStatuses.contains(status.0) && status.1 == true {
+                    uniqueOldSelectedStatuses.append(status.0)
+                }
+                if !uniqueOldDeselectedStatuses.contains(status.0) && status.1 == false {
+                    uniqueOldDeselectedStatuses.append(status.0)
+                }
+            }
+            for (index, status) in newList.enumerate() {
+                if uniqueOldDeselectedStatuses.contains(status.0) {
+                    newStatuses?.statusesList[index].1 = false
+                } else if uniqueOldSelectedStatuses.contains(status.0) {
+                    newStatuses?.statusesList[index].1 = true
+                }
+            }
+            if newStatuses != nil {
+                self.statusesList = newStatuses!.statusesList
+            }
+        }
+    }
 }
 
 class JIRAcurrentUser: NSObject, NSCoding {

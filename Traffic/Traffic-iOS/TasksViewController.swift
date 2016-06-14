@@ -19,16 +19,16 @@ class aTask: UICollectionViewCell {
 
 class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverPresentationControllerDelegate {
     var caller: ProjectsViewController?
-    var aProject: Project?
-    var aVersion: Version?
-    var aBoard: Board?
+    var aProject: Project? = nil
+    var aVersion: Version? = nil
+    var aBoard: Board? = nil
     var aNetworkRequest = JIRANetworkRequest()
-    var tasks: JIRATasks?
+    var tasks: JIRATasks? = nil
     var filteredtasks: JIRATasks? { didSet { self.view_collectionView.reloadData() } }
-    var aTasktoPass: Task?
-    var IssueCreationMetadata: JIRAMetadataToCreateIssue?
-    var currentUser: JIRAcurrentUser?
-    var statusFilter: JIRAStatuses?
+    var aTasktoPass: Task? = nil
+    var IssueCreationMetadata: JIRAMetadataToCreateIssue? = nil
+    var currentUser: JIRAcurrentUser? = nil
+    var statusFilter: JIRAStatuses? = nil
     var refreshControl: UIRefreshControl!
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
@@ -45,6 +45,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         view_collectionView!.addSubview(refreshControl)
         button_open_filter.enabled = false
         button_open_boards.enabled = false
+        unarchiveContext()
         let isFetchFromCacheSuccesfull = tryFetchDataFromCache()
         if !isFetchFromCacheSuccesfull {
             // If we fail to load at least anything from cache user will have to wait.
@@ -151,7 +152,11 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                     }
                     self.aNetworkRequest.getdata("GET", URLEnding: URLEndingForStatuses, JSON: nil, domain: nil) { (data, response, error) -> Void in
                         if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
-                            self.statusFilter = JIRAStatuses(data: data!)
+                            if self.statusFilter == nil {
+                                self.statusFilter = JIRAStatuses(data: data!) // If there were no filter we create new one
+                            } else {
+                                self.statusFilter?.mergeNewStatuses(data!) // If there was some filter we update it trying to preserver old user's settings
+                            }
                             self.button_open_filter.enabled = true
                             NSKeyedArchiver.archiveRootObject(self.statusFilter!, toFile: JIRAStatuses.path(currentProject.id))
                         } else {
@@ -275,7 +280,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             }
         } else {
             cell.backgroundColor = UIColor.clearColor()
-            cell.label_summary.text = "Please check filter, as there might be more items hidden."
+            cell.label_summary.text = "There might be more issues, hidden by filter."
             cell.label_summary.textColor = UIColor.lightGrayColor()
             cell.label_name.text = ""
             cell.label_assignee.text = ""
@@ -356,20 +361,64 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+
+    func archiveContext() {
+        if let currentProjectID = aProject?.id {
+            let documentsPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).first
+            let path = documentsPath?.stringByAppendingString("/\(currentProjectID)currentContext")
+            let fileManager = NSFileManager.defaultManager()
+            if statusFilter != nil {
+                NSKeyedArchiver.archiveRootObject(statusFilter!, toFile: JIRAStatuses.path(currentProjectID))
+            }
+            if aVersion != nil {
+                NSKeyedArchiver.archiveRootObject(aVersion!, toFile: path!+"Version")
+            } else {
+                do { try fileManager.removeItemAtPath(path!+"Version") } catch { print("Failed to clean file at: \(path!)Version") }
+            }
+            if aBoard != nil {
+                NSKeyedArchiver.archiveRootObject(aBoard!, toFile: path!+"Board")
+            } else {
+                do { try fileManager.removeItemAtPath(path!+"Board") } catch { print("Failed to clean file at: \(path!)Board") }
+            }
+            if currentUser != nil {
+                NSKeyedArchiver.archiveRootObject(currentUser!, toFile: path!+"User")
+            } else {
+                do { try fileManager.removeItemAtPath(path!+"User") } catch { print("Failed to clean file at: \(path!)User") }
+            }
+        } else {
+            print("Failed to archive current context, as there is no project selected.")
+        }
+    }
+    
+    func unarchiveContext() {
+        if let currentProjectID = aProject?.id {
+            let documentsPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).first
+            let path = documentsPath?.stringByAppendingString("/\(currentProjectID)currentContext")
+            if let archivedCopyOfStatuses = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRAStatuses.path(currentProjectID)) as? JIRAStatuses {
+                self.statusFilter = archivedCopyOfStatuses
+            }
+            if let archivedCopyOfVersion = NSKeyedUnarchiver.unarchiveObjectWithFile(path!+"Version") as? Version {
+                self.aVersion = archivedCopyOfVersion
+            }
+            if let archivedCopyOfBoard = NSKeyedUnarchiver.unarchiveObjectWithFile(path!+"Board") as? Board {
+                self.aBoard = archivedCopyOfBoard
+            }
+            if let archivedCopyOfUser = NSKeyedUnarchiver.unarchiveObjectWithFile(path!+"User") as? JIRAcurrentUser {
+                self.currentUser = archivedCopyOfUser
+            }
+        } else {
+            print("Failed to unarchive current context as there is no project selected.")
+        }
+    }
     
     override func encodeRestorableStateWithCoder(coder: NSCoder) {
         if let projectToEncode = aProject { Project.encodeForCoder(projectToEncode, coder: coder, index: 1) }
-        if let versionToEncode = aVersion { coder.encodeObject(versionToEncode, forKey: "version") }
-        if let boardToEncode = aBoard { coder.encodeObject(boardToEncode, forKey: "board") }
-        if let aCurrenUserToEncode = currentUser { coder.encodeObject(aCurrenUserToEncode, forKey: "currentUser") }
+        self.archiveContext()
         super.encodeRestorableStateWithCoder(coder)
     }
     
     override func decodeRestorableStateWithCoder(coder: NSCoder) {
         aProject = Project.decode(coder, index: 1)
-        aVersion = coder.decodeObjectForKey("version") as? Version
-        aBoard = coder.decodeObjectForKey("board") as? Board
-        currentUser = coder.decodeObjectForKey("currentUser") as? JIRAcurrentUser
         super.decodeRestorableStateWithCoder(coder)
     }
 }

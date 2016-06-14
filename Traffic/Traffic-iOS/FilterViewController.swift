@@ -142,7 +142,7 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
     }
     
     override func viewWillDisappear(animated: Bool) {
-        NSKeyedArchiver.archiveRootObject(caller!.statusFilter!, toFile: JIRAStatuses.path(caller!.aProject!.id))
+        caller?.archiveContext()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

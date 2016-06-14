@@ -110,6 +110,11 @@ class BoardsViewController: UIViewController, UIPopoverPresentationControllerDel
         }
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        caller?.archiveContext()
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("BoardCell", forIndexPath: indexPath) as! aChooseBoardCell
         if indexPath.row == 0 {
