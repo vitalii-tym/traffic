@@ -110,6 +110,7 @@ struct Task {
     var task_status: String
     var task_assigneeDisplayName: String? // The issue might be Unassigned
     var task_assigneeInternalName: String? // The issue might be Unassigned
+    var task_fixversions: [String]
     
     static func encodeForCoder(task: Task, coder: NSCoder, index: Int) {
         let taskClassObject = TaskToCode(task: task)
@@ -139,8 +140,9 @@ extension Task {
             let task_description = aDecoder.decodeObjectForKey("task_description") as? String
             let task_assigneeDisplayName = aDecoder.decodeObjectForKey("task_assigneeDisplayName") as? String
             let task_assigneeInternalName = aDecoder.decodeObjectForKey("task_assigneeInternalName") as? String
+            guard let task_fixversions = aDecoder.decodeObjectForKey("task_fixversions") as? [String] else { task = nil; super.init(); return nil}
         
-            task = Task(task_key: task_key, task_type: task_type, task_summary: task_summary, task_priority: task_priority, task_description: task_description, task_status: task_status, task_assigneeDisplayName: task_assigneeDisplayName, task_assigneeInternalName: task_assigneeInternalName)
+            task = Task(task_key: task_key, task_type: task_type, task_summary: task_summary, task_priority: task_priority, task_description: task_description, task_status: task_status, task_assigneeDisplayName: task_assigneeDisplayName, task_assigneeInternalName: task_assigneeInternalName, task_fixversions: task_fixversions)
             super.init()
         }
     
@@ -153,6 +155,7 @@ extension Task {
             aCoder.encodeObject(task!.task_description, forKey: "task_description")
             aCoder.encodeObject(task!.task_assigneeDisplayName, forKey: "task_assigneeDisplayName")
             aCoder.encodeObject(task!.task_assigneeInternalName, forKey: "task_assigneeInternalName")
+            aCoder.encodeObject(task!.task_fixversions, forKey: "task_fixversions")
         }
     }
 }
@@ -586,11 +589,23 @@ class JIRATasks: NSObject, NSCoding {
                             issue_typeDict = issue_fields_Dict["issuetype"] as? Dictionary<String,AnyObject> {
                                 let issue_assigneeDict = issue_fields_Dict["assignee"] as? Dictionary<String,AnyObject> // Assignee will be absent if the issue is Unsassigned
                                 let issue_description = issue_fields_Dict["description"] as? String // issue_description can acutally be empty
+                        
+                                var issue_fixversions: [String] = []
+                                if let issue_fixversionsArray = issue_fields_Dict["fixVersions"] as? Array<AnyObject> {
+                                    for fixversionObject in issue_fixversionsArray {
+                                        if let fixversionDict = fixversionObject as? Dictionary<String,AnyObject> {
+                                            if let issue_fixversionID = fixversionDict["id"] as? String {
+                                                issue_fixversions.append(issue_fixversionID)
+                                            }
+                                        }
+                                    }
+                                }
                                 if let issue_priority = issue_priority_Dict["name"] as? String,
                                     issue_type = issue_typeDict["name"] as? String,
                                     issue_status = issue_status_Dict["name"] as? String {
                                         let issue_assigneeDisplayName = issue_assigneeDict?["displayName"] as? String
                                         let issue_assigneeInternalName = issue_assigneeDict?["name"] as? String
+                                
                                         newTasks.append(Task(task_key: issue_key ?? "(no title)",
                                             task_type: issue_type,
                                             task_summary: issue_summary,
@@ -598,7 +613,8 @@ class JIRATasks: NSObject, NSCoding {
                                             task_description: issue_description,
                                             task_status: issue_status,
                                             task_assigneeDisplayName: issue_assigneeDisplayName,
-                                            task_assigneeInternalName: issue_assigneeInternalName))
+                                            task_assigneeInternalName: issue_assigneeInternalName,
+                                            task_fixversions: issue_fixversions))
                         }
                     }
                 }

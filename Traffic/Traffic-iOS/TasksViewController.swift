@@ -21,7 +21,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var caller: ProjectsViewController?
     var aProject: Project?
     var aVersion: Version?
-    var versions: [Version] = []
     var aBoard: Board?
     var aNetworkRequest = JIRANetworkRequest()
     var tasks: JIRATasks?
@@ -36,6 +35,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     @IBOutlet weak var label_no_tasks: UILabel!
     @IBOutlet weak var label_context: UILabel!
     @IBOutlet weak var button_open_filter: UIBarButtonItem!
+    @IBOutlet weak var button_open_boards: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,12 +44,14 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         self.refreshControl.addTarget(self, action: #selector(TasksViewViewController.tryFetchDataFromNetwork(_:)), forControlEvents: UIControlEvents.ValueChanged)
         view_collectionView!.addSubview(refreshControl)
         button_open_filter.enabled = false
+        button_open_boards.enabled = false
         let isFetchFromCacheSuccesfull = tryFetchDataFromCache()
         if !isFetchFromCacheSuccesfull {
             // If we fail to load at least anything from cache user will have to wait.
             self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
         }
         tryFetchDataFromNetwork(isFetchFromCacheSuccesfull)
+        _ = NSTimer.scheduledTimerWithTimeInterval(420, target: self, selector: #selector(TasksViewViewController.tryFetchDataFromNetwork(_:)), userInfo: nil, repeats: true)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -74,7 +76,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 }
             }
         }
-        _ = NSTimer.scheduledTimerWithTimeInterval(420, target: self, selector: #selector(TasksViewViewController.tryFetchDataFromNetwork(_:)), userInfo: nil, repeats: true)
     }
     
     func tryFetchDataFromCache() -> Bool {
@@ -85,12 +86,16 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             if let maybeTasksList = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRATasks.path(URLEnding)) as? JIRATasks {
                 tasks = maybeTasksList
                 // If succesfull with tasks trying to load version from cache
-                if let maybeVersions = self.caller?.projects?.getVersionsForProject(currentProject.id) {
-                    versions = maybeVersions
+                if let maybeVersions = self.caller?.projects?.getVersionsForProject(currentProject.id),
+                    let maybeBoards = self.caller?.projects?.getBoardsForProject(currentProject.id) {
+                    //We dodn't need to explicitly unarchive "Projects" because it is supposed to be already present unarchived in the ViewDidLoad of ProjectsViewController by this time, so we only need to get versions and boards from there.
+                    aProject?.versions = maybeVersions
+                    aProject?.boards = maybeBoards
                     // If we are succesfull with versions we try to load statuses from cache
                     if let maybeStatusesFilter = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRAStatuses.path(currentProject.id)) as? JIRAStatuses {
                         statusFilter = maybeStatusesFilter
                         button_open_filter.enabled = true
+                        button_open_boards.enabled = true
                         // If we have everything loaded from cache we apply filters
                         applyFilter()
                         isResultSuccesful = true
@@ -132,8 +137,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                     if !anyErrors("get_versions", controller: self, data: data, response: response, error: error, quiteMode: false) {
                         if self.caller != nil {
                             self.caller!.projects?.setVersionsForProject(data!, projectID: currentProject.id)
-                            self.caller!.archiveProjects()
-                            self.versions = self.caller!.projects!.getVersionsForProject(currentProject.id)
+                            self.aProject?.versions = self.caller!.projects!.getVersionsForProject(currentProject.id)
                         }
                     } else {
                       //  self.showMessage("Failed to load versions", mood: "Bad")
@@ -149,16 +153,32 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                         if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
                             self.statusFilter = JIRAStatuses(data: data!)
                             self.button_open_filter.enabled = true
-                            // As soon as we have got new data from JIRA we redraw everything
-                            self.applyFilter()
-                            self.parentViewController?.stopActivityIndicator()
-                            self.refreshControl.endRefreshing()
-                            self.showMessage("Tasks list updated", mood: "Good")
                             NSKeyedArchiver.archiveRootObject(self.statusFilter!, toFile: JIRAStatuses.path(currentProject.id))
                         } else {
-                            self.parentViewController?.stopActivityIndicator()
                             self.refreshControl.endRefreshing()
                          //   self.showMessage("Failed to load statuses", mood: "Bad")
+                        }
+                        let URLEndingBoards = "/rest/agile/1.0/board?projectKeyOrId=\(currentProject.id)"
+                        if let parentVC = self.parentViewController where parentVC.isActivityIndicatorActive() == true {
+                            self.parentViewController?.stopActivityIndicator()
+                            self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting boards...")
+                        }
+                        self.aNetworkRequest.getdata("GET", URLEnding: URLEndingBoards, JSON: nil, domain: nil) { (data, response, error) -> Void in
+                            if !anyErrors("get_boards", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                                self.caller?.projects?.setBoardsForProject(data!, projectID: currentProject.id)
+                                self.aProject?.boards = self.caller!.projects!.getBoardsForProject(currentProject.id)
+                                self.button_open_boards.enabled = true
+                                self.caller!.archiveProjects()
+                                // As soon as we have got new data from JIRA we redraw everything
+                                self.applyFilter()
+                                self.parentViewController?.stopActivityIndicator()
+                                self.refreshControl.endRefreshing()
+                                self.showMessage("Tasks list updated", mood: "Good")
+                            } else {
+                                self.parentViewController?.stopActivityIndicator()
+                                self.refreshControl.endRefreshing()
+                            //   self.showMessage("Failed to load boards", mood: "Bad")
+                            }
                         }
                     }
                 }
@@ -169,7 +189,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     func applyFilter() {
         var itemsToShow: [String] = [] // Here we'll hold a list of allowed statuses
         let tasksSelectedAsFiltered = JIRATasks.init(tasks: [])
-        
         if statusFilter != nil && !statusFilter!.statusesList.isEmpty {
             for status in (statusFilter?.statusesList)! {
                 if !itemsToShow.contains(status.0) && status.1 {
@@ -178,12 +197,16 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             }
             for aTask in (tasks?.taskslist)! {
                 if itemsToShow.contains(aTask.task_status) { // Filtering by status
-                    if ((statusFilter?.onlyMyIssues) == true) { // Filtering tasks that assigned only to current user
-                        if aTask.task_assigneeInternalName == currentUser?.name {
+                    if let versionInContext = aVersion where !aTask.task_fixversions.contains(versionInContext.id) {
+                        // Skipping tasks which doesn't contain required version
+                    } else {
+                        if ((statusFilter?.onlyMyIssues) == true) { // Filtering tasks that assigned only to current user
+                            if aTask.task_assigneeInternalName == currentUser?.name {
+                                tasksSelectedAsFiltered.taskslist.append(aTask)
+                            }
+                        } else {
                             tasksSelectedAsFiltered.taskslist.append(aTask)
                         }
-                    } else {
-                        tasksSelectedAsFiltered.taskslist.append(aTask)
                     }
                 }
             }
@@ -196,19 +219,16 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     func GenerateURLEndingDependingOnContext() -> String {
         var URLEnding = ""
         if aProject?.key != "" {
-            if aVersion != nil {
-                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.id)+AND+fixVersion=\(aVersion!.id)+order+by+rank+asc&maxResults=200"
-                label_context.text = "[\(aVersion!.name)]"
-            } else if aBoard != nil {
+            if aBoard != nil {
                 URLEnding = "/rest/agile/1.0/board/\(aBoard!.id)/issue"
                 label_context.text = "[\(aBoard!.name)]"
             } else {
                 URLEnding = "/rest/api/2/search?jql=project=\(aProject!.id)+AND+status+not+in+(Done)+order+by+rank+asc&maxResults=200"
-                label_context.text = "[All issues for project]"
+                label_context.text = "[All issues for the project]"
             }
         } else {
             URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc&maxResults=200"
-            label_context.text = "[All issues for all projects]"
+            label_context.text = "[Issues for all projects]"
         }
         return URLEnding
     }
@@ -283,7 +303,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             destionationViewController.currentUser = self.currentUser
             destionationViewController.aProject = self.aProject
         }
-        
         if segue.identifier == "showFilters" {
             guard let destinationViewController = segue.destinationViewController as? FilterViewController else {
                 return
@@ -294,6 +313,18 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 popover?.delegate = self
                 let popoverHeight: CGFloat = min(CGFloat(statusFilter!.statusesList.count * 44 + 95), view_collectionView.frame.height) // WARNING: Hardcoded popover height here
                 destinationViewController.preferredContentSize = CGSizeMake(280,popoverHeight)
+            }
+        }
+        if segue.identifier == "showBoards" {
+            guard let destinationViewController = segue.destinationViewController as? BoardsViewController else {
+                return
+            }
+            destinationViewController.caller = self
+            let popover = destinationViewController.popoverPresentationController
+            if popover != nil && aProject != nil {
+                popover?.delegate = self
+                let popoverHeight: CGFloat = min(CGFloat(aProject!.boards.count * 44 + 105), view_collectionView.frame.height) // WARNING: Hardcoded popover height here
+                destinationViewController.preferredContentSize = CGSizeMake(280, popoverHeight)
             }
         }
     }
@@ -316,6 +347,10 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     @IBAction func action_open_filters(sender: AnyObject) {
         self.performSegueWithIdentifier("showFilters", sender: self)
+    }
+    
+    @IBAction func action_open_boards(sender: UIBarButtonItem) {
+        self.performSegueWithIdentifier("showBoards", sender: self)
     }
     
     override func didReceiveMemoryWarning() {

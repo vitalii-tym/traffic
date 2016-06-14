@@ -26,7 +26,7 @@ class ChooseVersionViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let numOfVersionsInList = caller?.versions.count {
+        if let numOfVersionsInList = caller?.aProject!.versions.count {
             return (numOfVersionsInList + 1)
         } else {
             return 0
@@ -36,7 +36,7 @@ class ChooseVersionViewController: UIViewController, UITableViewDelegate, UITabl
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ChooseVersionCell", forIndexPath: indexPath) as! aChooseVersionCell
         if indexPath.row != 0 {
-            cell.label_version_name.text = caller?.versions[indexPath.row - 1].name
+            cell.label_version_name.text = caller?.aProject?.versions[indexPath.row - 1].name
             if cell.label_version_name.text == caller?.aVersion?.name {
                 cell.accessoryType = .Checkmark
                 lastSelectedVersionIndexPath = indexPath
@@ -55,19 +55,15 @@ class ChooseVersionViewController: UIViewController, UITableViewDelegate, UITabl
         if indexPath.row == 0 {
             caller?.aVersion = nil
         } else {
-            caller?.aVersion = caller?.versions[indexPath.row - 1]
+            caller?.aVersion = caller?.aProject!.versions[indexPath.row - 1]
         }
         if lastSelectedVersionIndexPath != nil {
             tableView.reloadRowsAtIndexPaths([lastSelectedVersionIndexPath!, indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         } else {
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         }
-        if let isFetchFromCacheSuccesfull = caller?.tryFetchDataFromCache() {
-            if !isFetchFromCacheSuccesfull {
-                caller?.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
-                caller?.tryFetchDataFromNetwork(isFetchFromCacheSuccesfull)
-            }
-        }
+        caller?.applyFilter()
+        caller?.view_collectionView.reloadData()
         performSegueWithIdentifier("backToFilter", sender: self)
     }
 }
