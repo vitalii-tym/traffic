@@ -118,7 +118,7 @@ class BoardsViewController: UIViewController, UIPopoverPresentationControllerDel
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("BoardCell", forIndexPath: indexPath) as! aChooseBoardCell
         if indexPath.row == 0 {
-            cell.label_board_name.text = "(none)"
+            cell.label_board_name.text = "[All issues in this project]"
             if caller?.aBoard == nil {
                 cell.accessoryType = .Checkmark
                 lastSelectedBoardIndexPath = indexPath
@@ -134,7 +134,7 @@ class BoardsViewController: UIViewController, UIPopoverPresentationControllerDel
             } else {
                 cell.accessoryType = .None
             }
-        
+            // This is for later. We will allow selecting Sprint or Backlog to show if the project is of type "scrum"
 //            if caller?.aProject!.boards[indexPath.row - 1].type == "scrum" {
 //                cell.accessoryType = .DisclosureIndicator
 //            }

@@ -4,7 +4,6 @@
 //
 //  Created by Vitaliy Tim on 6/10/16.
 //  Copyright © 2016 Vitaliy Timoshenko. All rights reserved.
-//
 
 import UIKit
 
@@ -42,7 +41,7 @@ class ChooseVersionViewController: UIViewController, UITableViewDelegate, UITabl
                 lastSelectedVersionIndexPath = indexPath
             }
         } else {
-            cell.label_version_name.text = "(all versions)"
+            cell.label_version_name.text = "[Any]"
             if caller?.aVersion == nil {
                 cell.accessoryType = .Checkmark
                 lastSelectedVersionIndexPath = indexPath
@@ -93,13 +92,9 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
             label_version_name.text = caller?.aVersion?.name
             label_version_name.font = UIFont.systemFontOfSize(15)
         } else {
-            label_version_name.text = "(all versions)"
+            label_version_name.text = "[Any]"
             label_version_name.font = UIFont.italicSystemFontOfSize(12)
         }
-    }
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -115,7 +110,7 @@ class FilterViewController: UIViewController, UIPopoverPresentationControllerDel
             cell.accessoryType = .None
         }
         if cell.label_status_filter.text == "Done" {
-            if caller?.aBoard != nil || caller?.aVersion != nil { // Temporarilty disabling possibility to show "Done" issues if this is not a board or version.
+            if caller?.aBoard != nil { // Temporarilty disabling possibility to show "Done" issues if this is not a board.
                 cell.userInteractionEnabled = true
                 cell.label_status_filter.textColor = UIColor.blackColor()
             } else {

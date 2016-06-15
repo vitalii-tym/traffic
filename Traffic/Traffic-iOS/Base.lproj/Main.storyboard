@@ -769,20 +769,11 @@ The Scrum methodology drops traditional software requirement statements in favou
                                         <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="P85-Tv-e8T" id="Bbj-kn-0V0">
-                                            <rect key="frame" x="0.0" y="0.0" width="567" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wGq-qX-fI8">
-                                                    <rect key="frame" x="8" y="8" width="30" height="30"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="30" id="Osk-qn-dec"/>
-                                                        <constraint firstAttribute="width" constant="30" id="qcn-6h-lO6"/>
-                                                    </constraints>
-                                                    <state key="normal" title="&gt;"/>
-                                                    <state key="selected" title="v"/>
-                                                </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Project Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Cc-3o-2rE">
-                                                    <rect key="frame" x="38" y="9" width="521" height="27"/>
+                                                    <rect key="frame" x="8" y="9" width="551" height="27"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="27" id="7Kt-Au-08C"/>
                                                     </constraints>
@@ -792,39 +783,13 @@ The Scrum methodology drops traditional software requirement statements in favou
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="wGq-qX-fI8" firstAttribute="leading" secondItem="Bbj-kn-0V0" secondAttribute="leadingMargin" id="CZh-dE-Bfp"/>
-                                                <constraint firstItem="5Cc-3o-2rE" firstAttribute="leading" secondItem="wGq-qX-fI8" secondAttribute="trailing" id="Yan-Kg-V8p"/>
+                                                <constraint firstItem="5Cc-3o-2rE" firstAttribute="leading" secondItem="Bbj-kn-0V0" secondAttribute="leadingMargin" id="dBZ-jE-p19"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="5Cc-3o-2rE" secondAttribute="trailing" id="dcY-tu-WNU"/>
-                                                <constraint firstAttribute="topMargin" secondItem="wGq-qX-fI8" secondAttribute="top" id="tP2-7i-nyD"/>
                                                 <constraint firstItem="5Cc-3o-2rE" firstAttribute="top" secondItem="Bbj-kn-0V0" secondAttribute="topMargin" constant="1" id="yCU-iQ-4Hk"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="button_expand" destination="wGq-qX-fI8" id="OJP-yU-QNx"/>
                                             <outlet property="label_name" destination="5Cc-3o-2rE" id="l53-Vr-5tD"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="version_cell" id="5td-du-yCB" userLabel="version_cell" customClass="aVersionCell" customModule="EasyJira_iOS" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="136" width="600" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5td-du-yCB" id="qNh-Qk-LIg">
-                                            <rect key="frame" x="0.0" y="0.0" width="567" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dq4-CL-EK6">
-                                                    <rect key="frame" x="455" y="11" width="104" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailingMargin" secondItem="Dq4-CL-EK6" secondAttribute="trailing" id="5me-18-GGe"/>
-                                                <constraint firstItem="Dq4-CL-EK6" firstAttribute="centerY" secondItem="qNh-Qk-LIg" secondAttribute="centerY" id="OjG-Ae-060"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="label_name" destination="Dq4-CL-EK6" id="yHE-RZ-F05"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

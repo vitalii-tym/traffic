@@ -426,14 +426,19 @@ class JIRAProjects: NSObject, NSCoding {
         }
     }
     
-    convenience init? (data: NSData) {
+    convenience init? (data: NSData?) {
         var formedProjectsList = [Project]()
         var jsonObject: Array<AnyObject>?
         
+        if let unwrappedData = data {
         do {
-            jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(data), options: NSJSONReadingOptions(rawValue: 0)) as? Array<AnyObject>
+            jsonObject = try NSJSONSerialization.JSONObjectWithData(fixJsonData(unwrappedData), options: NSJSONReadingOptions(rawValue: 0)) as? Array<AnyObject>
         }
         catch { }
+        } else {
+            print("Error: attempt to create new Project without providing it with data.")
+            return nil
+        }
         
         guard let jsonObjectRoot = jsonObject else {
             return nil

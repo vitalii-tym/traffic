@@ -38,6 +38,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
     var currentUser: JIRAcurrentUser?
     var aNetworkRequest = JIRANetworkRequest()
     var fieldsQueue = [aReqiredField]()
+    var caller: TasksViewViewController?
     var JSON: String = ""
     var JSONfieldstoSend: Dictionary<String, [AnyObject]> = [:]
     var currentUserIntention: String = ""
@@ -284,6 +285,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                 let URLEnding = "/rest/api/2/issue"
                 self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
                     if !anyErrors("create_issue", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                        self.caller?.listNeedsRefreshing = true
                         self.performSegueWithIdentifier("back_to_tasks", sender: self)
                     }
                     self.parentViewController!.stopActivityIndicator()
@@ -294,6 +296,7 @@ class IssueDetailsViewController: UIViewController, UITableViewDelegate, UITable
                     let URLEnding = "/rest/api/2/issue/\(theTask.task_key)/transitions"
                     self.aNetworkRequest.getdata("POST", URLEnding: URLEnding, JSON: JSON, domain: nil) { (data, response, error) -> Void in
                         if !anyErrors("do_transition", controller: self, data: data, response: response, error: error, quiteMode: false) {
+                            self.caller?.listNeedsRefreshing = true
                             self.performSegueWithIdentifier("back_to_tasks", sender: self)
                         }
                         self.parentViewController!.stopActivityIndicator()

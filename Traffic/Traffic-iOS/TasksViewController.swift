@@ -30,6 +30,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var currentUser: JIRAcurrentUser? = nil
     var statusFilter: JIRAStatuses? = nil
     var refreshControl: UIRefreshControl!
+    var listNeedsRefreshing: Bool = false
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
     @IBOutlet weak var label_no_tasks: UILabel!
@@ -77,6 +78,9 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 }
             }
         }
+        if listNeedsRefreshing {
+            tryFetchDataFromNetwork(true)
+        }
     }
     
     func tryFetchDataFromCache() -> Bool {
@@ -107,7 +111,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         return isResultSuccesful
     }
     
-    func tryFetchDataFromNetwork(sender: AnyObject?) {
+    func tryFetchDataFromNetwork(didGettingFromCacheWasSuccesfull: AnyObject?) {
         // Trying to fetch and update tasks
         let URLEnding: String = GenerateURLEndingDependingOnContext()
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
@@ -115,9 +119,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 self.tasks = JIRATasks(data: data!)
                 NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
             } else {
-              //  self.showMessage("Failed to load tasks", mood: "Bad")
                 self.refreshControl.endRefreshing()
-                if sender != nil && sender as? Bool == false {
+                if didGettingFromCacheWasSuccesfull != nil && didGettingFromCacheWasSuccesfull as? Bool == false {
                     // In case we previously failed to load tasks from cache "sender" will be false
                     // If the network fetch didn't work either it is better to clear the tasks list
                     self.filteredtasks?.taskslist.removeAll()
@@ -141,7 +144,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                             self.aProject?.versions = self.caller!.projects!.getVersionsForProject(currentProject.id)
                         }
                     } else {
-                      //  self.showMessage("Failed to load versions", mood: "Bad")
                         self.refreshControl.endRefreshing()
                     }
                     // As soon as versions finished we try to get and update statuses
@@ -161,7 +163,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                             NSKeyedArchiver.archiveRootObject(self.statusFilter!, toFile: JIRAStatuses.path(currentProject.id))
                         } else {
                             self.refreshControl.endRefreshing()
-                         //   self.showMessage("Failed to load statuses", mood: "Bad")
                         }
                         let URLEndingBoards = "/rest/agile/1.0/board?projectKeyOrId=\(currentProject.id)"
                         if let parentVC = self.parentViewController where parentVC.isActivityIndicatorActive() == true {
@@ -182,7 +183,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                             } else {
                                 self.parentViewController?.stopActivityIndicator()
                                 self.refreshControl.endRefreshing()
-                            //   self.showMessage("Failed to load boards", mood: "Bad")
                             }
                         }
                     }
@@ -238,10 +238,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         return URLEnding
     }
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if self.filteredtasks != nil { // Showing or hiding the label that says that there are not tasks to show.
             label_no_tasks.hidden = !(self.tasks?.taskslist.isEmpty)!
@@ -260,7 +256,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             cell.label_name.text = filteredtasks?.taskslist[indexPath.row].task_key
             cell.label_summary.text = filteredtasks?.taskslist[indexPath.row].task_summary
             cell.label_summary.textColor = UIColor.blackColor()
-            cell.label_assignee.text = filteredtasks?.taskslist[indexPath.row].task_assigneeDisplayName
+            cell.label_assignee.text = ""
+        //    cell.label_assignee.text = filteredtasks?.taskslist[indexPath.row].task_assigneeDisplayName
             cell.label_type.text = filteredtasks?.taskslist[indexPath.row].task_type
             cell.label_description.text = filteredtasks?.taskslist[indexPath.row].task_description
             cell.label_priority.text = filteredtasks?.taskslist[indexPath.row].task_priority
@@ -280,7 +277,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             }
         } else {
             cell.backgroundColor = UIColor.clearColor()
-            cell.label_summary.text = "There might be more issues, hidden by filter."
+            cell.label_summary.text = "There might be more issues hidden by filter."
             cell.label_summary.textColor = UIColor.lightGrayColor()
             cell.label_name.text = ""
             cell.label_assignee.text = ""
@@ -307,6 +304,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             destionationViewController.IssueCreationMetadata = self.IssueCreationMetadata
             destionationViewController.currentUser = self.currentUser
             destionationViewController.aProject = self.aProject
+            destionationViewController.caller = self
         }
         if segue.identifier == "showFilters" {
             guard let destinationViewController = segue.destinationViewController as? FilterViewController else {
@@ -358,10 +356,6 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         self.performSegueWithIdentifier("showBoards", sender: self)
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-
     func archiveContext() {
         if let currentProjectID = aProject?.id {
             let documentsPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true).first
@@ -411,8 +405,14 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         }
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
     override func encodeRestorableStateWithCoder(coder: NSCoder) {
-        if let projectToEncode = aProject { Project.encodeForCoder(projectToEncode, coder: coder, index: 1) }
+        if let projectToEncode = aProject {
+            Project.encodeForCoder(projectToEncode, coder: coder, index: 1)
+        }
         self.archiveContext()
         super.encodeRestorableStateWithCoder(coder)
     }
