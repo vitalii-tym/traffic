@@ -43,11 +43,10 @@ class JIRANetworkRequest: NSObject, NSURLSessionDelegate {
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                 completionHandler(data: data, response: response, error: error) })
             //-- for debugging only ---
-             print ("Request: \(URL)")
-             if (JSON != nil) { print ("JSON: \(JSON!)")
-            //-- end of debugging ---
-            }
-            
+         //    print ("Request: \(URL)")
+         //    if (JSON != nil) { print ("JSON: \(JSON!)")
+         //   }
+            //-- end of debugging ---            
         }
         dataTask.resume()
     }

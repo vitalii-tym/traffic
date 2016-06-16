@@ -17,6 +17,31 @@ class aTask: UICollectionViewCell {
     @IBOutlet weak var label_description: UILabel!
 }
 
+enum sortBy: Int {
+    case rank
+    case priority
+    
+    func URL() -> String {
+        switch self {
+        case .rank: return "rank"
+        case .priority: return "priority"
+        }
+    }
+    
+    func Name() -> String {
+        switch self {
+        case .rank: return "Rank"
+        case .priority: return "Priority"
+        }
+    }
+    static var count: Int { return sortBy.priority.hashValue + 1 }
+}
+
+enum sortingDirection: String {
+    case ascending = "+asc"
+    case descending = "+desc"
+}
+
 class TasksViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverPresentationControllerDelegate {
     var caller: ProjectsViewController?
     var aProject: Project? = nil
@@ -31,12 +56,15 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var statusFilter: JIRAStatuses? = nil
     var refreshControl: UIRefreshControl!
     var listNeedsRefreshing: Bool = false
+    var currentSortingOrder = sortBy.rank // rank will be the default sorting order, unless user sets their own order
+    var currentSortingDirection = sortingDirection.ascending
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
     @IBOutlet weak var label_no_tasks: UILabel!
     @IBOutlet weak var label_context: UILabel!
     @IBOutlet weak var button_open_filter: UIBarButtonItem!
     @IBOutlet weak var button_open_boards: UIBarButtonItem!
+    @IBOutlet weak var button_open_sorting: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,12 +116,13 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         if let currentProject = aProject {
             // Trying to load tasks from cache
             let URLEnding: String = GenerateURLEndingDependingOnContext()
+            print("cache: \(URLEnding)")
             if let maybeTasksList = NSKeyedUnarchiver.unarchiveObjectWithFile(JIRATasks.path(URLEnding)) as? JIRATasks {
                 tasks = maybeTasksList
                 // If succesfull with tasks trying to load version from cache
                 if let maybeVersions = self.caller?.projects?.getVersionsForProject(currentProject.id),
                     let maybeBoards = self.caller?.projects?.getBoardsForProject(currentProject.id) {
-                    //We dodn't need to explicitly unarchive "Projects" because it is supposed to be already present unarchived in the ViewDidLoad of ProjectsViewController by this time, so we only need to get versions and boards from there.
+                    //We don't need to explicitly unarchive "Projects" because it is supposed to be already present unarchived in the ViewDidLoad of ProjectsViewController by this time, so we only need to get versions and boards from there.
                     aProject?.versions = maybeVersions
                     aProject?.boards = maybeBoards
                     // If we are succesfull with versions we try to load statuses from cache
@@ -115,6 +144,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         // Trying to fetch and update tasks
         let URLEnding: String = GenerateURLEndingDependingOnContext()
         aNetworkRequest.getdata("GET", URLEnding: URLEnding, JSON: nil, domain: nil) { (data, response, error) -> Void in
+            print("online: \(URLEnding)")
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
                 self.tasks = JIRATasks(data: data!)
                 NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
@@ -137,6 +167,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                     self.parentViewController?.stopActivityIndicator()
                     self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
                 }
+                print("online: \(URLEndingForVersions)")
                 self.aNetworkRequest.getdata("GET", URLEnding: URLEndingForVersions, JSON: nil, domain: nil) { (data, response, error) -> Void in
                     if !anyErrors("get_versions", controller: self, data: data, response: response, error: error, quiteMode: false) {
                         if self.caller != nil {
@@ -152,6 +183,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                         self.parentViewController?.stopActivityIndicator()
                         self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting statuses...")
                     }
+                    print("online: \(URLEndingForVersions)")
                     self.aNetworkRequest.getdata("GET", URLEnding: URLEndingForStatuses, JSON: nil, domain: nil) { (data, response, error) -> Void in
                         if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
                             if self.statusFilter == nil {
@@ -223,16 +255,19 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     
     func GenerateURLEndingDependingOnContext() -> String {
         var URLEnding = ""
+        let orderByBlock = "+order+by+\(currentSortingOrder.URL())\(currentSortingDirection.rawValue)"
+        
+        
         if aProject?.key != "" {
             if aBoard != nil {
-                URLEnding = "/rest/agile/1.0/board/\(aBoard!.id)/issue"
+                URLEnding = "/rest/agile/1.0/board/\(aBoard!.id)/issue?jql=\(orderByBlock)"
                 label_context.text = "[\(aBoard!.name)]"
             } else {
-                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.id)+AND+status+not+in+(Done)+order+by+rank+asc&maxResults=200"
+                URLEnding = "/rest/api/2/search?jql=project=\(aProject!.id)+AND+status+not+in+(Done)\(orderByBlock)&maxResults=200"
                 label_context.text = "[All issues for the project]"
             }
         } else {
-            URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)+order+by+rank+asc&maxResults=200"
+            URLEnding = "/rest/api/2/search?jql=status+not+in+(Done)\(orderByBlock)&maxResults=200"
             label_context.text = "[Issues for all projects]"
         }
         return URLEnding
@@ -330,6 +365,18 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                 destinationViewController.preferredContentSize = CGSizeMake(280, popoverHeight)
             }
         }
+        if segue.identifier == "showSorting" {
+            guard let destinationViewController = segue.destinationViewController as? SortingViewController else {
+                return
+            }
+            destinationViewController.caller = self
+            let popover = destinationViewController.popoverPresentationController
+            if popover != nil && aProject != nil {
+                popover?.delegate = self
+                let popoverHeight: CGFloat = min(CGFloat(44 + 115), view_collectionView.frame.height) // WARNING: Hardcoded popover height here
+                destinationViewController.preferredContentSize = CGSizeMake(280, popoverHeight)
+            }
+        }
     }
     
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -355,6 +402,11 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     @IBAction func action_open_boards(sender: UIBarButtonItem) {
         self.performSegueWithIdentifier("showBoards", sender: self)
     }
+    
+    @IBAction func action_open_sorting(sender: UIBarButtonItem) {
+        self.performSegueWithIdentifier("showSorting", sender: self)
+    }
+
     
     func archiveContext() {
         if let currentProjectID = aProject?.id {
