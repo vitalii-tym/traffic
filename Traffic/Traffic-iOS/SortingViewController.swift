@@ -14,6 +14,9 @@ class aSortingCell: UITableViewCell {
 class SortingViewController: UIViewController, UIPopoverPresentationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     var caller: TasksViewViewController?
     var lastSelectedSearchIndexPath: NSIndexPath?
+    var wereChangesApplied = false
+    var sortingParameterToRevertTo = sortBy.rank
+    var sortingDirectionToRevertTo = sortingDirection.ascending
     
     @IBOutlet weak var table_boards: UITableView!
     @IBOutlet weak var segment_sorting: UISegmentedControl!
@@ -33,6 +36,14 @@ class SortingViewController: UIViewController, UIPopoverPresentationControllerDe
         if let unwrappedDirectionIndex = caller?.currentSortingDirection.hashValue {
             segment_sorting.selectedSegmentIndex = unwrappedDirectionIndex
         }
+        
+        wereChangesApplied = false
+
+        if let initialSortingParameter = caller?.currentSortingParameter,
+            let initialSortingDirection = caller?.currentSortingDirection {
+                sortingParameterToRevertTo = initialSortingParameter
+                sortingDirectionToRevertTo = initialSortingDirection
+        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -45,7 +56,20 @@ class SortingViewController: UIViewController, UIPopoverPresentationControllerDe
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-//        caller?.archiveContext()
+        if wereChangesApplied {
+            caller?.archiveContext()
+        } else {
+            // Popover was dismissed, so we need to revert any possible changes and rebuild the tasks list
+            caller?.aNetworkRequest.cancel()
+            caller?.currentSortingParameter = sortingParameterToRevertTo
+            caller?.currentSortingDirection = sortingDirectionToRevertTo
+            if let wasFetchFromCacheSuccesfull = caller?.tryFetchDataFromCache() {
+                if !wasFetchFromCacheSuccesfull {
+                    caller?.tasksToBeRefreshedWhenNewDataGotFromNetwork = false
+                    caller?.tryFetchDataFromNetwork(wasFetchFromCacheSuccesfull)
+                }
+            }
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -53,7 +77,7 @@ class SortingViewController: UIViewController, UIPopoverPresentationControllerDe
         let cellItem = sortBy(rawValue: indexPath.row)
         cell.label_sorting_name.text = cellItem?.Name()
 
-        if caller?.currentSortingOrder == cellItem {
+        if caller?.currentSortingParameter == cellItem {
             cell.accessoryType = .Checkmark
             lastSelectedSearchIndexPath = indexPath
         } else {
@@ -65,7 +89,7 @@ class SortingViewController: UIViewController, UIPopoverPresentationControllerDe
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let selectedCellItem = sortBy(rawValue: indexPath.row) {
-            caller?.currentSortingOrder = selectedCellItem
+            caller?.currentSortingParameter = selectedCellItem
         }
         
         if lastSelectedSearchIndexPath != nil {
@@ -74,12 +98,10 @@ class SortingViewController: UIViewController, UIPopoverPresentationControllerDe
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         }
         
-        if let isFetchFromCacheSuccesfull = caller?.tryFetchDataFromCache() {
-            if isFetchFromCacheSuccesfull {
-                caller?.view_collectionView.reloadData()
-            } else {
-                caller?.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
-                caller?.tryFetchDataFromNetwork(isFetchFromCacheSuccesfull)
+        if let wasFetchFromCacheSuccesfull = caller?.tryFetchDataFromCache() {
+            if !wasFetchFromCacheSuccesfull {
+                caller?.tasksToBeRefreshedWhenNewDataGotFromNetwork = false
+                caller?.tryFetchDataFromNetwork(wasFetchFromCacheSuccesfull)
             }
         }
     }
@@ -96,16 +118,25 @@ class SortingViewController: UIViewController, UIPopoverPresentationControllerDe
                     caller?.currentSortingDirection = sortingDirection.ascending
                 }
 
-                if let isFetchFromCacheSuccesfull = caller?.tryFetchDataFromCache() {
-                    if isFetchFromCacheSuccesfull {
-                        caller?.view_collectionView.reloadData()
-                    } else {
-                        caller?.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
-                        caller?.tryFetchDataFromNetwork(isFetchFromCacheSuccesfull)
+                if let wasFetchFromCacheSuccesfull = caller?.tryFetchDataFromCache() {
+                    if !wasFetchFromCacheSuccesfull {
+                        caller?.tasksToBeRefreshedWhenNewDataGotFromNetwork = false
+                        caller?.tryFetchDataFromNetwork(wasFetchFromCacheSuccesfull)
                     }
                 }
             }
         }
+    }
+    
+    @IBAction func action_apply_pressed(sender: UIButton) {
+        caller?.view_collectionView.reloadData()
+        if let theCaller = caller where theCaller.tasksToBeRefreshedWhenNewDataGotFromNetwork == false {
+            // Means we have closed the popover earlier than the data finished refreshing
+            caller?.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
+            caller?.tasksToBeRefreshedWhenNewDataGotFromNetwork = true
+        }
+        wereChangesApplied = true
+        self.dismissViewControllerAnimated(false, completion: nil)
     }
     
     //    @IBAction func unwindToFilter(segue: UIStoryboardSegue) {

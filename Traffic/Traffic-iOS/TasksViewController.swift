@@ -49,15 +49,16 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
     var aBoard: Board? = nil
     var aNetworkRequest = JIRANetworkRequest()
     var tasks: JIRATasks? = nil
-    var filteredtasks: JIRATasks? { didSet { self.view_collectionView.reloadData() } }
+    var filteredtasks: JIRATasks? // { didSet { self.view_collectionView.reloadData() } }
     var aTasktoPass: Task? = nil
     var IssueCreationMetadata: JIRAMetadataToCreateIssue? = nil
     var currentUser: JIRAcurrentUser? = nil
     var statusFilter: JIRAStatuses? = nil
     var refreshControl: UIRefreshControl!
     var listNeedsRefreshing: Bool = false
-    var currentSortingOrder = sortBy.rank // rank will be the default sorting order, unless user sets their own order
+    var currentSortingParameter = sortBy.rank // rank will be the default sorting order, unless user sets their own order
     var currentSortingDirection = sortingDirection.ascending
+    var tasksToBeRefreshedWhenNewDataGotFromNetwork = true
     @IBOutlet weak var view_collectionView: UICollectionView!
     @IBOutlet weak var button_NewTask: UIBarButtonItem!
     @IBOutlet weak var label_no_tasks: UILabel!
@@ -75,12 +76,14 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
         button_open_filter.enabled = false
         button_open_boards.enabled = false
         unarchiveContext()
-        let isFetchFromCacheSuccesfull = tryFetchDataFromCache()
-        if !isFetchFromCacheSuccesfull {
+        let wasFetchFromCacheSuccesfull = tryFetchDataFromCache()
+        if !wasFetchFromCacheSuccesfull {
             // If we fail to load at least anything from cache user will have to wait.
             self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
+        } else {
+            self.view_collectionView.reloadData()
         }
-        tryFetchDataFromNetwork(isFetchFromCacheSuccesfull)
+        tryFetchDataFromNetwork(wasFetchFromCacheSuccesfull)
         _ = NSTimer.scheduledTimerWithTimeInterval(420, target: self, selector: #selector(TasksViewViewController.tryFetchDataFromNetwork(_:)), userInfo: nil, repeats: true)
     }
     
@@ -147,11 +150,21 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             print("online: \(URLEnding)")
             if !anyErrors("do_search", controller: self, data: data, response: response, error: error, quiteMode: false) {
                 self.tasks = JIRATasks(data: data!)
+                // As soon as we have got tasks from JIRA we can show them without waiting for the rest of info to be fetched
+                self.applyFilter()
+                self.parentViewController?.stopActivityIndicator()
+                self.refreshControl.endRefreshing()
+                self.showMessage("Tasks list updated", mood: "Good")
+                if self.tasksToBeRefreshedWhenNewDataGotFromNetwork {
+                    self.view_collectionView.reloadData()
+                } else {
+                    self.tasksToBeRefreshedWhenNewDataGotFromNetwork = true
+                }
                 NSKeyedArchiver.archiveRootObject(self.tasks!, toFile: JIRATasks.path(URLEnding))
             } else {
                 self.refreshControl.endRefreshing()
                 if didGettingFromCacheWasSuccesfull != nil && didGettingFromCacheWasSuccesfull as? Bool == false {
-                    // In case we previously failed to load tasks from cache "sender" will be false
+                    // In case we previously failed to load tasks from cache "didGettingFromCacheWasSuccesfull" will be false
                     // If the network fetch didn't work either it is better to clear the tasks list
                     self.filteredtasks?.taskslist.removeAll()
                     self.view_collectionView.reloadData()
@@ -162,11 +175,11 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             // As soon as we finished fetching tasks, we try to get and update versions
             if let currentProject = self.aProject {
                 let URLEndingForVersions = "/rest/api/2/project/\(currentProject.id)/versions"
-                if let parentVC = self.parentViewController where parentVC.isActivityIndicatorActive() == true {
+           //     if let parentVC = self.parentViewController where parentVC.isActivityIndicatorActive() == true {
                     // If activity indicator is not running, this means we are doing work in backgrounf and don't need to show furher indicators
-                    self.parentViewController?.stopActivityIndicator()
-                    self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
-                }
+           //         self.parentViewController?.stopActivityIndicator()
+           //         self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting versions...")
+           //     }
                 print("online: \(URLEndingForVersions)")
                 self.aNetworkRequest.getdata("GET", URLEnding: URLEndingForVersions, JSON: nil, domain: nil) { (data, response, error) -> Void in
                     if !anyErrors("get_versions", controller: self, data: data, response: response, error: error, quiteMode: false) {
@@ -179,10 +192,10 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                     }
                     // As soon as versions finished we try to get and update statuses
                     let URLEndingForStatuses = "/rest/api/2/project/\(currentProject.id)/statuses"
-                    if let parentVC = self.parentViewController where parentVC.isActivityIndicatorActive() == true {
-                        self.parentViewController?.stopActivityIndicator()
-                        self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting statuses...")
-                    }
+            //        if let parentVC = self.parentViewController where parentVC.isActivityIndicatorActive() == true {
+            //            self.parentViewController?.stopActivityIndicator()
+            //            self.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting statuses...")
+            //        }
                     print("online: \(URLEndingForVersions)")
                     self.aNetworkRequest.getdata("GET", URLEnding: URLEndingForStatuses, JSON: nil, domain: nil) { (data, response, error) -> Void in
                         if !anyErrors("get_statuses", controller: self, data: data, response: response, error: error, quiteMode: false) {
@@ -206,12 +219,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
                                 self.caller?.projects?.setBoardsForProject(data!, projectID: currentProject.id)
                                 self.aProject?.boards = self.caller!.projects!.getBoardsForProject(currentProject.id)
                                 self.button_open_boards.enabled = true
+                                // Only when we have updated versions and boards from JIRA we repack all projects
                                 self.caller!.archiveProjects()
-                                // As soon as we have got new data from JIRA we redraw everything
-                                self.applyFilter()
-                                self.parentViewController?.stopActivityIndicator()
-                                self.refreshControl.endRefreshing()
-                                self.showMessage("Tasks list updated", mood: "Good")
                             } else {
                                 self.parentViewController?.stopActivityIndicator()
                                 self.refreshControl.endRefreshing()
@@ -249,13 +258,14 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             }
             filteredtasks = tasksSelectedAsFiltered
         } else {
-            print("couldn't apply filter as it doesn't exist")
+            print("No filter found, showing all tasks instead.")
+            filteredtasks = tasks
         }
     }
     
     func GenerateURLEndingDependingOnContext() -> String {
         var URLEnding = ""
-        let orderByBlock = "+order+by+\(currentSortingOrder.URL())\(currentSortingDirection.rawValue)"
+        let orderByBlock = "+order+by+\(currentSortingParameter.URL())\(currentSortingDirection.rawValue)"
         
         
         if aProject?.key != "" {
@@ -373,7 +383,7 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             let popover = destinationViewController.popoverPresentationController
             if popover != nil && aProject != nil {
                 popover?.delegate = self
-                let popoverHeight: CGFloat = min(CGFloat(44 + 115), view_collectionView.frame.height) // WARNING: Hardcoded popover height here
+                let popoverHeight: CGFloat = min(CGFloat(sortBy.count * 44 + 105), view_collectionView.frame.height) // WARNING: Hardcoded popover height here
                 destinationViewController.preferredContentSize = CGSizeMake(280, popoverHeight)
             }
         }
@@ -431,6 +441,8 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             } else {
                 do { try fileManager.removeItemAtPath(path!+"User") } catch { print("Failed to clean file at: \(path!)User") }
             }
+            NSKeyedArchiver.archiveRootObject(currentSortingDirection.rawValue, toFile: path!+"SortingDirection")
+            NSKeyedArchiver.archiveRootObject(currentSortingParameter.rawValue, toFile: path!+"SortingParameter")
         } else {
             print("Failed to archive current context, as there is no project selected.")
         }
@@ -451,6 +463,17 @@ class TasksViewViewController: UIViewController, UICollectionViewDataSource, UIC
             }
             if let archivedCopyOfUser = NSKeyedUnarchiver.unarchiveObjectWithFile(path!+"User") as? JIRAcurrentUser {
                 self.currentUser = archivedCopyOfUser
+            }
+            if let archivedRawValueOfSortingDirection = NSKeyedUnarchiver.unarchiveObjectWithFile(path!+"SortingDirection") as? String {
+                if let archivedSortingDirection = sortingDirection(rawValue: archivedRawValueOfSortingDirection) {
+                    self.currentSortingDirection = archivedSortingDirection
+                }
+            }
+            if let archivedRawValueOfSortingParameter = NSKeyedUnarchiver.unarchiveObjectWithFile(path!+"SortingParameter") as? Int {
+                if let archivedSortingParameter = sortBy(rawValue: archivedRawValueOfSortingParameter) {
+                    self.currentSortingParameter = archivedSortingParameter
+                    
+                }
             }
         } else {
             print("Failed to unarchive current context as there is no project selected.")

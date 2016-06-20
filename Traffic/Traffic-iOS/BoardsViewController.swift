@@ -74,6 +74,8 @@ class aChooseBoardCell: UITableViewCell {
 class BoardsViewController: UIViewController, UIPopoverPresentationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
     var caller: TasksViewViewController?
     var lastSelectedBoardIndexPath: NSIndexPath?
+    var wereChangesApplied = false
+    var aBoardToRevertTo: Board?
 
     @IBOutlet weak var table_boards: UITableView!
 
@@ -86,18 +88,37 @@ class BoardsViewController: UIViewController, UIPopoverPresentationControllerDel
         super.viewDidLoad()
     }
 
-//    override func viewWillAppear(animated: Bool) {
-//        super.viewWillAppear(animated)
-//        
-//        if caller?.aVersion != nil {
-//            label_version_name.text = caller?.aVersion?.name
-//            label_version_name.font = UIFont.systemFontOfSize(15)
-//        } else {
-//            label_version_name.text = "(all versions)"
-//            label_version_name.font = UIFont.italicSystemFontOfSize(12)
-//        }
-//    }
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        wereChangesApplied = false
+        if let initialBoard = caller?.aBoard {
+            aBoardToRevertTo = Board.init(id: initialBoard.id,
+                                          name: initialBoard.name,
+                                          type: initialBoard.type)
+        } else {
+            aBoardToRevertTo = nil
+        }
+    }
 
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if wereChangesApplied {
+            caller?.archiveContext()
+        } else {
+            // Popover was dismissed, so we need to revert any possible changes and rebuild the tasks list
+            caller?.aNetworkRequest.cancel()
+            caller?.aBoard = aBoardToRevertTo
+            if let wasFetchFromCacheSuccesfull = caller?.tryFetchDataFromCache() {
+                if !wasFetchFromCacheSuccesfull {
+                    caller?.tasksToBeRefreshedWhenNewDataGotFromNetwork = false
+                    caller?.tryFetchDataFromNetwork(wasFetchFromCacheSuccesfull)
+                }
+            
+            }
+        }
+    }
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -108,11 +129,6 @@ class BoardsViewController: UIViewController, UIPopoverPresentationControllerDel
         } else {
             return 0
         }
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        caller?.archiveContext()
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -154,14 +170,22 @@ class BoardsViewController: UIViewController, UIPopoverPresentationControllerDel
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         }
         
-        if let isFetchFromCacheSuccesfull = caller?.tryFetchDataFromCache() {
-            if isFetchFromCacheSuccesfull {
-                caller?.view_collectionView.reloadData()
-            } else {
-                caller?.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
-                caller?.tryFetchDataFromNetwork(isFetchFromCacheSuccesfull)
+        if let wasFetchFromCacheSuccesfull = caller?.tryFetchDataFromCache() {
+            if !wasFetchFromCacheSuccesfull {
+                caller?.tasksToBeRefreshedWhenNewDataGotFromNetwork = false
+                caller?.tryFetchDataFromNetwork(wasFetchFromCacheSuccesfull)
             }
         }
+    }
+    @IBAction func button_apply_pressed(sender: UIButton) {
+        caller?.view_collectionView.reloadData()
+        if let theCaller = caller where theCaller.tasksToBeRefreshedWhenNewDataGotFromNetwork == false {
+            // Means we have closed the popover earlier than the data finished refreshing
+            caller?.parentViewController?.startActivityIndicator(.WhiteLarge, location: nil, activityText: "Getting tasks list...")
+            caller?.tasksToBeRefreshedWhenNewDataGotFromNetwork = true
+        }
+        wereChangesApplied = true
+        self.dismissViewControllerAnimated(false, completion: nil)
     }
 
 //    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

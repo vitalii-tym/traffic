@@ -30,6 +30,7 @@
 		FE3DE4B81CBBCBA100D35BF8 /* JIRAItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3DE4B71CBBCBA100D35BF8 /* JIRAItems.swift */; };
 		FE49FE891CBD56C9009255EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE49FE881CBD56C9009255EE /* LoginViewController.swift */; };
 		FE51E9A71D12ACDF00C0BDB2 /* SortingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE51E9A61D12ACDF00C0BDB2 /* SortingViewController.swift */; };
+		FE89900D1D1407A300ADAD9D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE89900C1D1407A300ADAD9D /* SettingsViewController.swift */; };
 		FEC015FB1D0B12EA007DC79C /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC015F91D0B10FD007DC79C /* FilterViewController.swift */; };
 		FEC7BAB91CC62AEE001A2181 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC7BAB81CC62AEE001A2181 /* Security.framework */; };
 /* End PBXBuildFile section */
@@ -101,6 +102,7 @@
 		FE3DE4B71CBBCBA100D35BF8 /* JIRAItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIRAItems.swift; sourceTree = "<group>"; };
 		FE49FE881CBD56C9009255EE /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		FE51E9A61D12ACDF00C0BDB2 /* SortingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortingViewController.swift; sourceTree = "<group>"; };
+		FE89900C1D1407A300ADAD9D /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		FEC015F91D0B10FD007DC79C /* FilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		FEC7BAB81CC62AEE001A2181 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -215,6 +217,7 @@
 				FE3DE4861CBBBCA300D35BF8 /* AppDelegate.swift */,
 				FE1E3E601CEF1F7000CD8C48 /* Extensions.swift */,
 				FE49FE881CBD56C9009255EE /* LoginViewController.swift */,
+				FE89900C1D1407A300ADAD9D /* SettingsViewController.swift */,
 				FE1E3E681CF32BD000CD8C48 /* ProjectsViewController.swift */,
 				FE51E9A91D12C7CB00C0BDB2 /* TasksList */,
 				FE1011151CBE8AE100DE04CE /* IssueDetailsViewController.swift */,
@@ -540,6 +543,7 @@
 				FE51E9A71D12ACDF00C0BDB2 /* SortingViewController.swift in Sources */,
 				FE1E3E611CEF1F7000CD8C48 /* Extensions.swift in Sources */,
 				FE3DE4891CBBBCA300D35BF8 /* TasksViewController.swift in Sources */,
+				FE89900D1D1407A300ADAD9D /* SettingsViewController.swift in Sources */,
 				FE1011161CBE8AE100DE04CE /* IssueDetailsViewController.swift in Sources */,
 				FE3DE48F1CBBBCA300D35BF8 /* Traffic_iOS.xcdatamodeld in Sources */,
 				FE3DE4871CBBBCA300D35BF8 /* AppDelegate.swift in Sources */,

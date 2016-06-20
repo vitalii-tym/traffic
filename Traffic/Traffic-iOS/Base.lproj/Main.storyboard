@@ -228,7 +228,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q75-9J-OPO" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="mAA-aa-HVT" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2997" y="-4"/>
         </scene>
@@ -498,7 +497,6 @@ The Scrum methodology drops traditional software requirement statements in favou
                         <segue destination="0nm-sz-jlj" kind="popoverPresentation" identifier="showFilters" popoverAnchorBarButtonItem="SKp-Hq-Qc0" id="AWn-QM-nvS">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
-                        <segue destination="mAA-aa-HVT" kind="unwind" unwindAction="unwindToTasksList:" id="dqQ-w4-rJt"/>
                         <segue destination="eej-fM-9j0" kind="popoverPresentation" identifier="showBoards" popoverAnchorBarButtonItem="dmF-Qs-MZn" id="BMH-6Q-v8H">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
@@ -820,11 +818,20 @@ The Scrum methodology drops traditional software requirement statements in favou
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Projects" id="lLI-Ej-Lnq">
-                        <barButtonItem key="leftBarButtonItem" title="Log out" id="d4o-sO-ex3">
-                            <connections>
-                                <action selector="action_log_out:" destination="Zeq-j0-b0u" id="1u5-G6-acy"/>
-                            </connections>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem title="Log out" id="d4o-sO-ex3">
+                                <connections>
+                                    <action selector="action_log_out:" destination="Zeq-j0-b0u" id="1u5-G6-acy"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="pause" id="mqV-kP-OrJ">
+                                <connections>
+                                    <segue destination="0Fj-My-EaZ" kind="popoverPresentation" popoverAnchorBarButtonItem="mqV-kP-OrJ" id="qqN-fQ-dWL">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="button_log_out" destination="d4o-sO-ex3" id="nRw-qA-jVf"/>
@@ -837,6 +844,49 @@ The Scrum methodology drops traditional software requirement statements in favou
                 <exit id="Hyo-tB-9HY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1740" y="503"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="PyI-dh-uPK">
+            <objects>
+                <viewController id="0Fj-My-EaZ" userLabel="Settings" customClass="SettingViewController" customModule="EasyJira_iOS" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="GOG-BU-UUO"/>
+                        <viewControllerLayoutGuide type="bottom" id="DdI-TJ-kCY"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="UYz-Fn-Euu">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vc9-qW-4EN">
+                                <rect key="frame" x="40" y="40" width="156" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="156" id="fjK-my-PTL"/>
+                                </constraints>
+                                <state key="normal" title="Clear cache"/>
+                                <connections>
+                                    <action selector="button_ClearCache_pressed:" destination="0Fj-My-EaZ" eventType="touchUpInside" id="FRr-LD-Fk1"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dg8-mo-Ms3">
+                                <rect key="frame" x="282" y="550" width="37" height="30"/>
+                                <state key="normal" title="Done"/>
+                                <connections>
+                                    <action selector="button_Done_pressed:" destination="0Fj-My-EaZ" eventType="touchUpInside" id="lwf-qD-CFV"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="vc9-qW-4EN" firstAttribute="leading" secondItem="UYz-Fn-Euu" secondAttribute="leadingMargin" constant="20" id="2j0-Zd-YxP"/>
+                            <constraint firstItem="DdI-TJ-kCY" firstAttribute="top" secondItem="Dg8-mo-Ms3" secondAttribute="bottom" constant="20" id="ADu-YC-nMo"/>
+                            <constraint firstItem="vc9-qW-4EN" firstAttribute="top" secondItem="GOG-BU-UUO" secondAttribute="bottom" constant="20" id="I0Z-f0-dsr"/>
+                            <constraint firstItem="Dg8-mo-Ms3" firstAttribute="centerX" secondItem="UYz-Fn-Euu" secondAttribute="centerX" id="KMm-Cr-rm5"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uDJ-6l-tpJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1740" y="1205"/>
         </scene>
         <!--Boards-->
         <scene sceneID="Cj4-4P-hf2">
@@ -851,7 +901,7 @@ The Scrum methodology drops traditional software requirement statements in favou
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="t8r-o4-zHs">
-                                <rect key="frame" x="10" y="31" width="180" height="249"/>
+                                <rect key="frame" x="10" y="31" width="180" height="229"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="BoardCell" id="tMa-k7-qMD" userLabel="BoardCell" customClass="aChooseBoardCell" customModule="EasyJira_iOS" customModuleProvider="target">
@@ -889,17 +939,33 @@ The Scrum methodology drops traditional software requirement statements in favou
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IT9-Fl-WCn">
+                                <rect key="frame" x="16" y="270" width="168" height="30"/>
+                                <state key="normal" title="Apply"/>
+                                <connections>
+                                    <action selector="button_apply_pressed:" destination="eej-fM-9j0" eventType="touchUpInside" id="y3u-Vh-o48"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="IT9-Fl-WCn" secondAttribute="trailing" id="1JD-lr-oge"/>
                             <constraint firstItem="I5F-dV-Bha" firstAttribute="top" secondItem="QxU-62-rG9" secondAttribute="bottom" id="4EB-Kl-M7I"/>
                             <constraint firstItem="DmZ-b5-GR2" firstAttribute="top" secondItem="t8r-o4-zHs" secondAttribute="bottom" constant="20" id="4Oe-jC-foD"/>
                             <constraint firstItem="t8r-o4-zHs" firstAttribute="top" secondItem="I5F-dV-Bha" secondAttribute="bottom" constant="10" id="7i0-yM-26c"/>
+                            <constraint firstItem="DmZ-b5-GR2" firstAttribute="top" secondItem="IT9-Fl-WCn" secondAttribute="bottom" id="9LJ-Nq-W4q"/>
                             <constraint firstAttribute="trailingMargin" secondItem="I5F-dV-Bha" secondAttribute="trailing" id="Imw-Ul-ZQu"/>
                             <constraint firstItem="t8r-o4-zHs" firstAttribute="leading" secondItem="RND-xs-EcK" secondAttribute="leading" constant="10" id="Mt9-Z0-bYX"/>
                             <constraint firstItem="t8r-o4-zHs" firstAttribute="trailing" secondItem="RND-xs-EcK" secondAttribute="trailing" constant="-10" id="RZU-Qu-Ehe"/>
+                            <constraint firstItem="IT9-Fl-WCn" firstAttribute="top" secondItem="t8r-o4-zHs" secondAttribute="bottom" constant="10" id="TKj-MQ-ED2"/>
+                            <constraint firstItem="IT9-Fl-WCn" firstAttribute="leading" secondItem="RND-xs-EcK" secondAttribute="leadingMargin" id="iZF-f9-a95"/>
                             <constraint firstItem="I5F-dV-Bha" firstAttribute="leading" secondItem="RND-xs-EcK" secondAttribute="leadingMargin" id="ngD-ho-Jyq"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="4Oe-jC-foD"/>
+                            </mask>
+                        </variation>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
@@ -940,7 +1006,7 @@ The Scrum methodology drops traditional software requirement statements in favou
                                 </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kha-82-jyT">
-                                <rect key="frame" x="10" y="65" width="180" height="215"/>
+                                <rect key="frame" x="10" y="65" width="180" height="197"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="BoardCell" id="XnL-Vg-CWc" userLabel="SortingCell" customClass="aSortingCell" customModule="EasyJira_iOS" customModuleProvider="target">
@@ -972,6 +1038,13 @@ The Scrum methodology drops traditional software requirement statements in favou
                                     <outlet property="delegate" destination="MCW-F7-dzi" id="eab-Vp-VrE"/>
                                 </connections>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="khm-Bv-mQ5">
+                                <rect key="frame" x="16" y="262" width="168" height="30"/>
+                                <state key="normal" title="Apply"/>
+                                <connections>
+                                    <action selector="action_apply_pressed:" destination="MCW-F7-dzi" eventType="touchUpInside" id="MBo-yN-hW6"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -979,17 +1052,22 @@ The Scrum methodology drops traditional software requirement statements in favou
                             <constraint firstAttribute="trailingMargin" secondItem="kUf-MC-g2z" secondAttribute="trailing" id="Azy-SJ-AUh"/>
                             <constraint firstItem="kha-82-jyT" firstAttribute="leading" secondItem="lOc-RT-ZWk" secondAttribute="leading" constant="10" id="GZl-oE-Jw8"/>
                             <constraint firstItem="ZaE-Zi-Ctz" firstAttribute="top" secondItem="fA7-cI-eMc" secondAttribute="bottom" id="HKU-Rj-mXi"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="khm-Bv-mQ5" secondAttribute="trailing" id="Kxt-o1-XHr"/>
+                            <constraint firstItem="khm-Bv-mQ5" firstAttribute="top" secondItem="kha-82-jyT" secondAttribute="bottom" id="NIh-W3-AhG"/>
                             <constraint firstItem="kha-82-jyT" firstAttribute="top" secondItem="kUf-MC-g2z" secondAttribute="bottom" constant="8" id="YIN-7B-uzV"/>
                             <constraint firstItem="kha-82-jyT" firstAttribute="trailing" secondItem="lOc-RT-ZWk" secondAttribute="trailing" constant="-10" id="aQS-X1-OFU"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ZaE-Zi-Ctz" secondAttribute="trailing" id="m5L-gW-LQg"/>
+                            <constraint firstItem="TcL-9z-o0X" firstAttribute="top" secondItem="khm-Bv-mQ5" secondAttribute="bottom" constant="8" id="mPY-ZD-IoL"/>
                             <constraint firstItem="TcL-9z-o0X" firstAttribute="top" secondItem="kha-82-jyT" secondAttribute="bottom" constant="20" id="mZn-oT-30X"/>
                             <constraint firstItem="ZaE-Zi-Ctz" firstAttribute="leading" secondItem="lOc-RT-ZWk" secondAttribute="leadingMargin" id="pEX-Rx-Uor"/>
                             <constraint firstItem="kUf-MC-g2z" firstAttribute="top" secondItem="ZaE-Zi-Ctz" secondAttribute="bottom" constant="8" id="qYB-hT-okq"/>
                             <constraint firstItem="kUf-MC-g2z" firstAttribute="leading" secondItem="lOc-RT-ZWk" secondAttribute="leadingMargin" id="ufk-op-gps"/>
+                            <constraint firstItem="khm-Bv-mQ5" firstAttribute="leading" secondItem="lOc-RT-ZWk" secondAttribute="leadingMargin" id="wpu-TU-CjZ"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="6uB-D2-809"/>
+                                <exclude reference="mZn-oT-30X"/>
                             </mask>
                         </variation>
                     </view>
